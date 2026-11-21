@@ -1,0 +1,836 @@
+{
+  "sourceHashes": {
+    "portgrid-engine.js": "ea65b4e7eae88687ddfe3a8502d52d974d8c8cb088cd1cc398950279d875f118",
+    "portgrid-control.js": "05c6d85c48245ff48a3b7d6a943e2afdf7ef70a6ddf4ce234ce553b719f9a5c3",
+    "portgrid-monitor.js": "e7c5d4c36005576bfecc377e503b623f880fa748cc2717b91d073641b1d688ca",
+    "PORTGRID_Standalone.html": "e2b996cf2096840bbcd1ea42de479a2d7c6e26d0c83ccc0e9b65e314d903c426"
+  },
+  "scenarios": [
+    {
+      "scenario": "complete-small-seed3",
+      "command": "node tests/integration.acceptance.js complete-small-seed3",
+      "currentSource": true,
+      "configuration": {
+        "name": "complete-small-seed3",
+        "seed": 3,
+        "discharge": 3,
+        "load": 2,
+        "seconds": 900,
+        "departures": 3,
+        "imports": 9,
+        "exports": 6,
+        "waitMax": 30
+      },
+      "outcome": "PASS",
+      "failure": null,
+      "validationError": null,
+      "simulatedSeconds": 900,
+      "wallSeconds": 3.2678913780000003,
+      "imports": 9,
+      "exports": 6,
+      "departures": 3,
+      "lastCargoCompletionTime": 406.8,
+      "departureTimes": [
+        {
+          "call": "VC-0001",
+          "time": 287.13
+        },
+        {
+          "call": "VC-0002",
+          "time": 411.23
+        },
+        {
+          "call": "VC-0003",
+          "time": 461.73
+        }
+      ],
+      "activeMissions": 0,
+      "zeroProgressAGVs": 0,
+      "waitCycles": [],
+      "craneGrossMovesPerHour": 18.09469557350116,
+      "terminalMovesPerSimulatedHour": 60,
+      "stsGrossWaitingPct": 11.34,
+      "schedulerDelaySeconds": 11.4,
+      "schedulerDelaySharePercent": 0.3819991287739133,
+      "fleet": {
+        "productivePercent": 10.58306166802389,
+        "parkedAssignedPercent": 1.0510051616408453,
+        "loadedTravelPercent": 2.8490899212170553,
+        "emptyTravelPercent": 4.375509372453138,
+        "craneHandlingPercent": 3.3584623743547914,
+        "queueWaitPercent": 0.14602010323281486,
+        "trafficWaitPercent": 0.16469709318119818,
+        "parkedUnassignedPercent": 88.05521597388291,
+        "observationVehicleSeconds": 21595.200000000357
+      },
+      "emptyDistanceSharePercent": 60.62852503845497,
+      "doubleCycles": 5,
+      "crossVesselDoubleCycles": 2,
+      "latencySeconds": {
+        "count": 15,
+        "min": 87.03333333333094,
+        "median": 125.93333333332873,
+        "p95": 257.26666666665585,
+        "max": 257.26666666665585
+      },
+      "unsafe": {
+        "routeFailures": 0,
+        "bodyOverlaps": 0,
+        "manifestViolations": 0,
+        "jobErrors": 0,
+        "duplicateAssignments": 0,
+        "prematureLoads": 0,
+        "railViolations": 0
+      }
+    },
+    {
+      "scenario": "complete-small-seed7",
+      "command": "node tests/integration.acceptance.js complete-small-seed7",
+      "currentSource": true,
+      "configuration": {
+        "name": "complete-small-seed7",
+        "seed": 7,
+        "discharge": 3,
+        "load": 2,
+        "seconds": 900,
+        "departures": 3,
+        "imports": 9,
+        "exports": 6,
+        "waitMax": 30
+      },
+      "outcome": "PASS",
+      "failure": null,
+      "validationError": null,
+      "simulatedSeconds": 900,
+      "wallSeconds": 2.8239892419999997,
+      "imports": 9,
+      "exports": 6,
+      "departures": 3,
+      "lastCargoCompletionTime": 407.6,
+      "departureTimes": [
+        {
+          "call": "VC-0001",
+          "time": 296.2
+        },
+        {
+          "call": "VC-0002",
+          "time": 412.5
+        },
+        {
+          "call": "VC-0003",
+          "time": 462.53
+        }
+      ],
+      "activeMissions": 0,
+      "zeroProgressAGVs": 0,
+      "waitCycles": [],
+      "craneGrossMovesPerHour": 17.896795147979812,
+      "terminalMovesPerSimulatedHour": 60,
+      "stsGrossWaitingPct": 11.2,
+      "schedulerDelaySeconds": 11.4,
+      "schedulerDelaySharePercent": 0.3778212309017961,
+      "fleet": {
+        "productivePercent": 10.552499320835615,
+        "parkedAssignedPercent": 1.0934528660689902,
+        "loadedTravelPercent": 2.8066422167889105,
+        "emptyTravelPercent": 4.3398533007334965,
+        "craneHandlingPercent": 3.4060038033143134,
+        "queueWaitPercent": 0.17488454224395272,
+        "trafficWaitPercent": 0.04074979625101806,
+        "parkedUnassignedPercent": 88.13841347456169,
+        "observationVehicleSeconds": 21595.200000000357
+      },
+      "emptyDistanceSharePercent": 60.7033375070161,
+      "doubleCycles": 5,
+      "crossVesselDoubleCycles": 2,
+      "latencySeconds": {
+        "count": 15,
+        "min": 90.09999999999744,
+        "median": 125.13333333332878,
+        "p95": 255.16666666665475,
+        "max": 255.16666666665475
+      },
+      "unsafe": {
+        "routeFailures": 0,
+        "bodyOverlaps": 0,
+        "manifestViolations": 0,
+        "jobErrors": 0,
+        "duplicateAssignments": 0,
+        "prematureLoads": 0,
+        "railViolations": 0
+      }
+    },
+    {
+      "scenario": "normal-load-first-service",
+      "command": "node tests/integration.acceptance.js normal-load-first-service",
+      "currentSource": true,
+      "configuration": {
+        "name": "normal-load-first-service",
+        "seed": 3,
+        "discharge": 12,
+        "load": 8,
+        "seconds": 300,
+        "imports": 9,
+        "waitMax": 90
+      },
+      "outcome": "PASS",
+      "failure": null,
+      "validationError": null,
+      "simulatedSeconds": 300,
+      "wallSeconds": 35.190915608,
+      "imports": 15,
+      "exports": 0,
+      "departures": 0,
+      "lastCargoCompletionTime": 271.57,
+      "departureTimes": [],
+      "activeMissions": 9,
+      "zeroProgressAGVs": 0,
+      "waitCycles": [],
+      "craneGrossMovesPerHour": 25.338964214269637,
+      "terminalMovesPerSimulatedHour": 180,
+      "stsGrossWaitingPct": 80.44,
+      "schedulerDelaySeconds": 274.6,
+      "schedulerDelaySharePercent": 10.172630955026964,
+      "fleet": {
+        "productivePercent": 36.91931540342161,
+        "parkedAssignedPercent": 4.864506927465371,
+        "loadedTravelPercent": 9.759576202119058,
+        "emptyTravelPercent": 13.579869600652113,
+        "craneHandlingPercent": 13.579869600652113,
+        "queueWaitPercent": 2.730236348818238,
+        "trafficWaitPercent": 1.1613691931540207,
+        "parkedUnassignedPercent": 54.324572127143604,
+        "observationVehicleSeconds": 7198.400000000059
+      },
+      "emptyDistanceSharePercent": 58.20546370088418,
+      "doubleCycles": 0,
+      "crossVesselDoubleCycles": 0,
+      "latencySeconds": {
+        "count": 15,
+        "min": 87.86666666666169,
+        "median": 129.76666666665932,
+        "p95": 258.29999999999,
+        "max": 258.29999999999
+      },
+      "unsafe": {
+        "routeFailures": 0,
+        "bodyOverlaps": 0,
+        "manifestViolations": 0,
+        "jobErrors": 0,
+        "duplicateAssignments": 0,
+        "prematureLoads": 0,
+        "railViolations": 0
+      }
+    },
+    {
+      "scenario": "complete-normal-seed3",
+      "command": "node tests/integration.acceptance.js complete-normal-seed3",
+      "currentSource": true,
+      "configuration": {
+        "name": "complete-normal-seed3",
+        "seed": 3,
+        "discharge": 12,
+        "load": 8,
+        "seconds": 2400,
+        "departures": 3,
+        "imports": 36,
+        "exports": 24,
+        "waitMax": 100
+      },
+      "outcome": "PASS",
+      "failure": null,
+      "validationError": null,
+      "simulatedSeconds": 2400,
+      "wallSeconds": 55.444931714999996,
+      "imports": 36,
+      "exports": 24,
+      "departures": 3,
+      "lastCargoCompletionTime": 1327.67,
+      "departureTimes": [
+        {
+          "call": "VC-0001",
+          "time": 748.23
+        },
+        {
+          "call": "VC-0003",
+          "time": 1322.43
+        },
+        {
+          "call": "VC-0002",
+          "time": 1382.63
+        }
+      ],
+      "activeMissions": 0,
+      "zeroProgressAGVs": 0,
+      "waitCycles": [],
+      "craneGrossMovesPerHour": 21.90091862186517,
+      "terminalMovesPerSimulatedHour": 90,
+      "stsGrossWaitingPct": 46.47,
+      "schedulerDelaySeconds": 1120.9,
+      "schedulerDelaySharePercent": 11.365157260763276,
+      "fleet": {
+        "productivePercent": 15.82633053221753,
+        "parkedAssignedPercent": 4.393302775655807,
+        "loadedTravelPercent": 4.486885663356379,
+        "emptyTravelPercent": 6.394194041253752,
+        "craneHandlingPercent": 4.945250827604078,
+        "queueWaitPercent": 1.2630506748154857,
+        "trafficWaitPercent": 0.492742551566118,
+        "parkedUnassignedPercent": 78.02457346574307,
+        "observationVehicleSeconds": 57595.9999999961
+      },
+      "emptyDistanceSharePercent": 58.76727338489197,
+      "doubleCycles": 13,
+      "crossVesselDoubleCycles": 10,
+      "latencySeconds": {
+        "count": 60,
+        "min": 81.06666666673118,
+        "median": 160.7000000000782,
+        "p95": 378.59999999965567,
+        "max": 399.9999999996362
+      },
+      "unsafe": {
+        "routeFailures": 0,
+        "bodyOverlaps": 0,
+        "manifestViolations": 0,
+        "jobErrors": 0,
+        "duplicateAssignments": 0,
+        "prematureLoads": 0,
+        "railViolations": 0
+      }
+    },
+    {
+      "scenario": "complete-normal-seed7",
+      "command": "node tests/integration.acceptance.js complete-normal-seed7",
+      "currentSource": true,
+      "configuration": {
+        "name": "complete-normal-seed7",
+        "seed": 7,
+        "discharge": 12,
+        "load": 8,
+        "seconds": 2400,
+        "departures": 3,
+        "imports": 36,
+        "exports": 24,
+        "waitMax": 100
+      },
+      "outcome": "PASS",
+      "failure": null,
+      "validationError": null,
+      "simulatedSeconds": 2400,
+      "wallSeconds": 61.478525311999995,
+      "imports": 36,
+      "exports": 24,
+      "departures": 3,
+      "lastCargoCompletionTime": 1329.57,
+      "departureTimes": [
+        {
+          "call": "VC-0001",
+          "time": 766.27
+        },
+        {
+          "call": "VC-0003",
+          "time": 1351.53
+        },
+        {
+          "call": "VC-0002",
+          "time": 1384.53
+        }
+      ],
+      "activeMissions": 0,
+      "zeroProgressAGVs": 0,
+      "waitCycles": [],
+      "craneGrossMovesPerHour": 21.576050583852712,
+      "terminalMovesPerSimulatedHour": 90,
+      "stsGrossWaitingPct": 46.06,
+      "schedulerDelaySeconds": 1150.6,
+      "schedulerDelaySharePercent": 11.493242500824502,
+      "fleet": {
+        "productivePercent": 16.14272981920518,
+        "parkedAssignedPercent": 4.343646549528972,
+        "loadedTravelPercent": 4.477336389101219,
+        "emptyTravelPercent": 6.4941431117910975,
+        "craneHandlingPercent": 5.171250318309542,
+        "queueWaitPercent": 1.2725999490706432,
+        "trafficWaitPercent": 0.35077667430611054,
+        "parkedUnassignedPercent": 77.89024700788649,
+        "observationVehicleSeconds": 57595.9999999961
+      },
+      "emptyDistanceSharePercent": 59.17994722955145,
+      "doubleCycles": 13,
+      "crossVesselDoubleCycles": 10,
+      "latencySeconds": {
+        "count": 60,
+        "min": 72.13333333339074,
+        "median": 170.86666666651126,
+        "p95": 367.49999999966576,
+        "max": 389.8999999996454
+      },
+      "unsafe": {
+        "routeFailures": 0,
+        "bodyOverlaps": 0,
+        "manifestViolations": 0,
+        "jobErrors": 0,
+        "duplicateAssignments": 0,
+        "prematureLoads": 0,
+        "railViolations": 0
+      }
+    },
+    {
+      "scenario": "complete-normal-seed11",
+      "command": "node tests/integration.acceptance.js complete-normal-seed11",
+      "currentSource": true,
+      "configuration": {
+        "name": "complete-normal-seed11",
+        "seed": 11,
+        "discharge": 12,
+        "load": 8,
+        "seconds": 2400,
+        "departures": 3,
+        "imports": 36,
+        "exports": 24,
+        "waitMax": 100
+      },
+      "outcome": "PASS",
+      "failure": null,
+      "validationError": null,
+      "simulatedSeconds": 2400,
+      "wallSeconds": 54.683718047,
+      "imports": 36,
+      "exports": 24,
+      "departures": 3,
+      "lastCargoCompletionTime": 1307.77,
+      "departureTimes": [
+        {
+          "call": "VC-0001",
+          "time": 772.63
+        },
+        {
+          "call": "VC-0002",
+          "time": 1111.17
+        },
+        {
+          "call": "VC-0003",
+          "time": 1362.73
+        }
+      ],
+      "activeMissions": 0,
+      "zeroProgressAGVs": 0,
+      "waitCycles": [],
+      "craneGrossMovesPerHour": 23.368277563208288,
+      "terminalMovesPerSimulatedHour": 90,
+      "stsGrossWaitingPct": 48.55,
+      "schedulerDelaySeconds": 917.8,
+      "schedulerDelaySharePercent": 9.929354234959522,
+      "fleet": {
+        "productivePercent": 16.52279093456056,
+        "parkedAssignedPercent": 3.1251591545707713,
+        "loadedTravelPercent": 4.4544181308888335,
+        "emptyTravelPercent": 6.419658772600847,
+        "craneHandlingPercent": 5.648714031067563,
+        "queueWaitPercent": 1.030685001273321,
+        "trafficWaitPercent": 0.492742551566118,
+        "parkedUnassignedPercent": 78.82862235803158,
+        "observationVehicleSeconds": 57595.9999999961
+      },
+      "emptyDistanceSharePercent": 59.05135733129095,
+      "doubleCycles": 13,
+      "crossVesselDoubleCycles": 10,
+      "latencySeconds": {
+        "count": 60,
+        "min": 77.066666666728,
+        "median": 174.09999999999206,
+        "p95": 277.1999999997479,
+        "max": 336.066666666361
+      },
+      "unsafe": {
+        "routeFailures": 0,
+        "bodyOverlaps": 0,
+        "manifestViolations": 0,
+        "jobErrors": 0,
+        "duplicateAssignments": 0,
+        "prematureLoads": 0,
+        "railViolations": 0
+      }
+    },
+    {
+      "scenario": "temporary-yard-outage",
+      "command": "node tests/integration.acceptance.js temporary-yard-outage",
+      "currentSource": true,
+      "configuration": {
+        "name": "temporary-yard-outage",
+        "seed": 3,
+        "discharge": 3,
+        "load": 2,
+        "seconds": 1200,
+        "departures": 3,
+        "imports": 9,
+        "exports": 6,
+        "waitMax": 100,
+        "craneOutages": {
+          "YC-A01": 90,
+          "YC-A02": 90,
+          "YC-A03": 90
+        }
+      },
+      "outcome": "PASS",
+      "failure": null,
+      "validationError": null,
+      "simulatedSeconds": 1200,
+      "wallSeconds": 9.208876274,
+      "imports": 9,
+      "exports": 6,
+      "departures": 3,
+      "lastCargoCompletionTime": 494.2,
+      "departureTimes": [
+        {
+          "call": "VC-0001",
+          "time": 410.5
+        },
+        {
+          "call": "VC-0002",
+          "time": 450.57
+        },
+        {
+          "call": "VC-0003",
+          "time": 549.13
+        }
+      ],
+      "activeMissions": 0,
+      "zeroProgressAGVs": 0,
+      "waitCycles": [],
+      "craneGrossMovesPerHour": 14.45976703708646,
+      "terminalMovesPerSimulatedHour": 45,
+      "stsGrossWaitingPct": 30.78,
+      "schedulerDelaySeconds": 822.8,
+      "schedulerDelaySharePercent": 22.032400589101364,
+      "fleet": {
+        "productivePercent": 7.630399348002674,
+        "parkedAssignedPercent": 0.9843622656887062,
+        "loadedTravelPercent": 2.0897004889976434,
+        "emptyTravelPercent": 3.3312958435209308,
+        "craneHandlingPercent": 2.209403015485017,
+        "queueWaitPercent": 0.2177567237163877,
+        "trafficWaitPercent": 0.07640586797066232,
+        "parkedUnassignedPercent": 91.09107579448076,
+        "observationVehicleSeconds": 28793.5999999992
+      },
+      "emptyDistanceSharePercent": 61.42674344209853,
+      "doubleCycles": 5,
+      "crossVesselDoubleCycles": 2,
+      "latencySeconds": {
+        "count": 15,
+        "min": 87.46666666672496,
+        "median": 152.53333333332466,
+        "p95": 213.13333333336158,
+        "max": 213.13333333336158
+      },
+      "unsafe": {
+        "routeFailures": 0,
+        "bodyOverlaps": 0,
+        "manifestViolations": 0,
+        "jobErrors": 0,
+        "duplicateAssignments": 0,
+        "prematureLoads": 0,
+        "railViolations": 0
+      }
+    },
+    {
+      "scenario": "blocked-parking-release",
+      "command": "node tests/integration.acceptance.js blocked-parking-release",
+      "currentSource": true,
+      "configuration": {
+        "name": "blocked-parking-release",
+        "seed": 7,
+        "discharge": 3,
+        "load": 2,
+        "seconds": 1200,
+        "departures": 3,
+        "imports": 9,
+        "exports": 6,
+        "waitMax": 100,
+        "stalledUntil": 90
+      },
+      "outcome": "PASS",
+      "failure": null,
+      "validationError": null,
+      "simulatedSeconds": 1200,
+      "wallSeconds": 3.265313717,
+      "imports": 9,
+      "exports": 6,
+      "departures": 3,
+      "lastCargoCompletionTime": 416.43,
+      "departureTimes": [
+        {
+          "call": "VC-0001",
+          "time": 305.73
+        },
+        {
+          "call": "VC-0002",
+          "time": 415.43
+        },
+        {
+          "call": "VC-0003",
+          "time": 471.37
+        }
+      ],
+      "activeMissions": 0,
+      "zeroProgressAGVs": 0,
+      "waitCycles": [],
+      "craneGrossMovesPerHour": 17.519953280124415,
+      "terminalMovesPerSimulatedHour": 45,
+      "stsGrossWaitingPct": 15.86,
+      "schedulerDelaySeconds": 11.4,
+      "schedulerDelaySharePercent": 0.3698656803581821,
+      "fleet": {
+        "productivePercent": 7.644407090463967,
+        "parkedAssignedPercent": 1.3714853300734033,
+        "loadedTravelPercent": 2.16101263243693,
+        "emptyTravelPercent": 3.2281479217605344,
+        "craneHandlingPercent": 2.255246536267415,
+        "queueWaitPercent": 0.1247962510187485,
+        "trafficWaitPercent": 0.37820904645477565,
+        "parkedUnassignedPercent": 90.48110228185114,
+        "observationVehicleSeconds": 28793.5999999992
+      },
+      "emptyDistanceSharePercent": 59.9410676646449,
+      "doubleCycles": 5,
+      "crossVesselDoubleCycles": 2,
+      "latencySeconds": {
+        "count": 15,
+        "min": 88.16666666666421,
+        "median": 134.49999999999494,
+        "p95": 268.0000000000067,
+        "max": 268.0000000000067
+      },
+      "unsafe": {
+        "routeFailures": 0,
+        "bodyOverlaps": 0,
+        "manifestViolations": 0,
+        "jobErrors": 0,
+        "duplicateAssignments": 0,
+        "prematureLoads": 0,
+        "railViolations": 0
+      }
+    },
+    {
+      "scenario": "complete-high-seed3",
+      "command": "node tests/integration.acceptance.js complete-high-seed3",
+      "currentSource": true,
+      "configuration": {
+        "name": "complete-high-seed3",
+        "seed": 3,
+        "discharge": 18,
+        "load": 12,
+        "seconds": 3600,
+        "departures": 3,
+        "imports": 54,
+        "exports": 36,
+        "waitMax": 100
+      },
+      "outcome": "PASS",
+      "failure": null,
+      "validationError": null,
+      "simulatedSeconds": 3600,
+      "wallSeconds": 136.246493793,
+      "imports": 54,
+      "exports": 36,
+      "departures": 3,
+      "lastCargoCompletionTime": 2070.8,
+      "departureTimes": [
+        {
+          "call": "VC-0001",
+          "time": 1143.8
+        },
+        {
+          "call": "VC-0002",
+          "time": 2016.9
+        },
+        {
+          "call": "VC-0003",
+          "time": 2125.77
+        }
+      ],
+      "activeMissions": 0,
+      "zeroProgressAGVs": 0,
+      "waitCycles": [],
+      "craneGrossMovesPerHour": 21.090180047650353,
+      "terminalMovesPerSimulatedHour": 90,
+      "stsGrossWaitingPct": 59.05,
+      "schedulerDelaySeconds": 2344.8,
+      "schedulerDelaySharePercent": 15.263041412262517,
+      "fleet": {
+        "productivePercent": 16.64290079446247,
+        "parkedAssignedPercent": 4.572808447070115,
+        "loadedTravelPercent": 4.376315610782971,
+        "emptyTravelPercent": 6.371375704488939,
+        "craneHandlingPercent": 5.8952094791883445,
+        "queueWaitPercent": 1.1433082094112303,
+        "trafficWaitPercent": 1.1441569905614983,
+        "parkedUnassignedPercent": 76.49682555861447,
+        "observationVehicleSeconds": 86398.40000000563
+      },
+      "emptyDistanceSharePercent": 59.27177742854477,
+      "doubleCycles": 18,
+      "crossVesselDoubleCycles": 14,
+      "latencySeconds": {
+        "count": 90,
+        "min": 66.66666666671972,
+        "median": 193.53333333315732,
+        "p95": 363.99999999966894,
+        "max": 400.8333333329688
+      },
+      "unsafe": {
+        "routeFailures": 0,
+        "bodyOverlaps": 0,
+        "manifestViolations": 0,
+        "jobErrors": 0,
+        "duplicateAssignments": 0,
+        "prematureLoads": 0,
+        "railViolations": 0
+      }
+    },
+    {
+      "scenario": "continuous-small-seed7",
+      "command": "node tests/integration.acceptance.js continuous-small-seed7",
+      "currentSource": true,
+      "configuration": {
+        "name": "continuous-small-seed7",
+        "seed": 7,
+        "discharge": 3,
+        "load": 2,
+        "seconds": 3000,
+        "departures": 9,
+        "imports": 27,
+        "exports": 18,
+        "waitMax": 100,
+        "continuous": true
+      },
+      "outcome": "PASS",
+      "failure": null,
+      "validationError": null,
+      "simulatedSeconds": 3000,
+      "wallSeconds": 20.261723502000002,
+      "imports": 61,
+      "exports": 38,
+      "departures": 19,
+      "lastCargoCompletionTime": 2997.77,
+      "departureTimes": [
+        {
+          "call": "VC-0001",
+          "time": 287.2
+        },
+        {
+          "call": "VC-0002",
+          "time": 437.3
+        },
+        {
+          "call": "VC-0003",
+          "time": 487.9
+        },
+        {
+          "call": "VC-0004",
+          "time": 648.8
+        },
+        {
+          "call": "VC-0005",
+          "time": 854.1
+        },
+        {
+          "call": "VC-0006",
+          "time": 933.5
+        },
+        {
+          "call": "VC-0007",
+          "time": 1023.03
+        },
+        {
+          "call": "VC-0008",
+          "time": 1376.3
+        },
+        {
+          "call": "VC-0009",
+          "time": 1425.3
+        },
+        {
+          "call": "VC-0010",
+          "time": 1455.27
+        },
+        {
+          "call": "VC-0013",
+          "time": 1831.4
+        },
+        {
+          "call": "VC-0011",
+          "time": 1847.03
+        },
+        {
+          "call": "VC-0012",
+          "time": 1934.77
+        },
+        {
+          "call": "VC-0016",
+          "time": 2324
+        },
+        {
+          "call": "VC-0014",
+          "time": 2350.3
+        },
+        {
+          "call": "VC-0015",
+          "time": 2433.47
+        },
+        {
+          "call": "VC-0017",
+          "time": 2723.53
+        },
+        {
+          "call": "VC-0018",
+          "time": 2797.87
+        },
+        {
+          "call": "VC-0019",
+          "time": 2945.5
+        }
+      ],
+      "activeMissions": 4,
+      "zeroProgressAGVs": 0,
+      "waitCycles": [],
+      "craneGrossMovesPerHour": 18.111087312776668,
+      "terminalMovesPerSimulatedHour": 118.8,
+      "stsGrossWaitingPct": 13.48,
+      "schedulerDelaySeconds": 20.5,
+      "schedulerDelaySharePercent": 0.1021114658723657,
+      "fleet": {
+        "productivePercent": 20.69072648006068,
+        "parkedAssignedPercent": 1.5533960803487434,
+        "loadedTravelPercent": 5.398178706759957,
+        "emptyTravelPercent": 8.708694943569878,
+        "craneHandlingPercent": 6.583852829728187,
+        "queueWaitPercent": 1.0242227926496392,
+        "trafficWaitPercent": 0.40744815222262804,
+        "parkedUnassignedPercent": 76.32420649478648,
+        "observationVehicleSeconds": 71992.80000000086
+      },
+      "emptyDistanceSharePercent": 61.74020323589342,
+      "doubleCycles": 75,
+      "crossVesselDoubleCycles": 55,
+      "latencySeconds": {
+        "count": 99,
+        "min": 65.69999999994025,
+        "median": 140.4666666665389,
+        "p95": 237.73333333311734,
+        "max": 258.7333333333237
+      },
+      "unsafe": {
+        "routeFailures": 0,
+        "bodyOverlaps": 0,
+        "manifestViolations": 0,
+        "jobErrors": 0,
+        "duplicateAssignments": 0,
+        "prematureLoads": 0,
+        "railViolations": 0
+      }
+    }
+  ]
+}

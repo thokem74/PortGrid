@@ -1,0 +1,15 @@
+'use strict';
+const assert=require('node:assert/strict');
+const {createMonitor,findCycles}=require('../portgrid-monitor');
+assert.deepEqual(findCycles([{from:'a',to:'b'},{from:'b',to:'a'},{from:'c',to:'a'}]),[['a','b']]);
+assert.deepEqual(findCycles([{from:'a',to:'RTG-01'}]),[]);
+const events=[],monitor=createMonitor({threshold:10,emit:e=>events.push(e)});
+const row={vehicleId:'a',missionId:'o',active:true,position:{x:0,z:0},toState:'TRAVEL',progressSignature:'TO_DROPOFF',blockingReason:'VEHICLE_BODY',blockingResourceId:'b'};
+monitor.sample(0,[row]);
+monitor.sample(11,[{...row,recoveryToken:11,routeOrReservationId:'new-route'}]);
+assert.equal(monitor.snapshot().vehicles[0].waitingDuration,11,'rerouting cannot reset physical watchdog');
+assert.equal(events.filter(e=>e.type==='NO_PROGRESS').length,1);
+assert.equal(monitor.snapshot().vehicles[0].recoveryAttempts,1);
+monitor.sample(12,[{...row,position:{x:1,z:0}}]);
+assert.equal(monitor.snapshot().vehicles[0].lastProgress,12);
+console.log('PASS: wait cycles, physical progress watchdog, recovery accounting');

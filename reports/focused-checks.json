@@ -1,0 +1,32 @@
+{
+  "date": "2026-11-21",
+  "sourceHashes": {
+    "portgrid-engine.js": "ea65b4e7eae88687ddfe3a8502d52d974d8c8cb088cd1cc398950279d875f118",
+    "portgrid-control.js": "05c6d85c48245ff48a3b7d6a943e2afdf7ef70a6ddf4ce234ce553b719f9a5c3",
+    "portgrid-monitor.js": "e7c5d4c36005576bfecc377e503b623f880fa748cc2717b91d073641b1d688ca",
+    "PORTGRID_Standalone.html": "e2b996cf2096840bbcd1ea42de479a2d7c6e26d0c83ccc0e9b65e314d903c426"
+  },
+  "checks": [
+    {
+      "command": "node tests/source-parity.test.js",
+      "outcome": "PASS"
+    },
+    {
+      "command": "node tests/control.unit.test.js",
+      "outcome": "PASS"
+    },
+    {
+      "command": "node tests/reliability.unit.test.js",
+      "outcome": "PASS"
+    },
+    {
+      "command": "node tests/traffic.test.js",
+      "outcome": "PASS"
+    },
+    {
+      "command": "node tests/physical-faults.test.js",
+      "outcome": "PASS"
+    }
+  ],
+  "notes": "Actual command outcomes recorded from this work session. Source-parity checks parse all embedded scripts, including the module scene."
+}

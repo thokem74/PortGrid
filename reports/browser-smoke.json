@@ -1,0 +1,3371 @@
+{
+  "passed": true,
+  "sourceHashes": {
+    "portgrid-engine.js": "ea65b4e7eae88687ddfe3a8502d52d974d8c8cb088cd1cc398950279d875f118",
+    "portgrid-control.js": "05c6d85c48245ff48a3b7d6a943e2afdf7ef70a6ddf4ce234ce553b719f9a5c3",
+    "portgrid-monitor.js": "e7c5d4c36005576bfecc377e503b623f880fa748cc2717b91d073641b1d688ca",
+    "PORTGRID_Standalone.html": "e2b996cf2096840bbcd1ea42de479a2d7c6e26d0c83ccc0e9b65e314d903c426"
+  },
+  "time": 20.233333333333498,
+  "errors": [],
+  "consoleErrors": [],
+  "status": {
+    "time": 20.233333333333498,
+    "vesselCalls": 6,
+    "vesselsDeparted": 0,
+    "vesselsWaiting": 0,
+    "vesselsScheduled": 3,
+    "manifestViolations": 0,
+    "berths": [
+      {
+        "call": "VC-0001",
+        "state": "WORKING"
+      },
+      {
+        "call": "VC-0002",
+        "state": "WORKING"
+      },
+      {
+        "call": "VC-0003",
+        "state": "WORKING"
+      }
+    ],
+    "moves": 0,
+    "containers": 2016,
+    "agvs": 24,
+    "trucks": 12,
+    "busyAgvs": 10,
+    "currentCraneAgvJobs": 4,
+    "prepositioningAgvs": 0,
+    "stagedAgvs": 6,
+    "busyTrucks": 4,
+    "assignedAgvs": 10,
+    "assignedTrucks": 12,
+    "transportAssignedAgvs": 10,
+    "transportAssignedTrucks": 12,
+    "activeJobs": 16,
+    "parkedUnassignedAgvs": 14,
+    "blockedAgvs": 0,
+    "productiveAgvs": 4,
+    "actualMovingAgvs": 4,
+    "parkedWithAssignment": 6,
+    "queuedAtSTS": 0,
+    "pairedCycles": 0,
+    "directReassignments": 0,
+    "craneQueueAdmissions": 0,
+    "earlyPickupCraneReleases": 0,
+    "agvEmptyShare": 100,
+    "errors": [],
+    "blocked": 0,
+    "craneWaits": 0,
+    "craneRailViolations": 0,
+    "relaysCompleted": 0,
+    "rollingSectionGrants": 1605,
+    "rollingSectionReleases": 1605,
+    "quayLaneCount": 8,
+    "quayLanePitch": 12,
+    "yardLaneCount": 8,
+    "yardInboundLanes": 4,
+    "yardOutboundLanes": 4,
+    "yardLanePitch": 12,
+    "truckGatePhysicalYields": 0,
+    "agvConflictReroutes": 0,
+    "agvPhysicalYields": 0,
+    "independentIntersectionController": true,
+    "agvYardSlotsPerCrane": 4,
+    "truckYardSlotsPerCrane": 4,
+    "omnidirectionalPivotEnabled": true,
+    "pivotMode": "emergency-yield-only",
+    "pivotBlockedThresholdSeconds": 9,
+    "pivotStarted": 0,
+    "pivotCompleted": 0,
+    "pivotDenied": 0,
+    "pivotSeconds": 0,
+    "pivotingAgvs": 0,
+    "pivotSweepRadius": 8.604401297395047,
+    "loadedRouteWaitSeconds": 0,
+    "emptyRouteWaitSeconds": 1.8,
+    "loadedAgvsWaitingForRoute": 0,
+    "guidePathNodes": 820,
+    "gridRoutes": 4,
+    "gridRouteFailures": 0,
+    "minAgvClearance": 12,
+    "unsafeAgvProximity": 0,
+    "unsafeAgvBodyOverlaps": 0,
+    "movingAgvs": 4,
+    "movingTrucks": 1,
+    "peakConcurrentAgvs": 4,
+    "peakConcurrentTrucks": 4,
+    "junctionYields": 0,
+    "completedByType": {
+      "IMPORT": 0,
+      "EXPORT": 0,
+      "TRUCK_DELIVERY": 0,
+      "TRUCK_PICKUP": 0,
+      "YARD_RELAY": 0
+    },
+    "reliability": {
+      "vehicles": [
+        {
+          "vehicleId": "AGV-01",
+          "missionId": "ORD-00005",
+          "vesselCallId": "VC-0002",
+          "stsId": "QC-05",
+          "vehicleType": "agv",
+          "containerId": "PG00000158",
+          "toState": "TO_PICKUP",
+          "active": true,
+          "position": {
+            "x": -230,
+            "z": -24
+          },
+          "destination": {
+            "x": -220,
+            "z": -24
+          },
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": "AGV-01:1:11",
+          "trafficAuthorized": true,
+          "recoveryToken": null,
+          "plannedNextAction": "FOLLOW_ROUTE",
+          "progressSignature": "JOB-00005|TO_PICKUP||1|0",
+          "lastProgress": 19.500000000000128,
+          "progressX": -230,
+          "progressZ": -24,
+          "signature": "JOB-00005|TO_PICKUP||1|0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-02",
+          "missionId": "ORD-00007",
+          "vesselCallId": "VC-0003",
+          "stsId": "QC-07",
+          "vehicleType": "agv",
+          "containerId": "PG00000233",
+          "toState": "TO_PICKUP",
+          "active": true,
+          "position": {
+            "x": -437,
+            "z": -24
+          },
+          "destination": {
+            "x": -308,
+            "z": -24
+          },
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": "AGV-02:1:3",
+          "trafficAuthorized": true,
+          "recoveryToken": null,
+          "plannedNextAction": "FOLLOW_ROUTE",
+          "progressSignature": "JOB-00007|TO_PICKUP||1|0",
+          "lastProgress": 19.500000000000128,
+          "progressX": -437,
+          "progressZ": -24,
+          "signature": "JOB-00007|TO_PICKUP||1|0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-03",
+          "missionId": "ORD-00023",
+          "vesselCallId": "VC-0003",
+          "stsId": "QC-09",
+          "vehicleType": "agv",
+          "containerId": "PG00000306",
+          "toState": "PREPOSITION",
+          "active": true,
+          "position": {
+            "x": -444,
+            "z": 31
+          },
+          "destination": null,
+          "blockingReason": "PARKING_EXIT_CONFLICT",
+          "blockingResourceId": "AGV-02",
+          "routeOrReservationId": "ORD-00023",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "JOB-00015|PREPOSITION||1|0",
+          "lastProgress": 12.399999999999967,
+          "progressX": -444,
+          "progressZ": 31,
+          "signature": "JOB-00015|PREPOSITION||1|0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 7.100000000000161
+        },
+        {
+          "vehicleId": "AGV-04",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -444,
+            "z": 43
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": -444,
+          "progressZ": 43,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-05",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -444,
+            "z": 55
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": -444,
+          "progressZ": 55,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-06",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -444,
+            "z": 67
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": -444,
+          "progressZ": 67,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-07",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -444,
+            "z": 79
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": -444,
+          "progressZ": 79,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-08",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -444,
+            "z": 91
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": -444,
+          "progressZ": 91,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-09",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -444,
+            "z": 103
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": -444,
+          "progressZ": 103,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-10",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -444,
+            "z": 115
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": -444,
+          "progressZ": 115,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-11",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -444,
+            "z": 127
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": -444,
+          "progressZ": 127,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-12",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -444,
+            "z": 139
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": -444,
+          "progressZ": 139,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-13",
+          "missionId": "ORD-00001",
+          "vesselCallId": "VC-0001",
+          "stsId": "QC-01",
+          "vehicleType": "agv",
+          "containerId": "PG00000006",
+          "toState": "TO_PICKUP",
+          "active": true,
+          "position": {
+            "x": -253,
+            "z": -12.5
+          },
+          "destination": {
+            "x": -253,
+            "z": -24
+          },
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": "AGV-13:1:13",
+          "trafficAuthorized": true,
+          "recoveryToken": null,
+          "plannedNextAction": "FOLLOW_ROUTE",
+          "progressSignature": "JOB-00001|TO_PICKUP||1|0",
+          "lastProgress": 19.500000000000128,
+          "progressX": -253,
+          "progressZ": -12.5,
+          "signature": "JOB-00001|TO_PICKUP||1|0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-14",
+          "missionId": "ORD-00002",
+          "vesselCallId": "VC-0001",
+          "stsId": "QC-02",
+          "vehicleType": "agv",
+          "containerId": "PG00000043",
+          "toState": "TO_PICKUP",
+          "active": true,
+          "position": {
+            "x": -366,
+            "z": -36
+          },
+          "destination": {
+            "x": -308,
+            "z": -36
+          },
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": "AGV-14:1:3",
+          "trafficAuthorized": true,
+          "recoveryToken": null,
+          "plannedNextAction": "FOLLOW_ROUTE",
+          "progressSignature": "JOB-00002|TO_PICKUP||1|0",
+          "lastProgress": 19.500000000000128,
+          "progressX": -366,
+          "progressZ": -36,
+          "signature": "JOB-00002|TO_PICKUP||1|0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-15",
+          "missionId": "ORD-00003",
+          "vesselCallId": "VC-0001",
+          "stsId": "QC-03",
+          "vehicleType": "agv",
+          "containerId": "PG00000080",
+          "toState": "PREPOSITION",
+          "active": true,
+          "position": {
+            "x": -396,
+            "z": 31
+          },
+          "destination": null,
+          "blockingReason": "PARKING_EXIT_CONFLICT",
+          "blockingResourceId": "AGV-14",
+          "routeOrReservationId": "ORD-00003",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "JOB-00003|PREPOSITION||1|0",
+          "lastProgress": 1.0666666666666667,
+          "progressX": -396,
+          "progressZ": 31,
+          "signature": "JOB-00003|PREPOSITION||1|0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 18.43333333333346
+        },
+        {
+          "vehicleId": "AGV-16",
+          "missionId": "ORD-00004",
+          "vesselCallId": "VC-0002",
+          "stsId": "QC-04",
+          "vehicleType": "agv",
+          "containerId": "PG00000117",
+          "toState": "PREPOSITION",
+          "active": true,
+          "position": {
+            "x": -396,
+            "z": 43
+          },
+          "destination": null,
+          "blockingReason": "PARKING_EXIT_CONFLICT",
+          "blockingResourceId": "AGV-14",
+          "routeOrReservationId": "ORD-00004",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "JOB-00004|PREPOSITION||1|0",
+          "lastProgress": 1.0666666666666667,
+          "progressX": -396,
+          "progressZ": 43,
+          "signature": "JOB-00004|PREPOSITION||1|0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 18.43333333333346
+        },
+        {
+          "vehicleId": "AGV-17",
+          "missionId": "ORD-00006",
+          "vesselCallId": "VC-0002",
+          "stsId": "QC-06",
+          "vehicleType": "agv",
+          "containerId": "PG00000198",
+          "toState": "PREPOSITION",
+          "active": true,
+          "position": {
+            "x": -396,
+            "z": 55
+          },
+          "destination": null,
+          "blockingReason": "PARKING_EXIT_CONFLICT",
+          "blockingResourceId": "AGV-14",
+          "routeOrReservationId": "ORD-00006",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "JOB-00006|PREPOSITION||1|0",
+          "lastProgress": 1.0666666666666667,
+          "progressX": -396,
+          "progressZ": 55,
+          "signature": "JOB-00006|PREPOSITION||1|0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 18.43333333333346
+        },
+        {
+          "vehicleId": "AGV-18",
+          "missionId": "ORD-00008",
+          "vesselCallId": "VC-0003",
+          "stsId": "QC-08",
+          "vehicleType": "agv",
+          "containerId": "PG00000269",
+          "toState": "PREPOSITION",
+          "active": true,
+          "position": {
+            "x": -396,
+            "z": 67
+          },
+          "destination": null,
+          "blockingReason": "PARKING_EXIT_CONFLICT",
+          "blockingResourceId": "AGV-14",
+          "routeOrReservationId": "ORD-00008",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "JOB-00008|PREPOSITION||1|0",
+          "lastProgress": 1.0666666666666667,
+          "progressX": -396,
+          "progressZ": 67,
+          "signature": "JOB-00008|PREPOSITION||1|0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 18.43333333333346
+        },
+        {
+          "vehicleId": "AGV-19",
+          "missionId": "ORD-00024",
+          "vesselCallId": "VC-0001",
+          "stsId": "QC-01",
+          "vehicleType": "agv",
+          "containerId": "PG00000016",
+          "toState": "PREPOSITION",
+          "active": true,
+          "position": {
+            "x": -396,
+            "z": 79
+          },
+          "destination": null,
+          "blockingReason": "PARKING_EXIT_CONFLICT",
+          "blockingResourceId": "AGV-14",
+          "routeOrReservationId": "ORD-00024",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "JOB-00016|PREPOSITION||1|0",
+          "lastProgress": 14.466666666666626,
+          "progressX": -396,
+          "progressZ": 79,
+          "signature": "JOB-00016|PREPOSITION||1|0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 5.033333333333502
+        },
+        {
+          "vehicleId": "AGV-20",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -396,
+            "z": 91
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": -396,
+          "progressZ": 91,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-21",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -396,
+            "z": 103
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": -396,
+          "progressZ": 103,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-22",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -396,
+            "z": 115
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": -396,
+          "progressZ": 115,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-23",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -396,
+            "z": 127
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": -396,
+          "progressZ": 127,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-24",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -396,
+            "z": 139
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": -396,
+          "progressZ": 139,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "TRK-01",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000481",
+          "toState": "PICK",
+          "active": true,
+          "position": {
+            "x": 221,
+            "z": 81.5
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": "ORD-00009",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "PHYSICAL_HANDOVER",
+          "progressSignature": "JOB-00009|PICK|MOVE_TARGET|2|0",
+          "lastProgress": 17.50000000000003,
+          "progressX": 221,
+          "progressZ": 81.5,
+          "signature": "JOB-00009|PICK|MOVE_TARGET|2|0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 2.0000000000000995
+        },
+        {
+          "vehicleId": "TRK-02",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00002011",
+          "toState": "PICK",
+          "active": true,
+          "position": {
+            "x": 221,
+            "z": 183.5
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": "ORD-00010",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "PHYSICAL_HANDOVER",
+          "progressSignature": "JOB-00010|PICK|MOVE_ABOVE|2|0",
+          "lastProgress": 16.49999999999998,
+          "progressX": 221,
+          "progressZ": 183.5,
+          "signature": "JOB-00010|PICK|MOVE_ABOVE|2|0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 3.000000000000149
+        },
+        {
+          "vehicleId": "TRK-03",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000935",
+          "toState": "TO_PICKUP",
+          "active": true,
+          "position": {
+            "x": 238.20000000000206,
+            "z": 149.5
+          },
+          "destination": {
+            "x": 221,
+            "z": 149.5
+          },
+          "blockingReason": "TRAFFIC_AUTHORIZATION",
+          "blockingResourceId": null,
+          "routeOrReservationId": "TRK-03:1:3",
+          "trafficAuthorized": true,
+          "recoveryToken": null,
+          "plannedNextAction": "FOLLOW_ROUTE",
+          "progressSignature": "JOB-00011|TO_PICKUP||1|0",
+          "lastProgress": 19.500000000000128,
+          "progressX": 238.20000000000206,
+          "progressZ": 149.5,
+          "signature": "JOB-00011|TO_PICKUP||1|0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "TRK-04",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00002012",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 348,
+            "z": 195
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T04",
+          "routeOrReservationId": "ORD-00012",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 348,
+          "progressZ": 195,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 19.466666666666793
+        },
+        {
+          "vehicleId": "TRK-05",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000936",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 348,
+            "z": 231
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T03",
+          "routeOrReservationId": "ORD-00013",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 348,
+          "progressZ": 231,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 19.466666666666793
+        },
+        {
+          "vehicleId": "TRK-06",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00002013",
+          "toState": "PICK",
+          "active": true,
+          "position": {
+            "x": 221,
+            "z": 251.5
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": "ORD-00014",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "PHYSICAL_HANDOVER",
+          "progressSignature": "JOB-00012|PICK|MOVE_ABOVE|2|0",
+          "lastProgress": 12.399999999999967,
+          "progressX": 221,
+          "progressZ": 251.5,
+          "signature": "JOB-00012|PICK|MOVE_ABOVE|2|0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 7.100000000000161
+        },
+        {
+          "vehicleId": "TRK-07",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000483",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 103
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T01",
+          "routeOrReservationId": "ORD-00015",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 103,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 19.466666666666793
+        },
+        {
+          "vehicleId": "TRK-08",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00002014",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 139
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T04",
+          "routeOrReservationId": "ORD-00016",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 139,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 19.466666666666793
+        },
+        {
+          "vehicleId": "TRK-09",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000938",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 175
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T03",
+          "routeOrReservationId": "ORD-00017",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 175,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 19.466666666666793
+        },
+        {
+          "vehicleId": "TRK-10",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00002015",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 211
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T04",
+          "routeOrReservationId": "ORD-00018",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 211,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 19.466666666666793
+        },
+        {
+          "vehicleId": "TRK-11",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000940",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 247
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T03",
+          "routeOrReservationId": "ORD-00019",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 247,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 19.466666666666793
+        },
+        {
+          "vehicleId": "TRK-12",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00002016",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 283
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T06",
+          "routeOrReservationId": "ORD-00020",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 283,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 19.466666666666793
+        }
+      ],
+      "cycles": [],
+      "dependencies": [
+        {
+          "from": "AGV-03",
+          "to": "AGV-02"
+        },
+        {
+          "from": "AGV-15",
+          "to": "AGV-14"
+        },
+        {
+          "from": "AGV-16",
+          "to": "AGV-14"
+        },
+        {
+          "from": "AGV-17",
+          "to": "AGV-14"
+        },
+        {
+          "from": "AGV-18",
+          "to": "AGV-14"
+        },
+        {
+          "from": "AGV-19",
+          "to": "AGV-14"
+        },
+        {
+          "from": "TRK-04",
+          "to": "YC-T04"
+        },
+        {
+          "from": "TRK-05",
+          "to": "YC-T03"
+        },
+        {
+          "from": "TRK-07",
+          "to": "YC-T01"
+        },
+        {
+          "from": "TRK-08",
+          "to": "YC-T04"
+        },
+        {
+          "from": "TRK-09",
+          "to": "YC-T03"
+        },
+        {
+          "from": "TRK-10",
+          "to": "YC-T04"
+        },
+        {
+          "from": "TRK-11",
+          "to": "YC-T03"
+        },
+        {
+          "from": "TRK-12",
+          "to": "YC-T06"
+        },
+        {
+          "from": "QC-01",
+          "to": "AGV-13"
+        },
+        {
+          "from": "QC-02",
+          "to": "AGV-14"
+        },
+        {
+          "from": "QC-05",
+          "to": "AGV-01"
+        },
+        {
+          "from": "QC-07",
+          "to": "AGV-02"
+        },
+        {
+          "from": "YC-T01",
+          "to": "TRK-01"
+        },
+        {
+          "from": "YC-T03",
+          "to": "TRK-03"
+        },
+        {
+          "from": "YC-T04",
+          "to": "TRK-02"
+        },
+        {
+          "from": "YC-T06",
+          "to": "TRK-06"
+        }
+      ],
+      "cargoDemands": [
+        {
+          "id": "VC-0001|IMPORT|PG00000006",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-01",
+          "type": "IMPORT",
+          "container": "PG00000006",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": -274.8,
+            "z": -158
+          },
+          "yard": null,
+          "order": "ORD-00001",
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000016",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-01",
+          "type": "IMPORT",
+          "container": "PG00000016",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": -264,
+            "z": -164
+          },
+          "yard": null,
+          "order": "ORD-00024",
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000027",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-01",
+          "type": "IMPORT",
+          "container": "PG00000027",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": -264,
+            "z": -140
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000036",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-01",
+          "type": "IMPORT",
+          "container": "PG00000036",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": -253.2,
+            "z": -146
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000043",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-02",
+          "type": "IMPORT",
+          "container": "PG00000043",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": -230.8,
+            "z": -158
+          },
+          "yard": null,
+          "order": "ORD-00002",
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000055",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-02",
+          "type": "IMPORT",
+          "container": "PG00000055",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": -220,
+            "z": -164
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000065",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-02",
+          "type": "IMPORT",
+          "container": "PG00000065",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": -220,
+            "z": -140
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000073",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-02",
+          "type": "IMPORT",
+          "container": "PG00000073",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": -209.2,
+            "z": -146
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000080",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-03",
+          "type": "IMPORT",
+          "container": "PG00000080",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": -186.8,
+            "z": -158
+          },
+          "yard": null,
+          "order": "ORD-00003",
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000091",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-03",
+          "type": "IMPORT",
+          "container": "PG00000091",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": -176,
+            "z": -164
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000100",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-03",
+          "type": "IMPORT",
+          "container": "PG00000100",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": -176,
+            "z": -140
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000109",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-03",
+          "type": "IMPORT",
+          "container": "PG00000109",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": -165.2,
+            "z": -146
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000117",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-04",
+          "type": "IMPORT",
+          "container": "PG00000117",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": -54.8,
+            "z": -158
+          },
+          "yard": null,
+          "order": "ORD-00004",
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000129",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-04",
+          "type": "IMPORT",
+          "container": "PG00000129",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": -44,
+            "z": -164
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000140",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-04",
+          "type": "IMPORT",
+          "container": "PG00000140",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": -44,
+            "z": -140
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000150",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-04",
+          "type": "IMPORT",
+          "container": "PG00000150",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": -33.2,
+            "z": -146
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000158",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-05",
+          "type": "IMPORT",
+          "container": "PG00000158",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": -10.8,
+            "z": -158
+          },
+          "yard": null,
+          "order": "ORD-00005",
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000169",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-05",
+          "type": "IMPORT",
+          "container": "PG00000169",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": 0,
+            "z": -164
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000179",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-05",
+          "type": "IMPORT",
+          "container": "PG00000179",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": 0,
+            "z": -140
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000190",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-05",
+          "type": "IMPORT",
+          "container": "PG00000190",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": 10.8,
+            "z": -146
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000198",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-06",
+          "type": "IMPORT",
+          "container": "PG00000198",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": 33.2,
+            "z": -158
+          },
+          "yard": null,
+          "order": "ORD-00006",
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000208",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-06",
+          "type": "IMPORT",
+          "container": "PG00000208",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": 44,
+            "z": -164
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000218",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-06",
+          "type": "IMPORT",
+          "container": "PG00000218",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": 44,
+            "z": -140
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000226",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-06",
+          "type": "IMPORT",
+          "container": "PG00000226",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": 54.8,
+            "z": -146
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000233",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-07",
+          "type": "IMPORT",
+          "container": "PG00000233",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": 165.2,
+            "z": -158
+          },
+          "yard": null,
+          "order": "ORD-00007",
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000243",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-07",
+          "type": "IMPORT",
+          "container": "PG00000243",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": 176,
+            "z": -164
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000254",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-07",
+          "type": "IMPORT",
+          "container": "PG00000254",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": 176,
+            "z": -140
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000263",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-07",
+          "type": "IMPORT",
+          "container": "PG00000263",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": 186.8,
+            "z": -146
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000269",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-08",
+          "type": "IMPORT",
+          "container": "PG00000269",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": 209.2,
+            "z": -158
+          },
+          "yard": null,
+          "order": "ORD-00008",
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000278",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-08",
+          "type": "IMPORT",
+          "container": "PG00000278",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": 220,
+            "z": -164
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000289",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-08",
+          "type": "IMPORT",
+          "container": "PG00000289",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": 220,
+            "z": -140
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000300",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-08",
+          "type": "IMPORT",
+          "container": "PG00000300",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": 230.8,
+            "z": -146
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000306",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-09",
+          "type": "IMPORT",
+          "container": "PG00000306",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": 253.2,
+            "z": -158
+          },
+          "yard": null,
+          "order": "ORD-00023",
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000316",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-09",
+          "type": "IMPORT",
+          "container": "PG00000316",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": 264,
+            "z": -164
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000326",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-09",
+          "type": "IMPORT",
+          "container": "PG00000326",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": 264,
+            "z": -140
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000337",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-09",
+          "type": "IMPORT",
+          "container": "PG00000337",
+          "age": 20.2,
+          "site": "ship",
+          "position": {
+            "x": 274.8,
+            "z": -146
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        }
+      ],
+      "sts": [
+        {
+          "stsId": "QC-01",
+          "vesselCallId": "VC-0001",
+          "remainingDischarge": 4,
+          "remainingLoad": 3,
+          "outstandingRequests": [
+            {
+              "id": "VC-0001|IMPORT|PG00000006",
+              "status": "ASSIGNED",
+              "reason": null,
+              "sts": "QC-01",
+              "type": "IMPORT",
+              "container": "PG00000006",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0001|IMPORT|PG00000016",
+              "status": "ASSIGNED",
+              "reason": null,
+              "sts": "QC-01",
+              "type": "IMPORT",
+              "container": "PG00000016",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0001|IMPORT|PG00000027",
+              "status": "OPEN",
+              "reason": "STS_QUEUE_FULL",
+              "sts": "QC-01",
+              "type": "IMPORT",
+              "container": "PG00000027",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0001|IMPORT|PG00000036",
+              "status": "OPEN",
+              "reason": "STS_QUEUE_FULL",
+              "sts": "QC-01",
+              "type": "IMPORT",
+              "container": "PG00000036",
+              "age": 20.2
+            }
+          ],
+          "assignedAGVs": [
+            "AGV-13",
+            "AGV-19"
+          ],
+          "approachingAGVs": [
+            "AGV-13"
+          ],
+          "waitingCause": "AGV_IN_TRANSIT",
+          "waitingDuration": 20.233333333333498,
+          "waitCauses": {
+            "AGV_IN_TRANSIT": 20.16666666666668
+          },
+          "grossMovesPerHour": 0
+        },
+        {
+          "stsId": "QC-02",
+          "vesselCallId": "VC-0001",
+          "remainingDischarge": 4,
+          "remainingLoad": 3,
+          "outstandingRequests": [
+            {
+              "id": "VC-0001|IMPORT|PG00000043",
+              "status": "ASSIGNED",
+              "reason": null,
+              "sts": "QC-02",
+              "type": "IMPORT",
+              "container": "PG00000043",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0001|IMPORT|PG00000055",
+              "status": "OPEN",
+              "reason": "NO_SAFE_YARD_DESTINATION",
+              "sts": "QC-02",
+              "type": "IMPORT",
+              "container": "PG00000055",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0001|IMPORT|PG00000065",
+              "status": "OPEN",
+              "reason": "NO_SAFE_YARD_DESTINATION",
+              "sts": "QC-02",
+              "type": "IMPORT",
+              "container": "PG00000065",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0001|IMPORT|PG00000073",
+              "status": "OPEN",
+              "reason": "NO_SAFE_YARD_DESTINATION",
+              "sts": "QC-02",
+              "type": "IMPORT",
+              "container": "PG00000073",
+              "age": 20.2
+            }
+          ],
+          "assignedAGVs": [
+            "AGV-14"
+          ],
+          "approachingAGVs": [
+            "AGV-14"
+          ],
+          "waitingCause": "AGV_IN_TRANSIT",
+          "waitingDuration": 8.866666666666863,
+          "waitCauses": {
+            "PARKING_DISPATCH_WAIT": 11.366666666666667,
+            "AGV_IN_TRANSIT": 8.799999999999997
+          },
+          "grossMovesPerHour": 0
+        },
+        {
+          "stsId": "QC-03",
+          "vesselCallId": "VC-0001",
+          "remainingDischarge": 4,
+          "remainingLoad": 2,
+          "outstandingRequests": [
+            {
+              "id": "VC-0001|IMPORT|PG00000080",
+              "status": "ASSIGNED",
+              "reason": null,
+              "sts": "QC-03",
+              "type": "IMPORT",
+              "container": "PG00000080",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0001|IMPORT|PG00000091",
+              "status": "OPEN",
+              "reason": "STS_QUEUE_FULL",
+              "sts": "QC-03",
+              "type": "IMPORT",
+              "container": "PG00000091",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0001|IMPORT|PG00000100",
+              "status": "OPEN",
+              "reason": "STS_QUEUE_FULL",
+              "sts": "QC-03",
+              "type": "IMPORT",
+              "container": "PG00000100",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0001|IMPORT|PG00000109",
+              "status": "OPEN",
+              "reason": "STS_QUEUE_FULL",
+              "sts": "QC-03",
+              "type": "IMPORT",
+              "container": "PG00000109",
+              "age": 20.2
+            }
+          ],
+          "assignedAGVs": [
+            "AGV-15"
+          ],
+          "approachingAGVs": [],
+          "waitingCause": "PARKING_DISPATCH_WAIT",
+          "waitingDuration": 20.233333333333498,
+          "waitCauses": {
+            "PARKING_DISPATCH_WAIT": 20.16666666666668
+          },
+          "grossMovesPerHour": 0
+        },
+        {
+          "stsId": "QC-04",
+          "vesselCallId": "VC-0002",
+          "remainingDischarge": 4,
+          "remainingLoad": 3,
+          "outstandingRequests": [
+            {
+              "id": "VC-0002|IMPORT|PG00000117",
+              "status": "ASSIGNED",
+              "reason": null,
+              "sts": "QC-04",
+              "type": "IMPORT",
+              "container": "PG00000117",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0002|IMPORT|PG00000129",
+              "status": "OPEN",
+              "reason": "STS_QUEUE_FULL",
+              "sts": "QC-04",
+              "type": "IMPORT",
+              "container": "PG00000129",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0002|IMPORT|PG00000140",
+              "status": "OPEN",
+              "reason": "STS_QUEUE_FULL",
+              "sts": "QC-04",
+              "type": "IMPORT",
+              "container": "PG00000140",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0002|IMPORT|PG00000150",
+              "status": "OPEN",
+              "reason": "STS_QUEUE_FULL",
+              "sts": "QC-04",
+              "type": "IMPORT",
+              "container": "PG00000150",
+              "age": 20.2
+            }
+          ],
+          "assignedAGVs": [
+            "AGV-16"
+          ],
+          "approachingAGVs": [],
+          "waitingCause": "PARKING_DISPATCH_WAIT",
+          "waitingDuration": 20.233333333333498,
+          "waitCauses": {
+            "PARKING_DISPATCH_WAIT": 20.16666666666668
+          },
+          "grossMovesPerHour": 0
+        },
+        {
+          "stsId": "QC-05",
+          "vesselCallId": "VC-0002",
+          "remainingDischarge": 4,
+          "remainingLoad": 3,
+          "outstandingRequests": [
+            {
+              "id": "VC-0002|IMPORT|PG00000158",
+              "status": "ASSIGNED",
+              "reason": null,
+              "sts": "QC-05",
+              "type": "IMPORT",
+              "container": "PG00000158",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0002|IMPORT|PG00000169",
+              "status": "OPEN",
+              "reason": "NO_SAFE_YARD_DESTINATION",
+              "sts": "QC-05",
+              "type": "IMPORT",
+              "container": "PG00000169",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0002|IMPORT|PG00000179",
+              "status": "OPEN",
+              "reason": "NO_SAFE_YARD_DESTINATION",
+              "sts": "QC-05",
+              "type": "IMPORT",
+              "container": "PG00000179",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0002|IMPORT|PG00000190",
+              "status": "OPEN",
+              "reason": "NO_SAFE_YARD_DESTINATION",
+              "sts": "QC-05",
+              "type": "IMPORT",
+              "container": "PG00000190",
+              "age": 20.2
+            }
+          ],
+          "assignedAGVs": [
+            "AGV-01"
+          ],
+          "approachingAGVs": [
+            "AGV-01"
+          ],
+          "waitingCause": "AGV_IN_TRANSIT",
+          "waitingDuration": 20.233333333333498,
+          "waitCauses": {
+            "AGV_IN_TRANSIT": 20.16666666666668
+          },
+          "grossMovesPerHour": 0
+        },
+        {
+          "stsId": "QC-06",
+          "vesselCallId": "VC-0002",
+          "remainingDischarge": 4,
+          "remainingLoad": 2,
+          "outstandingRequests": [
+            {
+              "id": "VC-0002|IMPORT|PG00000198",
+              "status": "ASSIGNED",
+              "reason": null,
+              "sts": "QC-06",
+              "type": "IMPORT",
+              "container": "PG00000198",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0002|IMPORT|PG00000208",
+              "status": "OPEN",
+              "reason": "STS_QUEUE_FULL",
+              "sts": "QC-06",
+              "type": "IMPORT",
+              "container": "PG00000208",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0002|IMPORT|PG00000218",
+              "status": "OPEN",
+              "reason": "STS_QUEUE_FULL",
+              "sts": "QC-06",
+              "type": "IMPORT",
+              "container": "PG00000218",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0002|IMPORT|PG00000226",
+              "status": "OPEN",
+              "reason": "STS_QUEUE_FULL",
+              "sts": "QC-06",
+              "type": "IMPORT",
+              "container": "PG00000226",
+              "age": 20.2
+            }
+          ],
+          "assignedAGVs": [
+            "AGV-17"
+          ],
+          "approachingAGVs": [],
+          "waitingCause": "PARKING_DISPATCH_WAIT",
+          "waitingDuration": 20.233333333333498,
+          "waitCauses": {
+            "PARKING_DISPATCH_WAIT": 20.16666666666668
+          },
+          "grossMovesPerHour": 0
+        },
+        {
+          "stsId": "QC-07",
+          "vesselCallId": "VC-0003",
+          "remainingDischarge": 4,
+          "remainingLoad": 3,
+          "outstandingRequests": [
+            {
+              "id": "VC-0003|IMPORT|PG00000233",
+              "status": "ASSIGNED",
+              "reason": null,
+              "sts": "QC-07",
+              "type": "IMPORT",
+              "container": "PG00000233",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0003|IMPORT|PG00000243",
+              "status": "OPEN",
+              "reason": "NO_SAFE_YARD_DESTINATION",
+              "sts": "QC-07",
+              "type": "IMPORT",
+              "container": "PG00000243",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0003|IMPORT|PG00000254",
+              "status": "OPEN",
+              "reason": "NO_SAFE_YARD_DESTINATION",
+              "sts": "QC-07",
+              "type": "IMPORT",
+              "container": "PG00000254",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0003|IMPORT|PG00000263",
+              "status": "OPEN",
+              "reason": "NO_SAFE_YARD_DESTINATION",
+              "sts": "QC-07",
+              "type": "IMPORT",
+              "container": "PG00000263",
+              "age": 20.2
+            }
+          ],
+          "assignedAGVs": [
+            "AGV-02"
+          ],
+          "approachingAGVs": [
+            "AGV-02"
+          ],
+          "waitingCause": "AGV_IN_TRANSIT",
+          "waitingDuration": 6.66666666666687,
+          "waitCauses": {
+            "PARKING_DISPATCH_WAIT": 13.56666666666667,
+            "AGV_IN_TRANSIT": 6.599999999999997
+          },
+          "grossMovesPerHour": 0
+        },
+        {
+          "stsId": "QC-08",
+          "vesselCallId": "VC-0003",
+          "remainingDischarge": 4,
+          "remainingLoad": 3,
+          "outstandingRequests": [
+            {
+              "id": "VC-0003|IMPORT|PG00000269",
+              "status": "ASSIGNED",
+              "reason": null,
+              "sts": "QC-08",
+              "type": "IMPORT",
+              "container": "PG00000269",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0003|IMPORT|PG00000278",
+              "status": "OPEN",
+              "reason": "STS_QUEUE_FULL",
+              "sts": "QC-08",
+              "type": "IMPORT",
+              "container": "PG00000278",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0003|IMPORT|PG00000289",
+              "status": "OPEN",
+              "reason": "STS_QUEUE_FULL",
+              "sts": "QC-08",
+              "type": "IMPORT",
+              "container": "PG00000289",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0003|IMPORT|PG00000300",
+              "status": "OPEN",
+              "reason": "STS_QUEUE_FULL",
+              "sts": "QC-08",
+              "type": "IMPORT",
+              "container": "PG00000300",
+              "age": 20.2
+            }
+          ],
+          "assignedAGVs": [
+            "AGV-18"
+          ],
+          "approachingAGVs": [],
+          "waitingCause": "PARKING_DISPATCH_WAIT",
+          "waitingDuration": 20.233333333333498,
+          "waitCauses": {
+            "PARKING_DISPATCH_WAIT": 20.16666666666668
+          },
+          "grossMovesPerHour": 0
+        },
+        {
+          "stsId": "QC-09",
+          "vesselCallId": "VC-0003",
+          "remainingDischarge": 4,
+          "remainingLoad": 2,
+          "outstandingRequests": [
+            {
+              "id": "VC-0003|IMPORT|PG00000306",
+              "status": "ASSIGNED",
+              "reason": null,
+              "sts": "QC-09",
+              "type": "IMPORT",
+              "container": "PG00000306",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0003|IMPORT|PG00000316",
+              "status": "OPEN",
+              "reason": "STS_QUEUE_FULL",
+              "sts": "QC-09",
+              "type": "IMPORT",
+              "container": "PG00000316",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0003|IMPORT|PG00000326",
+              "status": "OPEN",
+              "reason": "STS_QUEUE_FULL",
+              "sts": "QC-09",
+              "type": "IMPORT",
+              "container": "PG00000326",
+              "age": 20.2
+            },
+            {
+              "id": "VC-0003|IMPORT|PG00000337",
+              "status": "OPEN",
+              "reason": "STS_QUEUE_FULL",
+              "sts": "QC-09",
+              "type": "IMPORT",
+              "container": "PG00000337",
+              "age": 20.2
+            }
+          ],
+          "assignedAGVs": [
+            "AGV-03"
+          ],
+          "approachingAGVs": [],
+          "waitingCause": "PARKING_DISPATCH_WAIT",
+          "waitingDuration": 8.866666666666863,
+          "waitCauses": {
+            "STS_UNSERVED_DEMAND": 11.366666666666667,
+            "PARKING_DISPATCH_WAIT": 8.799999999999997
+          },
+          "grossMovesPerHour": 0
+        }
+      ]
+    },
+    "eventCounts": {
+      "VESSEL_CALL_CREATED": 6,
+      "STS_DEMAND_ASSIGNED": 10,
+      "JOB_ASSIGNED": 8,
+      "TRUCK_ORDER_CREATED": 12,
+      "GATE_EXPORT_BOOKED": 3,
+      "RELAY_ASSIGNED": 2,
+      "VEHICLE_TRANSITION": 32,
+      "RELAY_BUFFER_STORED": 1
+    },
+    "control": {
+      "demandTotal": 36,
+      "demandOutstanding": 36,
+      "liveMissions": 10,
+      "missionStates": {
+        "RUNNING": 4,
+        "WAITING": 6
+      },
+      "blockingReasons": {
+        "PARKING_EXIT_CONFLICT": 6
+      },
+      "requests": [
+        {
+          "id": "VC-0001|IMPORT|PG00000006",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-01",
+          "type": "IMPORT",
+          "container": "PG00000006",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000016",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-01",
+          "type": "IMPORT",
+          "container": "PG00000016",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000027",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-01",
+          "type": "IMPORT",
+          "container": "PG00000027",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000036",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-01",
+          "type": "IMPORT",
+          "container": "PG00000036",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000043",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-02",
+          "type": "IMPORT",
+          "container": "PG00000043",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000055",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-02",
+          "type": "IMPORT",
+          "container": "PG00000055",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000065",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-02",
+          "type": "IMPORT",
+          "container": "PG00000065",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000073",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-02",
+          "type": "IMPORT",
+          "container": "PG00000073",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000080",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-03",
+          "type": "IMPORT",
+          "container": "PG00000080",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000091",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-03",
+          "type": "IMPORT",
+          "container": "PG00000091",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000100",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-03",
+          "type": "IMPORT",
+          "container": "PG00000100",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000109",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-03",
+          "type": "IMPORT",
+          "container": "PG00000109",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000117",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-04",
+          "type": "IMPORT",
+          "container": "PG00000117",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000129",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-04",
+          "type": "IMPORT",
+          "container": "PG00000129",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000140",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-04",
+          "type": "IMPORT",
+          "container": "PG00000140",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000150",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-04",
+          "type": "IMPORT",
+          "container": "PG00000150",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000158",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-05",
+          "type": "IMPORT",
+          "container": "PG00000158",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000169",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-05",
+          "type": "IMPORT",
+          "container": "PG00000169",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000179",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-05",
+          "type": "IMPORT",
+          "container": "PG00000179",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000190",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-05",
+          "type": "IMPORT",
+          "container": "PG00000190",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000198",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-06",
+          "type": "IMPORT",
+          "container": "PG00000198",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000208",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-06",
+          "type": "IMPORT",
+          "container": "PG00000208",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000218",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-06",
+          "type": "IMPORT",
+          "container": "PG00000218",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000226",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-06",
+          "type": "IMPORT",
+          "container": "PG00000226",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000233",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-07",
+          "type": "IMPORT",
+          "container": "PG00000233",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000243",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-07",
+          "type": "IMPORT",
+          "container": "PG00000243",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000254",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-07",
+          "type": "IMPORT",
+          "container": "PG00000254",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000263",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-07",
+          "type": "IMPORT",
+          "container": "PG00000263",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000269",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-08",
+          "type": "IMPORT",
+          "container": "PG00000269",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000278",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-08",
+          "type": "IMPORT",
+          "container": "PG00000278",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000289",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-08",
+          "type": "IMPORT",
+          "container": "PG00000289",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000300",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-08",
+          "type": "IMPORT",
+          "container": "PG00000300",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000306",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-09",
+          "type": "IMPORT",
+          "container": "PG00000306",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000316",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-09",
+          "type": "IMPORT",
+          "container": "PG00000316",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000326",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-09",
+          "type": "IMPORT",
+          "container": "PG00000326",
+          "age": 20.2
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000337",
+          "status": "OPEN",
+          "reason": "STS_QUEUE_FULL",
+          "sts": "QC-09",
+          "type": "IMPORT",
+          "container": "PG00000337",
+          "age": 20.2
+        }
+      ],
+      "missions": [
+        {
+          "id": "ORD-00001",
+          "requestKey": "VC-0001|IMPORT|PG00000006",
+          "sts": "QC-01",
+          "vehicle": "AGV-13",
+          "call": "VC-0001",
+          "type": "IMPORT",
+          "container": "PG00000006",
+          "state": "RUNNING",
+          "created": 0.2333333333333333,
+          "reason": null,
+          "started": 0.2333333333333333
+        },
+        {
+          "id": "ORD-00002",
+          "requestKey": "VC-0001|IMPORT|PG00000043",
+          "sts": "QC-02",
+          "vehicle": "AGV-14",
+          "call": "VC-0001",
+          "type": "IMPORT",
+          "container": "PG00000043",
+          "state": "RUNNING",
+          "created": 0.2333333333333333,
+          "reason": null,
+          "started": 11.466666666666637
+        },
+        {
+          "id": "ORD-00003",
+          "requestKey": "VC-0001|IMPORT|PG00000080",
+          "sts": "QC-03",
+          "vehicle": "AGV-15",
+          "call": "VC-0001",
+          "type": "IMPORT",
+          "container": "PG00000080",
+          "state": "WAITING",
+          "created": 0.2333333333333333,
+          "reason": "PARKING_EXIT_CONFLICT"
+        },
+        {
+          "id": "ORD-00004",
+          "requestKey": "VC-0002|IMPORT|PG00000117",
+          "sts": "QC-04",
+          "vehicle": "AGV-16",
+          "call": "VC-0002",
+          "type": "IMPORT",
+          "container": "PG00000117",
+          "state": "WAITING",
+          "created": 0.2333333333333333,
+          "reason": "PARKING_EXIT_CONFLICT"
+        },
+        {
+          "id": "ORD-00005",
+          "requestKey": "VC-0002|IMPORT|PG00000158",
+          "sts": "QC-05",
+          "vehicle": "AGV-01",
+          "call": "VC-0002",
+          "type": "IMPORT",
+          "container": "PG00000158",
+          "state": "RUNNING",
+          "created": 0.2333333333333333,
+          "reason": null,
+          "started": 0.2333333333333333
+        },
+        {
+          "id": "ORD-00006",
+          "requestKey": "VC-0002|IMPORT|PG00000198",
+          "sts": "QC-06",
+          "vehicle": "AGV-17",
+          "call": "VC-0002",
+          "type": "IMPORT",
+          "container": "PG00000198",
+          "state": "WAITING",
+          "created": 0.2333333333333333,
+          "reason": "PARKING_EXIT_CONFLICT"
+        },
+        {
+          "id": "ORD-00007",
+          "requestKey": "VC-0003|IMPORT|PG00000233",
+          "sts": "QC-07",
+          "vehicle": "AGV-02",
+          "call": "VC-0003",
+          "type": "IMPORT",
+          "container": "PG00000233",
+          "state": "RUNNING",
+          "created": 0.2333333333333333,
+          "reason": null,
+          "started": 13.799999999999962
+        },
+        {
+          "id": "ORD-00008",
+          "requestKey": "VC-0003|IMPORT|PG00000269",
+          "sts": "QC-08",
+          "vehicle": "AGV-18",
+          "call": "VC-0003",
+          "type": "IMPORT",
+          "container": "PG00000269",
+          "state": "WAITING",
+          "created": 0.2333333333333333,
+          "reason": "PARKING_EXIT_CONFLICT"
+        },
+        {
+          "id": "ORD-00023",
+          "requestKey": "VC-0003|IMPORT|PG00000306",
+          "sts": "QC-09",
+          "vehicle": "AGV-03",
+          "call": "VC-0003",
+          "type": "IMPORT",
+          "container": "PG00000306",
+          "state": "WAITING",
+          "created": 11.466666666666637,
+          "reason": "PARKING_EXIT_CONFLICT"
+        },
+        {
+          "id": "ORD-00024",
+          "requestKey": "VC-0001|IMPORT|PG00000016",
+          "sts": "QC-01",
+          "vehicle": "AGV-19",
+          "call": "VC-0001",
+          "type": "IMPORT",
+          "container": "PG00000016",
+          "state": "WAITING",
+          "created": 13.799999999999962,
+          "reason": "PARKING_EXIT_CONFLICT"
+        }
+      ],
+      "metrics": {
+        "requestsCreated": 36,
+        "assigned": 10,
+        "started": 4,
+        "prepositioned": 0,
+        "finished": 0,
+        "blockedReasons": {
+          "PARKING_EXIT_CONFLICT": 532
+        },
+        "lastDispatchAt": 20.100000000000158
+      }
+    },
+    "agvFleet": [
+      {
+        "id": "AGV-01",
+        "job": "JOB-00005",
+        "pendingOrder": null,
+        "container": "PG00000158",
+        "state": "TRAVEL",
+        "position": {
+          "x": -219,
+          "z": -24
+        },
+        "routeIndex": 12
+      },
+      {
+        "id": "AGV-02",
+        "job": "JOB-00007",
+        "pendingOrder": null,
+        "container": "PG00000233",
+        "state": "TRAVEL",
+        "position": {
+          "x": -426,
+          "z": -24
+        },
+        "routeIndex": 3
+      },
+      {
+        "id": "AGV-03",
+        "job": "JOB-00015",
+        "pendingOrder": "ORD-00023",
+        "container": "PG00000306",
+        "state": "STAGED",
+        "position": {
+          "x": -444,
+          "z": 31
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-04",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -444,
+          "z": 43
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-05",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -444,
+          "z": 55
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-06",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -444,
+          "z": 67
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-07",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -444,
+          "z": 79
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-08",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -444,
+          "z": 91
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-09",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -444,
+          "z": 103
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-10",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -444,
+          "z": 115
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-11",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -444,
+          "z": 127
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-12",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -444,
+          "z": 139
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-13",
+        "job": "JOB-00001",
+        "pendingOrder": null,
+        "container": "PG00000006",
+        "state": "TRAVEL",
+        "position": {
+          "x": -253,
+          "z": -23.5
+        },
+        "routeIndex": 13
+      },
+      {
+        "id": "AGV-14",
+        "job": "JOB-00002",
+        "pendingOrder": null,
+        "container": "PG00000043",
+        "state": "TRAVEL",
+        "position": {
+          "x": -355,
+          "z": -36
+        },
+        "routeIndex": 3
+      },
+      {
+        "id": "AGV-15",
+        "job": "JOB-00003",
+        "pendingOrder": "ORD-00003",
+        "container": "PG00000080",
+        "state": "STAGED",
+        "position": {
+          "x": -396,
+          "z": 31
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-16",
+        "job": "JOB-00004",
+        "pendingOrder": "ORD-00004",
+        "container": "PG00000117",
+        "state": "STAGED",
+        "position": {
+          "x": -396,
+          "z": 43
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-17",
+        "job": "JOB-00006",
+        "pendingOrder": "ORD-00006",
+        "container": "PG00000198",
+        "state": "STAGED",
+        "position": {
+          "x": -396,
+          "z": 55
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-18",
+        "job": "JOB-00008",
+        "pendingOrder": "ORD-00008",
+        "container": "PG00000269",
+        "state": "STAGED",
+        "position": {
+          "x": -396,
+          "z": 67
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-19",
+        "job": "JOB-00016",
+        "pendingOrder": "ORD-00024",
+        "container": "PG00000016",
+        "state": "STAGED",
+        "position": {
+          "x": -396,
+          "z": 79
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-20",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -396,
+          "z": 91
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-21",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -396,
+          "z": 103
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-22",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -396,
+          "z": 115
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-23",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -396,
+          "z": 127
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-24",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -396,
+          "z": 139
+        },
+        "routeIndex": 0
+      }
+    ],
+    "yardCranePositions": [
+      {
+        "id": "YC-A01",
+        "role": "agv",
+        "yard": 0,
+        "x": -86,
+        "range": {
+          "min": -221,
+          "max": 221
+        }
+      },
+      {
+        "id": "YC-A02",
+        "role": "agv",
+        "yard": 1,
+        "x": -163.6,
+        "range": {
+          "min": -221,
+          "max": 221
+        }
+      },
+      {
+        "id": "YC-A03",
+        "role": "agv",
+        "yard": 2,
+        "x": -86,
+        "range": {
+          "min": -221,
+          "max": 221
+        }
+      },
+      {
+        "id": "YC-A04",
+        "role": "agv",
+        "yard": 3,
+        "x": -86,
+        "range": {
+          "min": -221,
+          "max": 221
+        }
+      },
+      {
+        "id": "YC-A05",
+        "role": "agv",
+        "yard": 4,
+        "x": -90,
+        "range": {
+          "min": -221,
+          "max": 221
+        }
+      },
+      {
+        "id": "YC-A06",
+        "role": "agv",
+        "yard": 5,
+        "x": -86,
+        "range": {
+          "min": -221,
+          "max": 221
+        }
+      },
+      {
+        "id": "YC-T01",
+        "role": "truck",
+        "yard": 0,
+        "x": 82.23,
+        "range": {
+          "min": -221,
+          "max": 221
+        }
+      },
+      {
+        "id": "YC-T02",
+        "role": "truck",
+        "yard": 1,
+        "x": 90,
+        "range": {
+          "min": -221,
+          "max": 221
+        }
+      },
+      {
+        "id": "YC-T03",
+        "role": "truck",
+        "yard": 2,
+        "x": 86,
+        "range": {
+          "min": -221,
+          "max": 221
+        }
+      },
+      {
+        "id": "YC-T04",
+        "role": "truck",
+        "yard": 3,
+        "x": 125.18,
+        "range": {
+          "min": -221,
+          "max": 221
+        }
+      },
+      {
+        "id": "YC-T05",
+        "role": "truck",
+        "yard": 4,
+        "x": 25.5,
+        "range": {
+          "min": -221,
+          "max": 221
+        }
+      },
+      {
+        "id": "YC-T06",
+        "role": "truck",
+        "yard": 5,
+        "x": 158.98,
+        "range": {
+          "min": -221,
+          "max": 221
+        }
+      }
+    ],
+    "yardCraneIncidents": [],
+    "stuck": [],
+    "jobs": [
+      {
+        "id": "JOB-00001",
+        "stage": "TO_PICKUP",
+        "crane": "YC-A01",
+        "sts": "QC-01",
+        "vehicle": "AGV-13"
+      },
+      {
+        "id": "JOB-00002",
+        "stage": "TO_PICKUP",
+        "crane": "YC-A02",
+        "sts": "QC-02",
+        "vehicle": "AGV-14"
+      },
+      {
+        "id": "JOB-00003",
+        "stage": "PREPOSITION",
+        "vehicle": "AGV-15"
+      },
+      {
+        "id": "JOB-00004",
+        "stage": "PREPOSITION",
+        "vehicle": "AGV-16"
+      },
+      {
+        "id": "JOB-00005",
+        "stage": "TO_PICKUP",
+        "crane": "YC-A02",
+        "sts": "QC-05",
+        "vehicle": "AGV-01"
+      },
+      {
+        "id": "JOB-00006",
+        "stage": "PREPOSITION",
+        "vehicle": "AGV-17"
+      },
+      {
+        "id": "JOB-00007",
+        "stage": "TO_PICKUP",
+        "crane": "YC-A01",
+        "sts": "QC-07",
+        "vehicle": "AGV-02"
+      },
+      {
+        "id": "JOB-00008",
+        "stage": "PREPOSITION",
+        "vehicle": "AGV-18"
+      },
+      {
+        "id": "JOB-00009",
+        "stage": "PICK",
+        "crane": "YC-T01",
+        "vehicle": "TRK-01"
+      },
+      {
+        "id": "JOB-00010",
+        "stage": "PICK",
+        "crane": "YC-T04",
+        "vehicle": "TRK-02"
+      },
+      {
+        "id": "JOB-00011",
+        "stage": "TO_PICKUP",
+        "crane": "YC-T03",
+        "vehicle": "TRK-03"
+      },
+      {
+        "id": "JOB-00012",
+        "stage": "PICK",
+        "crane": "YC-T06",
+        "vehicle": "TRK-06"
+      },
+      {
+        "id": "JOB-00013",
+        "stage": "RELAY_TO_BUFFER",
+        "crane": "YC-A02",
+        "vehicle": "RTG-PAIR"
+      },
+      {
+        "id": "JOB-00014",
+        "stage": "RELAY_SOURCE_RETREAT",
+        "crane": "YC-T05",
+        "vehicle": "RTG-PAIR"
+      },
+      {
+        "id": "JOB-00015",
+        "stage": "PREPOSITION",
+        "vehicle": "AGV-03"
+      },
+      {
+        "id": "JOB-00016",
+        "stage": "PREPOSITION",
+        "vehicle": "AGV-19"
+      }
+    ]
+  }
+}

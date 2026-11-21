@@ -1,0 +1,61 @@
+{
+  "scenario": "complete-small-seed3",
+  "time": 900,
+  "imports": 9,
+  "exports": 6,
+  "departures": 3,
+  "stsGrossWaitingPct": 11.19,
+  "schedulerDelaySeconds": 11.4,
+  "stsWaitBreakdown": {
+    "AGV_IN_TRANSIT": 326.90000000000003,
+    "STS_UNSERVED_DEMAND": 11.4
+  },
+  "completedByCrane": [
+    {
+      "id": "QC-01",
+      "completed": 2
+    },
+    {
+      "id": "QC-02",
+      "completed": 2
+    },
+    {
+      "id": "QC-03",
+      "completed": 1
+    },
+    {
+      "id": "QC-04",
+      "completed": 2
+    },
+    {
+      "id": "QC-05",
+      "completed": 2
+    },
+    {
+      "id": "QC-06",
+      "completed": 1
+    },
+    {
+      "id": "QC-07",
+      "completed": 2
+    },
+    {
+      "id": "QC-08",
+      "completed": 2
+    },
+    {
+      "id": "QC-09",
+      "completed": 1
+    }
+  ],
+  "activeMissions": 0,
+  "blocking": {},
+  "unsafe": {
+    "routeFailures": 0,
+    "bodyOverlaps": 0,
+    "manifestViolations": 0,
+    "jobErrors": 0,
+    "railViolations": 0
+  }
+}
+ACCEPTANCE PASSED complete-small-seed3

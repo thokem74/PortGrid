@@ -1,0 +1,5668 @@
+{
+  "scenario": {
+    "name": "normal-load-first-service",
+    "seed": 3,
+    "discharge": 12,
+    "load": 8,
+    "seconds": 300,
+    "imports": 9,
+    "waitMax": 90
+  },
+  "wallSeconds": 35.188176631999994,
+  "samples": [
+    {
+      "kpi": {
+        "time": 0.1,
+        "sts": [
+          {
+            "id": "QC-01",
+            "berth": 1,
+            "completed": 0,
+            "grossMPH": 0,
+            "utilization": 0,
+            "avoidableIdle": 0,
+            "liftSeconds": 0,
+            "workingSeconds": 0,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {},
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-02",
+            "berth": 1,
+            "completed": 0,
+            "grossMPH": 0,
+            "utilization": 0,
+            "avoidableIdle": 0,
+            "liftSeconds": 0,
+            "workingSeconds": 0,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {},
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-03",
+            "berth": 1,
+            "completed": 0,
+            "grossMPH": 0,
+            "utilization": 0,
+            "avoidableIdle": 0,
+            "liftSeconds": 0,
+            "workingSeconds": 0,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {},
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-04",
+            "berth": 2,
+            "completed": 0,
+            "grossMPH": 0,
+            "utilization": 0,
+            "avoidableIdle": 0,
+            "liftSeconds": 0,
+            "workingSeconds": 0,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {},
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-05",
+            "berth": 2,
+            "completed": 0,
+            "grossMPH": 0,
+            "utilization": 0,
+            "avoidableIdle": 0,
+            "liftSeconds": 0,
+            "workingSeconds": 0,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {},
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-06",
+            "berth": 2,
+            "completed": 0,
+            "grossMPH": 0,
+            "utilization": 0,
+            "avoidableIdle": 0,
+            "liftSeconds": 0,
+            "workingSeconds": 0,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {},
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-07",
+            "berth": 3,
+            "completed": 0,
+            "grossMPH": 0,
+            "utilization": 0,
+            "avoidableIdle": 0,
+            "liftSeconds": 0,
+            "workingSeconds": 0,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {},
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-08",
+            "berth": 3,
+            "completed": 0,
+            "grossMPH": 0,
+            "utilization": 0,
+            "avoidableIdle": 0,
+            "liftSeconds": 0,
+            "workingSeconds": 0,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {},
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-09",
+            "berth": 3,
+            "completed": 0,
+            "grossMPH": 0,
+            "utilization": 0,
+            "avoidableIdle": 0,
+            "liftSeconds": 0,
+            "workingSeconds": 0,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {},
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          }
+        ],
+        "avoidableSTSSecs": 0,
+        "avoidableSTSPercent": 0,
+        "craneGrossMovesPerHour": 0,
+        "fleet": {
+          "productivePercent": 0,
+          "parkedAssignedPercent": 0,
+          "loadedTravelPercent": 0,
+          "emptyTravelPercent": 0,
+          "craneHandlingPercent": 0,
+          "queueWaitPercent": 0,
+          "trafficWaitPercent": 0,
+          "parkedUnassignedPercent": 0,
+          "observationVehicleSeconds": 1
+        },
+        "yard": [
+          {
+            "id": "YC-A01",
+            "yard": 1,
+            "side": "agv",
+            "completed": 0,
+            "throughput": 0,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-A02",
+            "yard": 2,
+            "side": "agv",
+            "completed": 0,
+            "throughput": 0,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-A03",
+            "yard": 3,
+            "side": "agv",
+            "completed": 0,
+            "throughput": 0,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-A04",
+            "yard": 4,
+            "side": "agv",
+            "completed": 0,
+            "throughput": 0,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-A05",
+            "yard": 5,
+            "side": "agv",
+            "completed": 0,
+            "throughput": 0,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-A06",
+            "yard": 6,
+            "side": "agv",
+            "completed": 0,
+            "throughput": 0,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-T01",
+            "yard": 1,
+            "side": "truck",
+            "completed": 0,
+            "throughput": 0,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-T02",
+            "yard": 2,
+            "side": "truck",
+            "completed": 0,
+            "throughput": 0,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-T03",
+            "yard": 3,
+            "side": "truck",
+            "completed": 0,
+            "throughput": 0,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-T04",
+            "yard": 4,
+            "side": "truck",
+            "completed": 0,
+            "throughput": 0,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-T05",
+            "yard": 5,
+            "side": "truck",
+            "completed": 0,
+            "throughput": 0,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-T06",
+            "yard": 6,
+            "side": "truck",
+            "completed": 0,
+            "throughput": 0,
+            "currentJob": "IDLE"
+          }
+        ],
+        "totalMoves": 0,
+        "importMoves": 0,
+        "exportMoves": 0,
+        "stsWaitBreakdown": {},
+        "schedulerDelaySeconds": 0,
+        "dualCycles": 0,
+        "agvEmptyShare": 0
+      },
+      "time": 0.1,
+      "imports": 0,
+      "exports": 0,
+      "departures": 0,
+      "control": {},
+      "cycles": [],
+      "stalled": []
+    },
+    {
+      "kpi": {
+        "time": 60.09999999999915,
+        "sts": [
+          {
+            "id": "QC-01",
+            "berth": 1,
+            "completed": 1,
+            "grossMPH": 60.23424428332398,
+            "utilization": 37.42331288343557,
+            "avoidableIdle": 37.400000000000034,
+            "liftSeconds": 22.36666666666668,
+            "workingSeconds": 59.76666666666673,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "AGV_IN_TRANSIT": 37.400000000000034
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-02",
+            "berth": 1,
+            "completed": 0,
+            "grossMPH": 0,
+            "utilization": 35.58282208588955,
+            "avoidableIdle": 38.500000000000036,
+            "liftSeconds": 21.26666666666668,
+            "workingSeconds": 59.76666666666673,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 11.366666666666667,
+              "AGV_IN_TRANSIT": 27.133333333333354
+            },
+            "state": "CRANE JOB JOB-00002"
+          },
+          {
+            "id": "QC-03",
+            "berth": 1,
+            "completed": 0,
+            "grossMPH": 0,
+            "utilization": 11.656441717791392,
+            "avoidableIdle": 52.800000000000054,
+            "liftSeconds": 6.966666666666663,
+            "workingSeconds": 59.76666666666673,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 23.466666666666683,
+              "AGV_IN_TRANSIT": 29.333333333333357
+            },
+            "state": "CRANE JOB JOB-00003"
+          },
+          {
+            "id": "QC-04",
+            "berth": 2,
+            "completed": 0,
+            "grossMPH": 0,
+            "utilization": 0,
+            "avoidableIdle": 59.76666666666673,
+            "liftSeconds": 0,
+            "workingSeconds": 59.76666666666673,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 36.30000000000003,
+              "AGV_IN_TRANSIT": 23.466666666666683
+            },
+            "state": "CRANE JOB JOB-00004"
+          },
+          {
+            "id": "QC-05",
+            "berth": 2,
+            "completed": 0,
+            "grossMPH": 0,
+            "utilization": 30.06134969325152,
+            "avoidableIdle": 41.80000000000004,
+            "liftSeconds": 17.966666666666676,
+            "workingSeconds": 59.76666666666673,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "AGV_IN_TRANSIT": 41.80000000000004
+            },
+            "state": "CRANE JOB JOB-00005"
+          },
+          {
+            "id": "QC-06",
+            "berth": 2,
+            "completed": 0,
+            "grossMPH": 0,
+            "utilization": 0,
+            "avoidableIdle": 59.76666666666673,
+            "liftSeconds": 0,
+            "workingSeconds": 59.76666666666673,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 49.50000000000005,
+              "AGV_IN_TRANSIT": 10.266666666666666
+            },
+            "state": "CRANE JOB JOB-00006"
+          },
+          {
+            "id": "QC-07",
+            "berth": 3,
+            "completed": 0,
+            "grossMPH": 0,
+            "utilization": 0,
+            "avoidableIdle": 59.76666666666673,
+            "liftSeconds": 0,
+            "workingSeconds": 59.76666666666673,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 13.56666666666667,
+              "AGV_IN_TRANSIT": 46.200000000000045
+            },
+            "state": "CRANE JOB JOB-00007"
+          },
+          {
+            "id": "QC-08",
+            "berth": 3,
+            "completed": 0,
+            "grossMPH": 0,
+            "utilization": 0,
+            "avoidableIdle": 59.76666666666673,
+            "liftSeconds": 0,
+            "workingSeconds": 59.76666666666673,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 59.76666666666673
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-09",
+            "berth": 3,
+            "completed": 0,
+            "grossMPH": 0,
+            "utilization": 0,
+            "avoidableIdle": 59.76666666666673,
+            "liftSeconds": 0,
+            "workingSeconds": 59.76666666666673,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "STS_UNSERVED_DEMAND": 11.366666666666667,
+              "PARKING_DISPATCH_WAIT": 16.866666666666674,
+              "AGV_IN_TRANSIT": 31.53333333333336
+            },
+            "state": "CRANE JOB JOB-00015"
+          }
+        ],
+        "avoidableSTSSecs": 469.3333333333337,
+        "avoidableSTSPercent": 87.25289706884797,
+        "craneGrossMovesPerHour": 6.69269380925822,
+        "fleet": {
+          "productivePercent": 22.955010224949064,
+          "parkedAssignedPercent": 20.015337423313014,
+          "loadedTravelPercent": 0.9969325153374227,
+          "emptyTravelPercent": 17.177914110429523,
+          "craneHandlingPercent": 4.780163599181998,
+          "queueWaitPercent": 0,
+          "trafficWaitPercent": 0.20449897750511226,
+          "parkedUnassignedPercent": 56.825153374233984,
+          "observationVehicleSeconds": 1434.4000000000015
+        },
+        "yard": [
+          {
+            "id": "YC-A01",
+            "yard": 1,
+            "side": "agv",
+            "completed": 0,
+            "throughput": 0,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-A02",
+            "yard": 2,
+            "side": "agv",
+            "completed": 0,
+            "throughput": 0,
+            "currentJob": "JOB-00013"
+          },
+          {
+            "id": "YC-A03",
+            "yard": 3,
+            "side": "agv",
+            "completed": 0,
+            "throughput": 0,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-A04",
+            "yard": 4,
+            "side": "agv",
+            "completed": 0,
+            "throughput": 0,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-A05",
+            "yard": 5,
+            "side": "agv",
+            "completed": 1,
+            "throughput": 59.90016638935193,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-A06",
+            "yard": 6,
+            "side": "agv",
+            "completed": 0,
+            "throughput": 0,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-T01",
+            "yard": 1,
+            "side": "truck",
+            "completed": 1,
+            "throughput": 59.90016638935193,
+            "currentJob": "JOB-00020"
+          },
+          {
+            "id": "YC-T02",
+            "yard": 2,
+            "side": "truck",
+            "completed": 0,
+            "throughput": 0,
+            "currentJob": "JOB-00013"
+          },
+          {
+            "id": "YC-T03",
+            "yard": 3,
+            "side": "truck",
+            "completed": 0,
+            "throughput": 0,
+            "currentJob": "JOB-00011"
+          },
+          {
+            "id": "YC-T04",
+            "yard": 4,
+            "side": "truck",
+            "completed": 1,
+            "throughput": 59.90016638935193,
+            "currentJob": "JOB-00019"
+          },
+          {
+            "id": "YC-T05",
+            "yard": 5,
+            "side": "truck",
+            "completed": 1,
+            "throughput": 59.90016638935193,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-T06",
+            "yard": 6,
+            "side": "truck",
+            "completed": 1,
+            "throughput": 59.90016638935193,
+            "currentJob": "JOB-00018"
+          }
+        ],
+        "totalMoves": 4,
+        "importMoves": 0,
+        "exportMoves": 0,
+        "stsWaitBreakdown": {
+          "AGV_IN_TRANSIT": 247.13333333333355,
+          "PARKING_DISPATCH_WAIT": 210.8333333333335,
+          "STS_UNSERVED_DEMAND": 11.366666666666667
+        },
+        "schedulerDelaySeconds": 222.2000000000002,
+        "dualCycles": 0,
+        "agvEmptyShare": 94.45859872611464
+      },
+      "time": 60.09999999999915,
+      "imports": 0,
+      "exports": 0,
+      "departures": 0,
+      "control": {
+        "RUNNING": 8,
+        "WAITING": 3,
+        "PREPOSITIONING": 1
+      },
+      "cycles": [],
+      "stalled": []
+    },
+    {
+      "kpi": {
+        "time": 120.09999999999575,
+        "sts": [
+          {
+            "id": "QC-01",
+            "berth": 1,
+            "completed": 1,
+            "grossMPH": 30.025020850709165,
+            "utilization": 28.134556574923792,
+            "avoidableIdle": 86.16666666666633,
+            "liftSeconds": 33.73333333333336,
+            "workingSeconds": 119.89999999999905,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "AGV_IN_TRANSIT": 64.16666666666673,
+              "STS_UNSERVED_DEMAND": 10.633333333333333,
+              "DOWNSTREAM_YARD_CAPACITY": 11.366666666666667
+            },
+            "state": "CRANE JOB JOB-00016"
+          },
+          {
+            "id": "QC-02",
+            "berth": 1,
+            "completed": 2,
+            "grossMPH": 60.05004170141833,
+            "utilization": 40.061162079511064,
+            "avoidableIdle": 71.86666666666659,
+            "liftSeconds": 48.03333333333338,
+            "workingSeconds": 119.89999999999905,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 11.366666666666667,
+              "AGV_IN_TRANSIT": 50.233333333333384,
+              "STS_UNSERVED_DEMAND": 6.233333333333331,
+              "DOWNSTREAM_YARD_CAPACITY": 4.033333333333333
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-03",
+            "berth": 1,
+            "completed": 1,
+            "grossMPH": 30.025020850709165,
+            "utilization": 18.348623853211166,
+            "avoidableIdle": 97.89999999999945,
+            "liftSeconds": 22.000000000000014,
+            "workingSeconds": 119.89999999999905,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 23.466666666666683,
+              "AGV_IN_TRANSIT": 57.56666666666673,
+              "STS_UNSERVED_DEMAND": 12.833333333333336,
+              "DOWNSTREAM_YARD_CAPACITY": 4.033333333333333
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-04",
+            "berth": 2,
+            "completed": 1,
+            "grossMPH": 30.025020850709165,
+            "utilization": 18.960244648318206,
+            "avoidableIdle": 97.16666666666613,
+            "liftSeconds": 22.73333333333335,
+            "workingSeconds": 119.89999999999905,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 36.30000000000003,
+              "AGV_IN_TRANSIT": 60.86666666666673
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-05",
+            "berth": 2,
+            "completed": 1,
+            "grossMPH": 30.025020850709165,
+            "utilization": 18.348623853211166,
+            "avoidableIdle": 97.89999999999945,
+            "liftSeconds": 22.000000000000014,
+            "workingSeconds": 119.89999999999905,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "AGV_IN_TRANSIT": 89.46666666666627,
+              "DOWNSTREAM_YARD_CAPACITY": 1.0999999999999999,
+              "STS_UNSERVED_DEMAND": 7.3333333333333295
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-06",
+            "berth": 2,
+            "completed": 1,
+            "grossMPH": 30.025020850709165,
+            "utilization": 18.654434250764687,
+            "avoidableIdle": 97.53333333333279,
+            "liftSeconds": 22.36666666666668,
+            "workingSeconds": 119.89999999999905,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 49.50000000000005,
+              "AGV_IN_TRANSIT": 48.03333333333338
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-07",
+            "berth": 3,
+            "completed": 1,
+            "grossMPH": 30.025020850709165,
+            "utilization": 18.654434250764687,
+            "avoidableIdle": 97.53333333333279,
+            "liftSeconds": 22.36666666666668,
+            "workingSeconds": 119.89999999999905,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 13.56666666666667,
+              "AGV_IN_TRANSIT": 83.96666666666637
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-08",
+            "berth": 3,
+            "completed": 0,
+            "grossMPH": 0,
+            "utilization": 0,
+            "avoidableIdle": 119.89999999999905,
+            "liftSeconds": 0,
+            "workingSeconds": 119.89999999999905,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 64.16666666666673,
+              "AGV_IN_TRANSIT": 55.73333333333339
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-09",
+            "berth": 3,
+            "completed": 1,
+            "grossMPH": 30.025020850709165,
+            "utilization": 18.654434250764687,
+            "avoidableIdle": 97.53333333333279,
+            "liftSeconds": 22.36666666666668,
+            "workingSeconds": 119.89999999999905,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "STS_UNSERVED_DEMAND": 11.366666666666667,
+              "PARKING_DISPATCH_WAIT": 16.866666666666674,
+              "AGV_IN_TRANSIT": 69.29999999999997
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          }
+        ],
+        "avoidableSTSSecs": 863.4999999999955,
+        "avoidableSTSPercent": 80.02038735983712,
+        "craneGrossMovesPerHour": 30.02502085070916,
+        "fleet": {
+          "productivePercent": 34.05963302752378,
+          "parkedAssignedPercent": 12.168705402650573,
+          "loadedTravelPercent": 6.7915392456677495,
+          "emptyTravelPercent": 17.265545361876,
+          "craneHandlingPercent": 10.00254841997977,
+          "queueWaitPercent": 0.0891946992864431,
+          "trafficWaitPercent": 0.28032619775739254,
+          "parkedUnassignedPercent": 53.40214067277875,
+          "observationVehicleSeconds": 2877.599999999977
+        },
+        "yard": [
+          {
+            "id": "YC-A01",
+            "yard": 1,
+            "side": "agv",
+            "completed": 1,
+            "throughput": 29.97502081598774,
+            "currentJob": "JOB-00029"
+          },
+          {
+            "id": "YC-A02",
+            "yard": 2,
+            "side": "agv",
+            "completed": 2,
+            "throughput": 59.95004163197548,
+            "currentJob": "JOB-00005"
+          },
+          {
+            "id": "YC-A03",
+            "yard": 3,
+            "side": "agv",
+            "completed": 0,
+            "throughput": 0,
+            "currentJob": "JOB-00003"
+          },
+          {
+            "id": "YC-A04",
+            "yard": 4,
+            "side": "agv",
+            "completed": 0,
+            "throughput": 0,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-A05",
+            "yard": 5,
+            "side": "agv",
+            "completed": 1,
+            "throughput": 29.97502081598774,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-A06",
+            "yard": 6,
+            "side": "agv",
+            "completed": 0,
+            "throughput": 0,
+            "currentJob": "JOB-00022"
+          },
+          {
+            "id": "YC-T01",
+            "yard": 1,
+            "side": "truck",
+            "completed": 2,
+            "throughput": 59.95004163197548,
+            "currentJob": "JOB-00029"
+          },
+          {
+            "id": "YC-T02",
+            "yard": 2,
+            "side": "truck",
+            "completed": 1,
+            "throughput": 29.97502081598774,
+            "currentJob": "JOB-00025"
+          },
+          {
+            "id": "YC-T03",
+            "yard": 3,
+            "side": "truck",
+            "completed": 1,
+            "throughput": 29.97502081598774,
+            "currentJob": "JOB-00023"
+          },
+          {
+            "id": "YC-T04",
+            "yard": 4,
+            "side": "truck",
+            "completed": 3,
+            "throughput": 89.92506244796321,
+            "currentJob": "JOB-00028"
+          },
+          {
+            "id": "YC-T05",
+            "yard": 5,
+            "side": "truck",
+            "completed": 1,
+            "throughput": 29.97502081598774,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-T06",
+            "yard": 6,
+            "side": "truck",
+            "completed": 2,
+            "throughput": 59.95004163197548,
+            "currentJob": "JOB-00022"
+          }
+        ],
+        "totalMoves": 12,
+        "importMoves": 2,
+        "exportMoves": 0,
+        "stsWaitBreakdown": {
+          "AGV_IN_TRANSIT": 579.3333333333329,
+          "STS_UNSERVED_DEMAND": 48.4,
+          "DOWNSTREAM_YARD_CAPACITY": 20.533333333333335,
+          "PARKING_DISPATCH_WAIT": 215.23333333333352
+        },
+        "schedulerDelaySeconds": 263.6333333333335,
+        "dualCycles": 0,
+        "agvEmptyShare": 71.7876021143681
+      },
+      "time": 120.09999999999575,
+      "imports": 2,
+      "exports": 0,
+      "departures": 0,
+      "control": {
+        "RUNNING": 8,
+        "PREPOSITIONING": 3,
+        "WAITING": 1
+      },
+      "cycles": [],
+      "stalled": [
+        {
+          "vehicleId": "TRK-06",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000926",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 348,
+            "z": 267
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T03",
+          "routeOrReservationId": "ORD-00026",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||1",
+          "lastProgress": 46.99999999999989,
+          "progressX": 348,
+          "progressZ": 267,
+          "signature": "||||1",
+          "recoveryAttempts": 0,
+          "waitingDuration": 72.33333333332922,
+          "lastWatchdog": 107.9666666666631
+        },
+        {
+          "vehicleId": "TRK-08",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00001723",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 139
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T04",
+          "routeOrReservationId": "ORD-00016",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 139,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 119.29999999999579,
+          "lastWatchdog": 60.43333333333246
+        },
+        {
+          "vehicleId": "TRK-09",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000923",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 175
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T03",
+          "routeOrReservationId": "ORD-00017",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 175,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 119.29999999999579,
+          "lastWatchdog": 60.43333333333246
+        },
+        {
+          "vehicleId": "TRK-10",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00001724",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 211
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T04",
+          "routeOrReservationId": "ORD-00018",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 211,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 119.29999999999579,
+          "lastWatchdog": 60.43333333333246
+        },
+        {
+          "vehicleId": "TRK-11",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000925",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 247
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T03",
+          "routeOrReservationId": "ORD-00019",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 247,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 119.29999999999579,
+          "lastWatchdog": 60.43333333333246
+        }
+      ]
+    },
+    {
+      "kpi": {
+        "time": 180.09999999999235,
+        "sts": [
+          {
+            "id": "QC-01",
+            "berth": 1,
+            "completed": 2,
+            "grossMPH": 39.99259396408073,
+            "utilization": 27.08757637474545,
+            "avoidableIdle": 131.26666666666563,
+            "liftSeconds": 48.766666666666715,
+            "workingSeconds": 180.0333333333333,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "AGV_IN_TRANSIT": 92.76666666666621,
+              "STS_UNSERVED_DEMAND": 10.633333333333333,
+              "DOWNSTREAM_YARD_CAPACITY": 27.86666666666669
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-02",
+            "berth": 1,
+            "completed": 3,
+            "grossMPH": 59.988890946121096,
+            "utilization": 39.51120162932787,
+            "avoidableIdle": 108.89999999999925,
+            "liftSeconds": 71.13333333333327,
+            "workingSeconds": 180.0333333333333,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 11.366666666666667,
+              "AGV_IN_TRANSIT": 76.63333333333317,
+              "STS_UNSERVED_DEMAND": 6.233333333333331,
+              "DOWNSTREAM_YARD_CAPACITY": 14.666666666666671
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-03",
+            "berth": 1,
+            "completed": 2,
+            "grossMPH": 39.99259396408073,
+            "utilization": 26.68024439918537,
+            "avoidableIdle": 131.99999999999898,
+            "liftSeconds": 48.03333333333338,
+            "workingSeconds": 180.0333333333333,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 23.466666666666683,
+              "AGV_IN_TRANSIT": 69.66666666666663,
+              "STS_UNSERVED_DEMAND": 18.333333333333343,
+              "DOWNSTREAM_YARD_CAPACITY": 4.3999999999999995,
+              "YARD_DELIVERY_CAPACITY_FULL": 16.13333333333334
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-04",
+            "berth": 2,
+            "completed": 1,
+            "grossMPH": 19.996296982040366,
+            "utilization": 12.627291242362537,
+            "avoidableIdle": 157.2999999999995,
+            "liftSeconds": 22.73333333333335,
+            "workingSeconds": 180.0333333333333,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 36.30000000000003,
+              "AGV_IN_TRANSIT": 86.16666666666633,
+              "DOWNSTREAM_YARD_CAPACITY": 34.833333333333364
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-05",
+            "berth": 2,
+            "completed": 1,
+            "grossMPH": 19.996296982040366,
+            "utilization": 18.737270875763766,
+            "avoidableIdle": 146.29999999999927,
+            "liftSeconds": 33.73333333333336,
+            "workingSeconds": 180.0333333333333,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "AGV_IN_TRANSIT": 132.36666666666565,
+              "DOWNSTREAM_YARD_CAPACITY": 1.0999999999999999,
+              "STS_UNSERVED_DEMAND": 12.833333333333336
+            },
+            "state": "CRANE JOB JOB-00030"
+          },
+          {
+            "id": "QC-06",
+            "berth": 2,
+            "completed": 1,
+            "grossMPH": 19.996296982040366,
+            "utilization": 12.423625254582497,
+            "avoidableIdle": 157.66666666666617,
+            "liftSeconds": 22.36666666666668,
+            "workingSeconds": 180.0333333333333,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 49.50000000000005,
+              "AGV_IN_TRANSIT": 98.63333333333277,
+              "DOWNSTREAM_YARD_CAPACITY": 9.533333333333331
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-07",
+            "berth": 3,
+            "completed": 1,
+            "grossMPH": 19.996296982040366,
+            "utilization": 12.423625254582497,
+            "avoidableIdle": 157.66666666666617,
+            "liftSeconds": 22.36666666666668,
+            "workingSeconds": 180.0333333333333,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 13.56666666666667,
+              "AGV_IN_TRANSIT": 115.13333333333247,
+              "DOWNSTREAM_YARD_CAPACITY": 28.96666666666669
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-08",
+            "berth": 3,
+            "completed": 1,
+            "grossMPH": 19.996296982040366,
+            "utilization": 11.608961303462332,
+            "avoidableIdle": 159.13333333333287,
+            "liftSeconds": 20.900000000000013,
+            "workingSeconds": 180.0333333333333,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 64.16666666666673,
+              "AGV_IN_TRANSIT": 94.96666666666617
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-09",
+            "berth": 3,
+            "completed": 1,
+            "grossMPH": 19.996296982040366,
+            "utilization": 12.423625254582497,
+            "avoidableIdle": 157.66666666666617,
+            "liftSeconds": 22.36666666666668,
+            "workingSeconds": 180.0333333333333,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "STS_UNSERVED_DEMAND": 11.366666666666667,
+              "PARKING_DISPATCH_WAIT": 16.866666666666674,
+              "AGV_IN_TRANSIT": 121.73333333333235,
+              "DOWNSTREAM_YARD_CAPACITY": 7.699999999999996
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          }
+        ],
+        "avoidableSTSSecs": 1307.8999999999937,
+        "avoidableSTSPercent": 80.71961982348911,
+        "craneGrossMovesPerHour": 28.883540085169418,
+        "fleet": {
+          "productivePercent": 36.583503054986494,
+          "parkedAssignedPercent": 8.104209097080869,
+          "loadedTravelPercent": 9.937202987101275,
+          "emptyTravelPercent": 15.045824847250735,
+          "craneHandlingPercent": 11.600475220638309,
+          "queueWaitPercent": 3.0380176510522507,
+          "trafficWaitPercent": 0.5685675492192809,
+          "parkedUnassignedPercent": 51.70570264765282,
+          "observationVehicleSeconds": 4320.799999999999
+        },
+        "yard": [
+          {
+            "id": "YC-A01",
+            "yard": 1,
+            "side": "agv",
+            "completed": 1,
+            "throughput": 19.988895058301793,
+            "currentJob": "JOB-00029"
+          },
+          {
+            "id": "YC-A02",
+            "yard": 2,
+            "side": "agv",
+            "completed": 3,
+            "throughput": 59.96668517490538,
+            "currentJob": "JOB-00015"
+          },
+          {
+            "id": "YC-A03",
+            "yard": 3,
+            "side": "agv",
+            "completed": 2,
+            "throughput": 39.977790116603586,
+            "currentJob": "JOB-00006"
+          },
+          {
+            "id": "YC-A04",
+            "yard": 4,
+            "side": "agv",
+            "completed": 0,
+            "throughput": 0,
+            "currentJob": "JOB-00032"
+          },
+          {
+            "id": "YC-A05",
+            "yard": 5,
+            "side": "agv",
+            "completed": 1,
+            "throughput": 19.988895058301793,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-A06",
+            "yard": 6,
+            "side": "agv",
+            "completed": 1,
+            "throughput": 19.988895058301793,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-T01",
+            "yard": 1,
+            "side": "truck",
+            "completed": 2,
+            "throughput": 39.977790116603586,
+            "currentJob": "JOB-00029"
+          },
+          {
+            "id": "YC-T02",
+            "yard": 2,
+            "side": "truck",
+            "completed": 2,
+            "throughput": 39.977790116603586,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-T03",
+            "yard": 3,
+            "side": "truck",
+            "completed": 2,
+            "throughput": 39.977790116603586,
+            "currentJob": "JOB-00033"
+          },
+          {
+            "id": "YC-T04",
+            "yard": 4,
+            "side": "truck",
+            "completed": 4,
+            "throughput": 79.95558023320717,
+            "currentJob": "JOB-00032"
+          },
+          {
+            "id": "YC-T05",
+            "yard": 5,
+            "side": "truck",
+            "completed": 1,
+            "throughput": 19.988895058301793,
+            "currentJob": "JOB-00034"
+          },
+          {
+            "id": "YC-T06",
+            "yard": 6,
+            "side": "truck",
+            "completed": 3,
+            "throughput": 59.96668517490538,
+            "currentJob": "IDLE"
+          }
+        ],
+        "totalMoves": 19,
+        "importMoves": 5,
+        "exportMoves": 0,
+        "stsWaitBreakdown": {
+          "AGV_IN_TRANSIT": 888.0666666666616,
+          "STS_UNSERVED_DEMAND": 59.400000000000006,
+          "DOWNSTREAM_YARD_CAPACITY": 129.06666666666672,
+          "PARKING_DISPATCH_WAIT": 215.23333333333352,
+          "YARD_DELIVERY_CAPACITY_FULL": 16.13333333333334
+        },
+        "schedulerDelaySeconds": 274.63333333333355,
+        "dualCycles": 0,
+        "agvEmptyShare": 60.25593586185631
+      },
+      "time": 180.09999999999235,
+      "imports": 5,
+      "exports": 0,
+      "departures": 0,
+      "control": {
+        "RUNNING": 9,
+        "WAITING": 2
+      },
+      "cycles": [],
+      "stalled": [
+        {
+          "vehicleId": "AGV-13",
+          "missionId": "ORD-00034",
+          "vesselCallId": "VC-0002",
+          "stsId": "QC-04",
+          "vehicleType": "agv",
+          "containerId": "PG00000126",
+          "toState": "PREPOSITION",
+          "active": true,
+          "position": {
+            "x": -44,
+            "z": -72
+          },
+          "destination": null,
+          "blockingReason": "YARD_DELIVERY_CAPACITY_FULL",
+          "blockingResourceId": null,
+          "routeOrReservationId": "ORD-00034",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "JOB-00026|PREPOSITION||1|1",
+          "lastProgress": 118.29999999999585,
+          "progressX": -44,
+          "progressZ": -72,
+          "signature": "JOB-00026|PREPOSITION||1|1",
+          "recoveryAttempts": 0,
+          "waitingDuration": 60.966666666663215,
+          "lastWatchdog": 179.26666666665906
+        },
+        {
+          "vehicleId": "TRK-06",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000926",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 348,
+            "z": 267
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T03",
+          "routeOrReservationId": "ORD-00026",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||1",
+          "lastProgress": 46.99999999999989,
+          "progressX": 348,
+          "progressZ": 267,
+          "signature": "||||1",
+          "recoveryAttempts": 0,
+          "waitingDuration": 132.26666666665918,
+          "lastWatchdog": 168.93333333332632
+        },
+        {
+          "vehicleId": "TRK-08",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00001723",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 139
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T04",
+          "routeOrReservationId": "ORD-00016",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 139,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 179.23333333332573,
+          "lastWatchdog": 121.39999999999567
+        },
+        {
+          "vehicleId": "TRK-09",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000923",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 175
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T03",
+          "routeOrReservationId": "ORD-00017",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 175,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 179.23333333332573,
+          "lastWatchdog": 121.39999999999567
+        },
+        {
+          "vehicleId": "TRK-10",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00001724",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 211
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T04",
+          "routeOrReservationId": "ORD-00018",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 211,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 179.23333333332573,
+          "lastWatchdog": 121.39999999999567
+        },
+        {
+          "vehicleId": "TRK-11",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000925",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 247
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T03",
+          "routeOrReservationId": "ORD-00019",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 247,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 179.23333333332573,
+          "lastWatchdog": 121.39999999999567
+        },
+        {
+          "vehicleId": "TRK-12",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000928",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 283
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T03",
+          "routeOrReservationId": "ORD-00032",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||1",
+          "lastProgress": 74.89999999999831,
+          "progressX": 367,
+          "progressZ": 283,
+          "signature": "||||1",
+          "recoveryAttempts": 0,
+          "waitingDuration": 104.36666666666075,
+          "lastWatchdog": 135.86666666666153
+        }
+      ]
+    },
+    {
+      "kpi": {
+        "time": 240.09999999998894,
+        "sts": [
+          {
+            "id": "QC-01",
+            "berth": 1,
+            "completed": 3,
+            "grossMPH": 45.03753127606316,
+            "utilization": 29.051987767583935,
+            "avoidableIdle": 170.1333333333331,
+            "liftSeconds": 69.66666666666663,
+            "workingSeconds": 239.8000000000012,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "AGV_IN_TRANSIT": 92.76666666666621,
+              "STS_UNSERVED_DEMAND": 10.633333333333333,
+              "DOWNSTREAM_YARD_CAPACITY": 66.73333333333335
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-02",
+            "berth": 1,
+            "completed": 3,
+            "grossMPH": 45.03753127606316,
+            "utilization": 31.957186544342278,
+            "avoidableIdle": 163.1666666666663,
+            "liftSeconds": 76.63333333333317,
+            "workingSeconds": 239.8000000000012,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 11.366666666666667,
+              "AGV_IN_TRANSIT": 120.63333333333237,
+              "STS_UNSERVED_DEMAND": 6.233333333333331,
+              "DOWNSTREAM_YARD_CAPACITY": 24.93333333333335
+            },
+            "state": "CRANE JOB JOB-00037"
+          },
+          {
+            "id": "QC-03",
+            "berth": 1,
+            "completed": 2,
+            "grossMPH": 30.025020850708774,
+            "utilization": 20.030581039755273,
+            "avoidableIdle": 191.76666666666688,
+            "liftSeconds": 48.03333333333338,
+            "workingSeconds": 239.8000000000012,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 23.466666666666683,
+              "AGV_IN_TRANSIT": 118.43333333333241,
+              "STS_UNSERVED_DEMAND": 18.333333333333343,
+              "DOWNSTREAM_YARD_CAPACITY": 15.400000000000006,
+              "YARD_DELIVERY_CAPACITY_FULL": 16.13333333333334
+            },
+            "state": "CRANE JOB JOB-00039"
+          },
+          {
+            "id": "QC-04",
+            "berth": 2,
+            "completed": 1,
+            "grossMPH": 15.012510425354387,
+            "utilization": 9.48012232415898,
+            "avoidableIdle": 217.0666666666674,
+            "liftSeconds": 22.73333333333335,
+            "workingSeconds": 239.8000000000012,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 36.30000000000003,
+              "AGV_IN_TRANSIT": 86.16666666666633,
+              "DOWNSTREAM_YARD_CAPACITY": 94.59999999999951
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-05",
+            "berth": 2,
+            "completed": 2,
+            "grossMPH": 30.025020850708774,
+            "utilization": 21.55963302752285,
+            "avoidableIdle": 188.10000000000014,
+            "liftSeconds": 51.70000000000005,
+            "workingSeconds": 239.8000000000012,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "AGV_IN_TRANSIT": 174.16666666666652,
+              "DOWNSTREAM_YARD_CAPACITY": 1.0999999999999999,
+              "STS_UNSERVED_DEMAND": 12.833333333333336
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-06",
+            "berth": 2,
+            "completed": 1,
+            "grossMPH": 15.012510425354387,
+            "utilization": 14.831804281345503,
+            "avoidableIdle": 204.2333333333338,
+            "liftSeconds": 35.5666666666667,
+            "workingSeconds": 239.8000000000012,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 49.50000000000005,
+              "AGV_IN_TRANSIT": 144.09999999999923,
+              "DOWNSTREAM_YARD_CAPACITY": 10.633333333333333
+            },
+            "state": "CRANE JOB JOB-00035"
+          },
+          {
+            "id": "QC-07",
+            "berth": 3,
+            "completed": 1,
+            "grossMPH": 15.012510425354387,
+            "utilization": 9.327217125382223,
+            "avoidableIdle": 217.43333333333408,
+            "liftSeconds": 22.36666666666668,
+            "workingSeconds": 239.8000000000012,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 13.56666666666667,
+              "AGV_IN_TRANSIT": 115.13333333333247,
+              "DOWNSTREAM_YARD_CAPACITY": 88.73333333333295
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-08",
+            "berth": 3,
+            "completed": 1,
+            "grossMPH": 15.012510425354387,
+            "utilization": 8.715596330275192,
+            "avoidableIdle": 218.90000000000077,
+            "liftSeconds": 20.900000000000013,
+            "workingSeconds": 239.8000000000012,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 64.16666666666673,
+              "AGV_IN_TRANSIT": 136.76666666666574,
+              "DOWNSTREAM_YARD_CAPACITY": 17.966666666666676
+            },
+            "state": "CRANE JOB JOB-00040"
+          },
+          {
+            "id": "QC-09",
+            "berth": 3,
+            "completed": 1,
+            "grossMPH": 15.012510425354387,
+            "utilization": 9.327217125382223,
+            "avoidableIdle": 217.43333333333408,
+            "liftSeconds": 22.36666666666668,
+            "workingSeconds": 239.8000000000012,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "STS_UNSERVED_DEMAND": 11.366666666666667,
+              "PARKING_DISPATCH_WAIT": 16.866666666666674,
+              "AGV_IN_TRANSIT": 121.73333333333235,
+              "DOWNSTREAM_YARD_CAPACITY": 67.46666666666667
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          }
+        ],
+        "avoidableSTSSecs": 1788.2333333333365,
+        "avoidableSTSPercent": 82.85762827047206,
+        "craneGrossMovesPerHour": 25.020850708923984,
+        "fleet": {
+          "productivePercent": 37.25152905198328,
+          "parkedAssignedPercent": 6.084352701325208,
+          "loadedTravelPercent": 10.059887869520988,
+          "emptyTravelPercent": 13.430173292558758,
+          "craneHandlingPercent": 13.761467889908408,
+          "queueWaitPercent": 3.344801223241577,
+          "trafficWaitPercent": 0.5606523955147784,
+          "parkedUnassignedPercent": 52.75866462793125,
+          "observationVehicleSeconds": 5755.200000000029
+        },
+        "yard": [
+          {
+            "id": "YC-A01",
+            "yard": 1,
+            "side": "agv",
+            "completed": 2,
+            "throughput": 29.98750520616548,
+            "currentJob": "JOB-00004"
+          },
+          {
+            "id": "YC-A02",
+            "yard": 2,
+            "side": "agv",
+            "completed": 6,
+            "throughput": 89.96251561849644,
+            "currentJob": "JOB-00027"
+          },
+          {
+            "id": "YC-A03",
+            "yard": 3,
+            "side": "agv",
+            "completed": 4,
+            "throughput": 59.97501041233096,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-A04",
+            "yard": 4,
+            "side": "agv",
+            "completed": 1,
+            "throughput": 14.99375260308274,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-A05",
+            "yard": 5,
+            "side": "agv",
+            "completed": 1,
+            "throughput": 14.99375260308274,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-A06",
+            "yard": 6,
+            "side": "agv",
+            "completed": 1,
+            "throughput": 14.99375260308274,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-T01",
+            "yard": 1,
+            "side": "truck",
+            "completed": 3,
+            "throughput": 44.98125780924822,
+            "currentJob": "JOB-00038"
+          },
+          {
+            "id": "YC-T02",
+            "yard": 2,
+            "side": "truck",
+            "completed": 2,
+            "throughput": 29.98750520616548,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-T03",
+            "yard": 3,
+            "side": "truck",
+            "completed": 3,
+            "throughput": 44.98125780924822,
+            "currentJob": "JOB-00041"
+          },
+          {
+            "id": "YC-T04",
+            "yard": 4,
+            "side": "truck",
+            "completed": 5,
+            "throughput": 74.9687630154137,
+            "currentJob": "JOB-00036"
+          },
+          {
+            "id": "YC-T05",
+            "yard": 5,
+            "side": "truck",
+            "completed": 2,
+            "throughput": 29.98750520616548,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-T06",
+            "yard": 6,
+            "side": "truck",
+            "completed": 3,
+            "throughput": 44.98125780924822,
+            "currentJob": "IDLE"
+          }
+        ],
+        "totalMoves": 28,
+        "importMoves": 10,
+        "exportMoves": 0,
+        "stsWaitBreakdown": {
+          "AGV_IN_TRANSIT": 1109.8999999999937,
+          "STS_UNSERVED_DEMAND": 59.400000000000006,
+          "DOWNSTREAM_YARD_CAPACITY": 387.5666666666659,
+          "PARKING_DISPATCH_WAIT": 215.23333333333352,
+          "YARD_DELIVERY_CAPACITY_FULL": 16.13333333333334
+        },
+        "schedulerDelaySeconds": 274.63333333333355,
+        "dualCycles": 0,
+        "agvEmptyShare": 57.175207994880125
+      },
+      "time": 240.09999999998894,
+      "imports": 10,
+      "exports": 0,
+      "departures": 0,
+      "control": {
+        "RUNNING": 9,
+        "WAITING": 1
+      },
+      "cycles": [],
+      "stalled": [
+        {
+          "vehicleId": "AGV-02",
+          "missionId": "ORD-00007",
+          "vesselCallId": "VC-0003",
+          "stsId": "QC-07",
+          "vehicleType": "agv",
+          "containerId": "PG00000228",
+          "toState": "PLACE",
+          "active": true,
+          "position": {
+            "x": -221,
+            "z": 88.5
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-A01",
+          "routeOrReservationId": "ORD-00007",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "PHYSICAL_HANDOVER",
+          "progressSignature": "JOB-00007|PLACE||3|0",
+          "lastProgress": 151.36666666666065,
+          "progressX": -221,
+          "progressZ": 88.5,
+          "signature": "JOB-00007|PLACE||3|0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 87.83333333332834,
+          "lastWatchdog": 212.33333333332385
+        },
+        {
+          "vehicleId": "AGV-13",
+          "missionId": "ORD-00034",
+          "vesselCallId": "VC-0002",
+          "stsId": "QC-04",
+          "vehicleType": "agv",
+          "containerId": "PG00000126",
+          "toState": "PREPOSITION",
+          "active": true,
+          "position": {
+            "x": -44,
+            "z": -72
+          },
+          "destination": null,
+          "blockingReason": "YARD_DELIVERY_CAPACITY_FULL",
+          "blockingResourceId": null,
+          "routeOrReservationId": "ORD-00034",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "JOB-00026|PREPOSITION||1|1",
+          "lastProgress": 118.29999999999585,
+          "progressX": -44,
+          "progressZ": -72,
+          "signature": "JOB-00026|PREPOSITION||1|1",
+          "recoveryAttempts": 0,
+          "waitingDuration": 120.89999999999314,
+          "lastWatchdog": 179.26666666665906
+        },
+        {
+          "vehicleId": "AGV-19",
+          "missionId": "ORD-00024",
+          "vesselCallId": "VC-0001",
+          "stsId": "QC-01",
+          "vehicleType": "agv",
+          "containerId": "PG00000014",
+          "toState": "PLACE",
+          "active": true,
+          "position": {
+            "x": -221,
+            "z": 81.5
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-A01",
+          "routeOrReservationId": "ORD-00024",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "PHYSICAL_HANDOVER",
+          "progressSignature": "JOB-00016|PLACE||3|0",
+          "lastProgress": 163.76666666665994,
+          "progressX": -221,
+          "progressZ": 81.5,
+          "signature": "JOB-00016|PLACE||3|0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 75.43333333332905,
+          "lastWatchdog": 224.73333333332315
+        },
+        {
+          "vehicleId": "TRK-06",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000926",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 348,
+            "z": 267
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T03",
+          "routeOrReservationId": "ORD-00026",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||1",
+          "lastProgress": 46.99999999999989,
+          "progressX": 348,
+          "progressZ": 267,
+          "signature": "||||1",
+          "recoveryAttempts": 0,
+          "waitingDuration": 192.1999999999891,
+          "lastWatchdog": 229.89999999998952
+        },
+        {
+          "vehicleId": "TRK-07",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00001728",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 103
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T04",
+          "routeOrReservationId": "ORD-00039",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||1",
+          "lastProgress": 128.6333333333286,
+          "progressX": 367,
+          "progressZ": 103,
+          "signature": "||||1",
+          "recoveryAttempts": 0,
+          "waitingDuration": 110.56666666666038,
+          "lastWatchdog": 189.5999999999918
+        },
+        {
+          "vehicleId": "TRK-08",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00001723",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 139
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T04",
+          "routeOrReservationId": "ORD-00016",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 139,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 239.16666666665566,
+          "lastWatchdog": 182.3666666666589
+        },
+        {
+          "vehicleId": "TRK-09",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000923",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 175
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T03",
+          "routeOrReservationId": "ORD-00017",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 175,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 239.16666666665566,
+          "lastWatchdog": 182.3666666666589
+        },
+        {
+          "vehicleId": "TRK-10",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00001724",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 211
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T04",
+          "routeOrReservationId": "ORD-00018",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 211,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 239.16666666665566,
+          "lastWatchdog": 182.3666666666589
+        },
+        {
+          "vehicleId": "TRK-11",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000925",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 247
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T03",
+          "routeOrReservationId": "ORD-00019",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 247,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 239.16666666665566,
+          "lastWatchdog": 182.3666666666589
+        },
+        {
+          "vehicleId": "TRK-12",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000928",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 283
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T03",
+          "routeOrReservationId": "ORD-00032",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||1",
+          "lastProgress": 74.89999999999831,
+          "progressX": 367,
+          "progressZ": 283,
+          "signature": "||||1",
+          "recoveryAttempts": 0,
+          "waitingDuration": 164.2999999999907,
+          "lastWatchdog": 196.83333333332473
+        }
+      ]
+    },
+    {
+      "kpi": {
+        "time": 300.000000000023,
+        "sts": [
+          {
+            "id": "QC-01",
+            "berth": 1,
+            "completed": 3,
+            "grossMPH": 36.008001778172634,
+            "utilization": 26.77261613691902,
+            "avoidableIdle": 219.63333333333412,
+            "liftSeconds": 80.29999999999977,
+            "workingSeconds": 299.9333333333358,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "AGV_IN_TRANSIT": 110.73333333333255,
+              "STS_UNSERVED_DEMAND": 10.633333333333333,
+              "DOWNSTREAM_YARD_CAPACITY": 98.26666666666611
+            },
+            "state": "CRANE JOB JOB-00048"
+          },
+          {
+            "id": "QC-02",
+            "berth": 1,
+            "completed": 4,
+            "grossMPH": 48.01066903756351,
+            "utilization": 32.39608801955946,
+            "avoidableIdle": 163.1666666666663,
+            "liftSeconds": 97.16666666666613,
+            "workingSeconds": 299.9333333333358,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 39.60000000000004,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 11.366666666666667,
+              "AGV_IN_TRANSIT": 120.63333333333237,
+              "STS_UNSERVED_DEMAND": 6.233333333333331,
+              "DOWNSTREAM_YARD_CAPACITY": 24.93333333333335
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-03",
+            "berth": 1,
+            "completed": 3,
+            "grossMPH": 36.008001778172634,
+            "utilization": 22.37163814180911,
+            "avoidableIdle": 232.8333333333344,
+            "liftSeconds": 67.10000000000001,
+            "workingSeconds": 299.9333333333358,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 23.466666666666683,
+              "AGV_IN_TRANSIT": 159.49999999999955,
+              "STS_UNSERVED_DEMAND": 18.333333333333343,
+              "DOWNSTREAM_YARD_CAPACITY": 15.400000000000006,
+              "YARD_DELIVERY_CAPACITY_FULL": 16.13333333333334
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-04",
+            "berth": 2,
+            "completed": 2,
+            "grossMPH": 24.005334518781755,
+            "utilization": 16.38141809290942,
+            "avoidableIdle": 250.80000000000143,
+            "liftSeconds": 49.13333333333338,
+            "workingSeconds": 299.9333333333358,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 36.30000000000003,
+              "AGV_IN_TRANSIT": 115.8666666666658,
+              "DOWNSTREAM_YARD_CAPACITY": 98.63333333333277
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-05",
+            "berth": 2,
+            "completed": 2,
+            "grossMPH": 24.005334518781755,
+            "utilization": 17.237163814180807,
+            "avoidableIdle": 248.2333333333347,
+            "liftSeconds": 51.70000000000005,
+            "workingSeconds": 299.9333333333358,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "AGV_IN_TRANSIT": 221.83333333333417,
+              "DOWNSTREAM_YARD_CAPACITY": 13.56666666666667,
+              "STS_UNSERVED_DEMAND": 12.833333333333336
+            },
+            "state": "CRANE JOB JOB-00046"
+          },
+          {
+            "id": "QC-06",
+            "berth": 2,
+            "completed": 2,
+            "grossMPH": 24.005334518781755,
+            "utilization": 17.481662591686916,
+            "avoidableIdle": 247.50000000000136,
+            "liftSeconds": 52.43333333333339,
+            "workingSeconds": 299.9333333333358,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 49.50000000000005,
+              "AGV_IN_TRANSIT": 187.3666666666668,
+              "DOWNSTREAM_YARD_CAPACITY": 10.633333333333333
+            },
+            "state": "WAITING FOR AGV / AVAILABLE WORK"
+          },
+          {
+            "id": "QC-07",
+            "berth": 3,
+            "completed": 1,
+            "grossMPH": 12.002667259390877,
+            "utilization": 7.457212713936375,
+            "avoidableIdle": 277.56666666666865,
+            "liftSeconds": 22.36666666666668,
+            "workingSeconds": 299.9333333333358,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 13.56666666666667,
+              "AGV_IN_TRANSIT": 156.56666666666615,
+              "DOWNSTREAM_YARD_CAPACITY": 107.43333333333261
+            },
+            "state": "CRANE JOB JOB-00047"
+          },
+          {
+            "id": "QC-08",
+            "berth": 3,
+            "completed": 1,
+            "grossMPH": 12.002667259390877,
+            "utilization": 12.5916870415647,
+            "avoidableIdle": 262.16666666666833,
+            "liftSeconds": 37.7666666666667,
+            "workingSeconds": 299.9333333333358,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "PARKING_DISPATCH_WAIT": 64.16666666666673,
+              "AGV_IN_TRANSIT": 180.0333333333333,
+              "DOWNSTREAM_YARD_CAPACITY": 17.966666666666676
+            },
+            "state": "CRANE JOB JOB-00040"
+          },
+          {
+            "id": "QC-09",
+            "berth": 3,
+            "completed": 1,
+            "grossMPH": 12.002667259390877,
+            "utilization": 10.146699266503592,
+            "avoidableIdle": 269.5000000000018,
+            "liftSeconds": 30.43333333333336,
+            "workingSeconds": 299.9333333333358,
+            "noWorkSeconds": 0,
+            "blockedSeconds": 0,
+            "unavailableSeconds": 0,
+            "waitCauses": {
+              "STS_UNSERVED_DEMAND": 11.366666666666667,
+              "PARKING_DISPATCH_WAIT": 16.866666666666674,
+              "AGV_IN_TRANSIT": 173.43333333333317,
+              "DOWNSTREAM_YARD_CAPACITY": 67.83333333333333
+            },
+            "state": "CRANE JOB JOB-00043"
+          }
+        ],
+        "avoidableSTSSecs": 2171.4000000000115,
+        "avoidableSTSPercent": 80.44009779951078,
+        "craneGrossMovesPerHour": 25.338964214269637,
+        "fleet": {
+          "productivePercent": 36.91931540342161,
+          "parkedAssignedPercent": 4.864506927465371,
+          "loadedTravelPercent": 9.759576202119058,
+          "emptyTravelPercent": 13.579869600652113,
+          "craneHandlingPercent": 13.579869600652113,
+          "queueWaitPercent": 2.730236348818238,
+          "trafficWaitPercent": 1.1613691931540207,
+          "parkedUnassignedPercent": 54.324572127143604,
+          "observationVehicleSeconds": 7198.400000000059
+        },
+        "yard": [
+          {
+            "id": "YC-A01",
+            "yard": 1,
+            "side": "agv",
+            "completed": 5,
+            "throughput": 59.999999999995396,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-A02",
+            "yard": 2,
+            "side": "agv",
+            "completed": 7,
+            "throughput": 83.99999999999355,
+            "currentJob": "JOB-00044"
+          },
+          {
+            "id": "YC-A03",
+            "yard": 3,
+            "side": "agv",
+            "completed": 5,
+            "throughput": 59.999999999995396,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-A04",
+            "yard": 4,
+            "side": "agv",
+            "completed": 1,
+            "throughput": 11.99999999999908,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-A05",
+            "yard": 5,
+            "side": "agv",
+            "completed": 1,
+            "throughput": 11.99999999999908,
+            "currentJob": "JOB-00042"
+          },
+          {
+            "id": "YC-A06",
+            "yard": 6,
+            "side": "agv",
+            "completed": 1,
+            "throughput": 11.99999999999908,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-T01",
+            "yard": 1,
+            "side": "truck",
+            "completed": 4,
+            "throughput": 47.99999999999632,
+            "currentJob": "IDLE"
+          },
+          {
+            "id": "YC-T02",
+            "yard": 2,
+            "side": "truck",
+            "completed": 2,
+            "throughput": 23.99999999999816,
+            "currentJob": "JOB-00044"
+          },
+          {
+            "id": "YC-T03",
+            "yard": 3,
+            "side": "truck",
+            "completed": 3,
+            "throughput": 35.999999999997236,
+            "currentJob": "JOB-00041"
+          },
+          {
+            "id": "YC-T04",
+            "yard": 4,
+            "side": "truck",
+            "completed": 7,
+            "throughput": 83.99999999999355,
+            "currentJob": "JOB-00049"
+          },
+          {
+            "id": "YC-T05",
+            "yard": 5,
+            "side": "truck",
+            "completed": 2,
+            "throughput": 23.99999999999816,
+            "currentJob": "JOB-00042"
+          },
+          {
+            "id": "YC-T06",
+            "yard": 6,
+            "side": "truck",
+            "completed": 3,
+            "throughput": 35.999999999997236,
+            "currentJob": "IDLE"
+          }
+        ],
+        "totalMoves": 36,
+        "importMoves": 15,
+        "exportMoves": 0,
+        "stsWaitBreakdown": {
+          "AGV_IN_TRANSIT": 1425.9666666666637,
+          "STS_UNSERVED_DEMAND": 59.400000000000006,
+          "DOWNSTREAM_YARD_CAPACITY": 454.6666666666648,
+          "PARKING_DISPATCH_WAIT": 215.23333333333352,
+          "YARD_DELIVERY_CAPACITY_FULL": 16.13333333333334
+        },
+        "schedulerDelaySeconds": 274.63333333333355,
+        "dualCycles": 0,
+        "agvEmptyShare": 58.20546370088418
+      },
+      "time": 300.000000000023,
+      "imports": 15,
+      "exports": 0,
+      "departures": 0,
+      "control": {
+        "RUNNING": 9
+      },
+      "cycles": [],
+      "stalled": [
+        {
+          "vehicleId": "TRK-05",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000932",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 348,
+            "z": 231
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T03",
+          "routeOrReservationId": "ORD-00046",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||2",
+          "lastProgress": 195.79999999999146,
+          "progressX": 348,
+          "progressZ": 231,
+          "signature": "||||2",
+          "recoveryAttempts": 0,
+          "waitingDuration": 103.93333333336469,
+          "lastWatchdog": 256.7333333333219
+        },
+        {
+          "vehicleId": "TRK-06",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000926",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 348,
+            "z": 267
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T03",
+          "routeOrReservationId": "ORD-00026",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||1",
+          "lastProgress": 46.99999999999989,
+          "progressX": 348,
+          "progressZ": 267,
+          "signature": "||||1",
+          "recoveryAttempts": 0,
+          "waitingDuration": 252.73333333335626,
+          "lastWatchdog": 290.733333333349
+        },
+        {
+          "vehicleId": "TRK-08",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00001723",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 139
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T04",
+          "routeOrReservationId": "ORD-00016",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 139,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 299.7000000000228,
+          "lastWatchdog": 243.3333333333221
+        },
+        {
+          "vehicleId": "TRK-09",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000923",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 175
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T03",
+          "routeOrReservationId": "ORD-00017",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 175,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 299.7000000000228,
+          "lastWatchdog": 243.3333333333221
+        },
+        {
+          "vehicleId": "TRK-10",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00001724",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 211
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T04",
+          "routeOrReservationId": "ORD-00018",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 211,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 299.7000000000228,
+          "lastWatchdog": 243.3333333333221
+        },
+        {
+          "vehicleId": "TRK-11",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000925",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 247
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T03",
+          "routeOrReservationId": "ORD-00019",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 247,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 299.7000000000228,
+          "lastWatchdog": 243.3333333333221
+        },
+        {
+          "vehicleId": "TRK-12",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000928",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 283
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T03",
+          "routeOrReservationId": "ORD-00032",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||1",
+          "lastProgress": 74.89999999999831,
+          "progressX": 367,
+          "progressZ": 283,
+          "signature": "||||1",
+          "recoveryAttempts": 0,
+          "waitingDuration": 224.8333333333578,
+          "lastWatchdog": 257.7333333333227
+        }
+      ]
+    }
+  ],
+  "last": {
+    "time": 300.000000000023,
+    "vesselCalls": 3,
+    "vesselsDeparted": 0,
+    "vesselsWaiting": 0,
+    "vesselsScheduled": 0,
+    "manifestViolations": 0,
+    "berths": [
+      {
+        "call": "VC-0001",
+        "state": "WORKING"
+      },
+      {
+        "call": "VC-0002",
+        "state": "WORKING"
+      },
+      {
+        "call": "VC-0003",
+        "state": "WORKING"
+      }
+    ],
+    "moves": 36,
+    "containers": 1732,
+    "agvs": 24,
+    "trucks": 12,
+    "busyAgvs": 9,
+    "currentCraneAgvJobs": 9,
+    "prepositioningAgvs": 0,
+    "stagedAgvs": 0,
+    "busyTrucks": 2,
+    "assignedAgvs": 9,
+    "assignedTrucks": 12,
+    "transportAssignedAgvs": 9,
+    "transportAssignedTrucks": 12,
+    "activeJobs": 13,
+    "parkedUnassignedAgvs": 15,
+    "blockedAgvs": 0,
+    "productiveAgvs": 9,
+    "actualMovingAgvs": 6,
+    "parkedWithAssignment": 0,
+    "queuedAtSTS": 0,
+    "pairedCycles": 0,
+    "directReassignments": 11,
+    "craneQueueAdmissions": 0,
+    "earlyPickupCraneReleases": 19,
+    "agvEmptyShare": 58.2,
+    "errors": [],
+    "blocked": 0,
+    "craneWaits": 0,
+    "craneRailViolations": 0,
+    "relaysCompleted": 5,
+    "rollingSectionGrants": 50442,
+    "rollingSectionReleases": 50442,
+    "quayLaneCount": 8,
+    "quayLanePitch": 12,
+    "yardLaneCount": 8,
+    "yardInboundLanes": 4,
+    "yardOutboundLanes": 4,
+    "yardLanePitch": 12,
+    "truckGatePhysicalYields": 0,
+    "agvConflictReroutes": 4,
+    "agvPhysicalYields": 0,
+    "independentIntersectionController": true,
+    "agvYardSlotsPerCrane": 4,
+    "truckYardSlotsPerCrane": 4,
+    "omnidirectionalPivotEnabled": true,
+    "pivotMode": "emergency-yield-only",
+    "pivotBlockedThresholdSeconds": 9,
+    "pivotStarted": 0,
+    "pivotCompleted": 0,
+    "pivotDenied": 0,
+    "pivotSeconds": 0,
+    "pivotingAgvs": 0,
+    "pivotSweepRadius": 8.604401297395047,
+    "loadedRouteWaitSeconds": 37.3,
+    "emptyRouteWaitSeconds": 44.1,
+    "loadedAgvsWaitingForRoute": 0,
+    "guidePathNodes": 820,
+    "gridRoutes": 53,
+    "gridRouteFailures": 0,
+    "minAgvClearance": 7,
+    "unsafeAgvProximity": 5999,
+    "unsafeAgvBodyOverlaps": 0,
+    "movingAgvs": 6,
+    "movingTrucks": 2,
+    "peakConcurrentAgvs": 10,
+    "peakConcurrentTrucks": 5,
+    "junctionYields": 0,
+    "completedByType": {
+      "IMPORT": 15,
+      "EXPORT": 0,
+      "TRUCK_DELIVERY": 9,
+      "TRUCK_PICKUP": 7,
+      "YARD_RELAY": 5
+    },
+    "reliability": {
+      "vehicles": [
+        {
+          "vehicleId": "AGV-01",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -444,
+            "z": 7
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||1",
+          "lastProgress": 151.36666666666065,
+          "progressX": -444,
+          "progressZ": 7,
+          "signature": "||||1",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-02",
+          "missionId": "ORD-00055",
+          "vesselCallId": "VC-0003",
+          "stsId": "QC-07",
+          "vehicleType": "agv",
+          "containerId": "PG00000240",
+          "toState": "TO_PICKUP",
+          "active": true,
+          "position": {
+            "x": 98,
+            "z": 12
+          },
+          "destination": {
+            "x": 99,
+            "z": 12
+          },
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": "AGV-02:5:35",
+          "trafficAuthorized": true,
+          "recoveryToken": 269.1999999999985,
+          "plannedNextAction": "FOLLOW_ROUTE",
+          "progressSignature": "JOB-00047|TO_PICKUP||1|1",
+          "lastProgress": 299.73333333335614,
+          "progressX": 98,
+          "progressZ": 12,
+          "signature": "JOB-00047|TO_PICKUP||1|1",
+          "recoveryAttempts": 1,
+          "waitingDuration": 0,
+          "lastWatchdog": 212.33333333332385,
+          "lastRecovery": 269.1999999999985
+        },
+        {
+          "vehicleId": "AGV-03",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -444,
+            "z": 31
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||1",
+          "lastProgress": 211.29999999999058,
+          "progressX": -444,
+          "progressZ": 31,
+          "signature": "||||1",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-04",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -444,
+            "z": 43
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||1",
+          "lastProgress": 184.43333333332544,
+          "progressX": -444,
+          "progressZ": 43,
+          "signature": "||||1",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-05",
+          "missionId": "ORD-00047",
+          "vesselCallId": "VC-0001",
+          "stsId": "QC-02",
+          "vehicleType": "agv",
+          "containerId": "PG00000071",
+          "toState": "TO_DROPOFF",
+          "active": true,
+          "position": {
+            "x": -304,
+            "z": 122.5
+          },
+          "destination": {
+            "x": -292,
+            "z": 122.5
+          },
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": "AGV-05:5:32",
+          "trafficAuthorized": true,
+          "recoveryToken": 272.33333333333434,
+          "plannedNextAction": "FOLLOW_ROUTE",
+          "progressSignature": "JOB-00037|TO_DROPOFF||3|1",
+          "lastProgress": 299.73333333335614,
+          "progressX": -304,
+          "progressZ": 122.5,
+          "signature": "JOB-00037|TO_DROPOFF||3|1",
+          "recoveryAttempts": 1,
+          "waitingDuration": 0,
+          "lastRecovery": 272.33333333333434
+        },
+        {
+          "vehicleId": "AGV-06",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -444,
+            "z": 67
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": -444,
+          "progressZ": 67,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-07",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -444,
+            "z": 79
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": -444,
+          "progressZ": 79,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-08",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -444,
+            "z": 91
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": -444,
+          "progressZ": 91,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-09",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -444,
+            "z": 103
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": -444,
+          "progressZ": 103,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-10",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -444,
+            "z": 115
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": -444,
+          "progressZ": 115,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-11",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -444,
+            "z": 127
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": -444,
+          "progressZ": 127,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-12",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -444,
+            "z": 139
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": -444,
+          "progressZ": 139,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-13",
+          "missionId": "ORD-00034",
+          "vesselCallId": "VC-0002",
+          "stsId": "QC-04",
+          "vehicleType": "agv",
+          "containerId": "PG00000126",
+          "toState": "TO_DROPOFF",
+          "active": true,
+          "position": {
+            "x": -282,
+            "z": -60
+          },
+          "destination": {
+            "x": -286,
+            "z": -60
+          },
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": "AGV-13:5:22",
+          "trafficAuthorized": true,
+          "recoveryToken": 283.60000000000997,
+          "plannedNextAction": "FOLLOW_ROUTE",
+          "progressSignature": "JOB-00026|TO_DROPOFF||3|1",
+          "lastProgress": 299.73333333335614,
+          "progressX": -282,
+          "progressZ": -60,
+          "signature": "JOB-00026|TO_DROPOFF||3|1",
+          "recoveryAttempts": 1,
+          "waitingDuration": 0,
+          "lastWatchdog": 240.23333333332226,
+          "lastRecovery": 283.60000000000997
+        },
+        {
+          "vehicleId": "AGV-14",
+          "missionId": "ORD-00052",
+          "vesselCallId": "VC-0003",
+          "stsId": "QC-09",
+          "vehicleType": "agv",
+          "containerId": "PG00000316",
+          "toState": "PICK",
+          "active": true,
+          "position": {
+            "x": 264,
+            "z": -36
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": "ORD-00052",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "PHYSICAL_HANDOVER",
+          "progressSignature": "JOB-00043|PICK|MOVE_ABOVE|1|2",
+          "lastProgress": 292.7333333333506,
+          "progressX": 264,
+          "progressZ": -36,
+          "signature": "JOB-00043|PICK|MOVE_ABOVE|1|2",
+          "recoveryAttempts": 0,
+          "waitingDuration": 7.000000000005571
+        },
+        {
+          "vehicleId": "AGV-15",
+          "missionId": "ORD-00054",
+          "vesselCallId": "VC-0002",
+          "stsId": "QC-05",
+          "vehicleType": "agv",
+          "containerId": "PG00000175",
+          "toState": "TO_PICKUP",
+          "active": true,
+          "position": {
+            "x": -134.5,
+            "z": -60
+          },
+          "destination": {
+            "x": -132,
+            "z": -60
+          },
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": "AGV-15:8:20",
+          "trafficAuthorized": true,
+          "recoveryToken": 279.96666666667375,
+          "plannedNextAction": "FOLLOW_ROUTE",
+          "progressSignature": "JOB-00046|TO_PICKUP||1|2",
+          "lastProgress": 299.73333333335614,
+          "progressX": -134.5,
+          "progressZ": -60,
+          "signature": "JOB-00046|TO_PICKUP||1|2",
+          "recoveryAttempts": 2,
+          "waitingDuration": 0,
+          "lastRecovery": 279.96666666667375
+        },
+        {
+          "vehicleId": "AGV-16",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -396,
+            "z": 43
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||1",
+          "lastProgress": 268.7333333333315,
+          "progressX": -396,
+          "progressZ": 43,
+          "signature": "||||1",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0,
+          "lastWatchdog": 207.16666666665748
+        },
+        {
+          "vehicleId": "AGV-17",
+          "missionId": "ORD-00045",
+          "vesselCallId": "VC-0002",
+          "stsId": "QC-06",
+          "vehicleType": "agv",
+          "containerId": "PG00000202",
+          "toState": "TO_DROPOFF",
+          "active": true,
+          "position": {
+            "x": -316,
+            "z": 84
+          },
+          "destination": {
+            "x": -316,
+            "z": 88.5
+          },
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": "AGV-17:4:47",
+          "trafficAuthorized": true,
+          "recoveryToken": null,
+          "plannedNextAction": "FOLLOW_ROUTE",
+          "progressSignature": "JOB-00035|TO_DROPOFF||3|1",
+          "lastProgress": 299.73333333335614,
+          "progressX": -316,
+          "progressZ": 84,
+          "signature": "JOB-00035|TO_DROPOFF||3|1",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-18",
+          "missionId": "ORD-00049",
+          "vesselCallId": "VC-0003",
+          "stsId": "QC-08",
+          "vehicleType": "agv",
+          "containerId": "PG00000280",
+          "toState": "PICK",
+          "active": true,
+          "position": {
+            "x": 220,
+            "z": -48
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": "ORD-00049",
+          "trafficAuthorized": false,
+          "recoveryToken": 172.03333333332614,
+          "plannedNextAction": "PHYSICAL_HANDOVER",
+          "progressSignature": "JOB-00040|PICK|MOVE_TARGET|2|1",
+          "lastProgress": 295.73333333335296,
+          "progressX": 220,
+          "progressZ": -48,
+          "signature": "JOB-00040|PICK|MOVE_TARGET|2|1",
+          "recoveryAttempts": 1,
+          "waitingDuration": 4.000000000003183,
+          "lastWatchdog": 61.46666666666574,
+          "lastRecovery": 172.03333333332614
+        },
+        {
+          "vehicleId": "AGV-19",
+          "missionId": "ORD-00057",
+          "vesselCallId": "VC-0001",
+          "stsId": "QC-01",
+          "vehicleType": "agv",
+          "containerId": "PG00000034",
+          "toState": "PICK",
+          "active": true,
+          "position": {
+            "x": -264,
+            "z": -72
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": "ORD-00057",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "PHYSICAL_HANDOVER",
+          "progressSignature": "JOB-00048|PICK|LOWER|1|1",
+          "lastProgress": 299.73333333335614,
+          "progressX": -264,
+          "progressZ": -72,
+          "signature": "JOB-00048|PICK|LOWER|1|1",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0,
+          "lastWatchdog": 224.73333333332315
+        },
+        {
+          "vehicleId": "AGV-20",
+          "missionId": "ORD-00048",
+          "vesselCallId": "VC-0001",
+          "stsId": "QC-03",
+          "vehicleType": "agv",
+          "containerId": "PG00000099",
+          "toState": "TO_DROPOFF",
+          "active": true,
+          "position": {
+            "x": -328,
+            "z": 167
+          },
+          "destination": {
+            "x": -328,
+            "z": 170.5
+          },
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": "AGV-20:4:39",
+          "trafficAuthorized": true,
+          "recoveryToken": null,
+          "plannedNextAction": "FOLLOW_ROUTE",
+          "progressSignature": "JOB-00039|TO_DROPOFF||3|1",
+          "lastProgress": 299.73333333335614,
+          "progressX": -328,
+          "progressZ": 167,
+          "signature": "JOB-00039|TO_DROPOFF||3|1",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-21",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -396,
+            "z": 103
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": -396,
+          "progressZ": 103,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-22",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -396,
+            "z": 115
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": -396,
+          "progressZ": 115,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-23",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -396,
+            "z": 127
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": -396,
+          "progressZ": 127,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "AGV-24",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "agv",
+          "containerId": null,
+          "toState": "PARKED",
+          "active": false,
+          "position": {
+            "x": -396,
+            "z": 139
+          },
+          "destination": null,
+          "blockingReason": null,
+          "blockingResourceId": null,
+          "routeOrReservationId": null,
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "AWAIT_DEMAND",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": -396,
+          "progressZ": 139,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0
+        },
+        {
+          "vehicleId": "TRK-01",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00001732",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 348,
+            "z": 87
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T04",
+          "routeOrReservationId": "ORD-00058",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||3",
+          "lastProgress": 285.733333333345,
+          "progressX": 348,
+          "progressZ": 87,
+          "signature": "||||3",
+          "recoveryAttempts": 0,
+          "waitingDuration": 14.000000000011141
+        },
+        {
+          "vehicleId": "TRK-02",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000700",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 348,
+            "z": 123
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T02",
+          "routeOrReservationId": "ORD-00056",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||3",
+          "lastProgress": 263.7333333333275,
+          "progressX": 348,
+          "progressZ": 123,
+          "signature": "||||3",
+          "recoveryAttempts": 0,
+          "waitingDuration": 36.00000000002865
+        },
+        {
+          "vehicleId": "TRK-03",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000920",
+          "toState": "TO_GATE",
+          "active": true,
+          "position": {
+            "x": 267.79999999999984,
+            "z": 149.5
+          },
+          "destination": {
+            "x": 317,
+            "z": 149.5
+          },
+          "blockingReason": "TRAFFIC_AUTHORIZATION",
+          "blockingResourceId": null,
+          "routeOrReservationId": "TRK-03:7:1",
+          "trafficAuthorized": true,
+          "recoveryToken": null,
+          "plannedNextAction": "FOLLOW_ROUTE",
+          "progressSignature": "JOB-00041|TO_GATE||3|2",
+          "lastProgress": 299.73333333335614,
+          "progressX": 267.79999999999984,
+          "progressZ": 149.5,
+          "signature": "JOB-00041|TO_GATE||3|2",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0,
+          "lastWatchdog": 228.86666666665624
+        },
+        {
+          "vehicleId": "TRK-04",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000929",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 348,
+            "z": 195
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T03",
+          "routeOrReservationId": "ORD-00059",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||3",
+          "lastProgress": 294.73333333335216,
+          "progressX": 348,
+          "progressZ": 195,
+          "signature": "||||3",
+          "recoveryAttempts": 0,
+          "waitingDuration": 5.000000000003979
+        },
+        {
+          "vehicleId": "TRK-05",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000932",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 348,
+            "z": 231
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T03",
+          "routeOrReservationId": "ORD-00046",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||2",
+          "lastProgress": 195.79999999999146,
+          "progressX": 348,
+          "progressZ": 231,
+          "signature": "||||2",
+          "recoveryAttempts": 0,
+          "waitingDuration": 103.93333333336469,
+          "lastWatchdog": 256.7333333333219
+        },
+        {
+          "vehicleId": "TRK-06",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000926",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 348,
+            "z": 267
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T03",
+          "routeOrReservationId": "ORD-00026",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||1",
+          "lastProgress": 46.99999999999989,
+          "progressX": 348,
+          "progressZ": 267,
+          "signature": "||||1",
+          "recoveryAttempts": 0,
+          "waitingDuration": 252.73333333335626,
+          "lastWatchdog": 290.733333333349
+        },
+        {
+          "vehicleId": "TRK-07",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00001728",
+          "toState": "TO_PICKUP",
+          "active": true,
+          "position": {
+            "x": 250.20000000000223,
+            "z": 183.5
+          },
+          "destination": {
+            "x": 221,
+            "z": 183.5
+          },
+          "blockingReason": "TRAFFIC_AUTHORIZATION",
+          "blockingResourceId": null,
+          "routeOrReservationId": "TRK-07:4:3",
+          "trafficAuthorized": true,
+          "recoveryToken": null,
+          "plannedNextAction": "FOLLOW_ROUTE",
+          "progressSignature": "JOB-00049|TO_PICKUP||2|1",
+          "lastProgress": 299.73333333335614,
+          "progressX": 250.20000000000223,
+          "progressZ": 183.5,
+          "signature": "JOB-00049|TO_PICKUP||2|1",
+          "recoveryAttempts": 0,
+          "waitingDuration": 0,
+          "lastWatchdog": 250.566666666655
+        },
+        {
+          "vehicleId": "TRK-08",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00001723",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 139
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T04",
+          "routeOrReservationId": "ORD-00016",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 139,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 299.7000000000228,
+          "lastWatchdog": 243.3333333333221
+        },
+        {
+          "vehicleId": "TRK-09",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000923",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 175
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T03",
+          "routeOrReservationId": "ORD-00017",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 175,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 299.7000000000228,
+          "lastWatchdog": 243.3333333333221
+        },
+        {
+          "vehicleId": "TRK-10",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00001724",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 211
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T04",
+          "routeOrReservationId": "ORD-00018",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 211,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 299.7000000000228,
+          "lastWatchdog": 243.3333333333221
+        },
+        {
+          "vehicleId": "TRK-11",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000925",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 247
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T03",
+          "routeOrReservationId": "ORD-00019",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||0",
+          "lastProgress": 0.03333333333333333,
+          "progressX": 367,
+          "progressZ": 247,
+          "signature": "||||0",
+          "recoveryAttempts": 0,
+          "waitingDuration": 299.7000000000228,
+          "lastWatchdog": 243.3333333333221
+        },
+        {
+          "vehicleId": "TRK-12",
+          "missionId": null,
+          "vesselCallId": null,
+          "stsId": null,
+          "vehicleType": "truck",
+          "containerId": "PG00000928",
+          "toState": "GATE",
+          "active": true,
+          "position": {
+            "x": 367,
+            "z": 283
+          },
+          "destination": null,
+          "blockingReason": "CRANE_BUSY",
+          "blockingResourceId": "YC-T03",
+          "routeOrReservationId": "ORD-00032",
+          "trafficAuthorized": false,
+          "recoveryToken": null,
+          "plannedNextAction": "RETRY_AUTHORIZATION",
+          "progressSignature": "||||1",
+          "lastProgress": 74.89999999999831,
+          "progressX": 367,
+          "progressZ": 283,
+          "signature": "||||1",
+          "recoveryAttempts": 0,
+          "waitingDuration": 224.8333333333578,
+          "lastWatchdog": 257.7333333333227
+        }
+      ],
+      "cycles": [],
+      "dependencies": [
+        {
+          "from": "TRK-01",
+          "to": "YC-T04"
+        },
+        {
+          "from": "TRK-02",
+          "to": "YC-T02"
+        },
+        {
+          "from": "TRK-04",
+          "to": "YC-T03"
+        },
+        {
+          "from": "TRK-05",
+          "to": "YC-T03"
+        },
+        {
+          "from": "TRK-06",
+          "to": "YC-T03"
+        },
+        {
+          "from": "TRK-08",
+          "to": "YC-T04"
+        },
+        {
+          "from": "TRK-09",
+          "to": "YC-T03"
+        },
+        {
+          "from": "TRK-10",
+          "to": "YC-T04"
+        },
+        {
+          "from": "TRK-11",
+          "to": "YC-T03"
+        },
+        {
+          "from": "TRK-12",
+          "to": "YC-T03"
+        },
+        {
+          "from": "QC-01",
+          "to": "AGV-19"
+        },
+        {
+          "from": "QC-05",
+          "to": "AGV-15"
+        },
+        {
+          "from": "QC-07",
+          "to": "AGV-02"
+        },
+        {
+          "from": "QC-08",
+          "to": "AGV-18"
+        },
+        {
+          "from": "QC-09",
+          "to": "AGV-14"
+        },
+        {
+          "from": "YC-T03",
+          "to": "TRK-03"
+        },
+        {
+          "from": "YC-T04",
+          "to": "TRK-07"
+        }
+      ],
+      "cargoDemands": [
+        {
+          "id": "VC-0001|IMPORT|PG00000034",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-01",
+          "type": "IMPORT",
+          "container": "PG00000034",
+          "age": 300,
+          "site": "ship",
+          "position": {
+            "x": -253.2,
+            "z": -146
+          },
+          "yard": null,
+          "order": "ORD-00057",
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000071",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-02",
+          "type": "IMPORT",
+          "container": "PG00000071",
+          "age": 300,
+          "site": "agv",
+          "position": {
+            "x": -300,
+            "z": 122.5
+          },
+          "yard": null,
+          "order": "ORD-00047",
+          "top": false,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000099",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-03",
+          "type": "IMPORT",
+          "container": "PG00000099",
+          "age": 300,
+          "site": "agv",
+          "position": {
+            "x": -327.5,
+            "z": 170.5
+          },
+          "yard": null,
+          "order": "ORD-00048",
+          "top": false,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000108",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-03",
+          "type": "IMPORT",
+          "container": "PG00000108",
+          "age": 300,
+          "site": "ship",
+          "position": {
+            "x": -165.2,
+            "z": -146
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000126",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-04",
+          "type": "IMPORT",
+          "container": "PG00000126",
+          "age": 300,
+          "site": "agv",
+          "position": {
+            "x": -286,
+            "z": -60
+          },
+          "yard": null,
+          "order": "ORD-00034",
+          "top": false,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000136",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-04",
+          "type": "IMPORT",
+          "container": "PG00000136",
+          "age": 300,
+          "site": "ship",
+          "position": {
+            "x": -44,
+            "z": -140
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000147",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-04",
+          "type": "IMPORT",
+          "container": "PG00000147",
+          "age": 300,
+          "site": "ship",
+          "position": {
+            "x": -33.2,
+            "z": -146
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000175",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-05",
+          "type": "IMPORT",
+          "container": "PG00000175",
+          "age": 300,
+          "site": "ship",
+          "position": {
+            "x": 0,
+            "z": -140
+          },
+          "yard": null,
+          "order": "ORD-00054",
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000184",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-05",
+          "type": "IMPORT",
+          "container": "PG00000184",
+          "age": 300,
+          "site": "ship",
+          "position": {
+            "x": 10.8,
+            "z": -146
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000202",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-06",
+          "type": "IMPORT",
+          "container": "PG00000202",
+          "age": 300,
+          "site": "agv",
+          "position": {
+            "x": -316,
+            "z": 88
+          },
+          "yard": null,
+          "order": "ORD-00045",
+          "top": false,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000211",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-06",
+          "type": "IMPORT",
+          "container": "PG00000211",
+          "age": 300,
+          "site": "ship",
+          "position": {
+            "x": 44,
+            "z": -140
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000221",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-06",
+          "type": "IMPORT",
+          "container": "PG00000221",
+          "age": 300,
+          "site": "ship",
+          "position": {
+            "x": 54.8,
+            "z": -146
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000240",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-07",
+          "type": "IMPORT",
+          "container": "PG00000240",
+          "age": 300,
+          "site": "ship",
+          "position": {
+            "x": 176,
+            "z": -164
+          },
+          "yard": null,
+          "order": "ORD-00055",
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000248",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-07",
+          "type": "IMPORT",
+          "container": "PG00000248",
+          "age": 300,
+          "site": "ship",
+          "position": {
+            "x": 176,
+            "z": -140
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000260",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-07",
+          "type": "IMPORT",
+          "container": "PG00000260",
+          "age": 300,
+          "site": "ship",
+          "position": {
+            "x": 186.8,
+            "z": -146
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000280",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-08",
+          "type": "IMPORT",
+          "container": "PG00000280",
+          "age": 300,
+          "site": "sts",
+          "position": {
+            "x": 220,
+            "z": -118.09999999999874
+          },
+          "yard": null,
+          "order": "ORD-00049",
+          "top": false,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000289",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-08",
+          "type": "IMPORT",
+          "container": "PG00000289",
+          "age": 300,
+          "site": "ship",
+          "position": {
+            "x": 220,
+            "z": -140
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000299",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-08",
+          "type": "IMPORT",
+          "container": "PG00000299",
+          "age": 300,
+          "site": "ship",
+          "position": {
+            "x": 230.8,
+            "z": -146
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000316",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-09",
+          "type": "IMPORT",
+          "container": "PG00000316",
+          "age": 300,
+          "site": "ship",
+          "position": {
+            "x": 264,
+            "z": -164
+          },
+          "yard": null,
+          "order": "ORD-00052",
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000326",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-09",
+          "type": "IMPORT",
+          "container": "PG00000326",
+          "age": 300,
+          "site": "ship",
+          "position": {
+            "x": 264,
+            "z": -140
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000336",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-09",
+          "type": "IMPORT",
+          "container": "PG00000336",
+          "age": 300,
+          "site": "ship",
+          "position": {
+            "x": 274.8,
+            "z": -146
+          },
+          "yard": null,
+          "order": null,
+          "top": true,
+          "agvReachable": false
+        }
+      ],
+      "sts": [
+        {
+          "stsId": "QC-01",
+          "vesselCallId": "VC-0001",
+          "remainingDischarge": 1,
+          "remainingLoad": 3,
+          "outstandingRequests": [
+            {
+              "id": "VC-0001|IMPORT|PG00000034",
+              "status": "ASSIGNED",
+              "reason": null,
+              "sts": "QC-01",
+              "type": "IMPORT",
+              "container": "PG00000034",
+              "age": 300
+            }
+          ],
+          "assignedAGVs": [
+            "AGV-19"
+          ],
+          "approachingAGVs": [],
+          "waitingCause": null,
+          "waitingDuration": 0,
+          "waitCauses": {
+            "AGV_IN_TRANSIT": 110.73333333333255,
+            "STS_UNSERVED_DEMAND": 10.633333333333333,
+            "DOWNSTREAM_YARD_CAPACITY": 98.26666666666611
+          },
+          "grossMovesPerHour": 36.008001778172634
+        },
+        {
+          "stsId": "QC-02",
+          "vesselCallId": "VC-0001",
+          "remainingDischarge": 1,
+          "remainingLoad": 3,
+          "outstandingRequests": [
+            {
+              "id": "VC-0001|IMPORT|PG00000071",
+              "status": "ASSIGNED",
+              "reason": null,
+              "sts": "QC-02",
+              "type": "IMPORT",
+              "container": "PG00000071",
+              "age": 300
+            }
+          ],
+          "assignedAGVs": [
+            "AGV-05"
+          ],
+          "approachingAGVs": [
+            "AGV-05"
+          ],
+          "waitingCause": null,
+          "waitingDuration": 0,
+          "waitCauses": {
+            "PARKING_DISPATCH_WAIT": 11.366666666666667,
+            "AGV_IN_TRANSIT": 120.63333333333237,
+            "STS_UNSERVED_DEMAND": 6.233333333333331,
+            "DOWNSTREAM_YARD_CAPACITY": 24.93333333333335
+          },
+          "grossMovesPerHour": 48.01066903756351
+        },
+        {
+          "stsId": "QC-03",
+          "vesselCallId": "VC-0001",
+          "remainingDischarge": 2,
+          "remainingLoad": 2,
+          "outstandingRequests": [
+            {
+              "id": "VC-0001|IMPORT|PG00000099",
+              "status": "ASSIGNED",
+              "reason": null,
+              "sts": "QC-03",
+              "type": "IMPORT",
+              "container": "PG00000099",
+              "age": 300
+            },
+            {
+              "id": "VC-0001|IMPORT|PG00000108",
+              "status": "OPEN",
+              "reason": "NO_SAFE_YARD_DESTINATION",
+              "sts": "QC-03",
+              "type": "IMPORT",
+              "container": "PG00000108",
+              "age": 300
+            }
+          ],
+          "assignedAGVs": [
+            "AGV-20"
+          ],
+          "approachingAGVs": [
+            "AGV-20"
+          ],
+          "waitingCause": "AGV_IN_TRANSIT",
+          "waitingDuration": 30.866666666690946,
+          "waitCauses": {
+            "PARKING_DISPATCH_WAIT": 23.466666666666683,
+            "AGV_IN_TRANSIT": 159.49999999999955,
+            "STS_UNSERVED_DEMAND": 18.333333333333343,
+            "DOWNSTREAM_YARD_CAPACITY": 15.400000000000006,
+            "YARD_DELIVERY_CAPACITY_FULL": 16.13333333333334
+          },
+          "grossMovesPerHour": 36.008001778172634
+        },
+        {
+          "stsId": "QC-04",
+          "vesselCallId": "VC-0002",
+          "remainingDischarge": 3,
+          "remainingLoad": 3,
+          "outstandingRequests": [
+            {
+              "id": "VC-0002|IMPORT|PG00000126",
+              "status": "ASSIGNED",
+              "reason": null,
+              "sts": "QC-04",
+              "type": "IMPORT",
+              "container": "PG00000126",
+              "age": 300
+            },
+            {
+              "id": "VC-0002|IMPORT|PG00000136",
+              "status": "OPEN",
+              "reason": "NO_SAFE_YARD_DESTINATION",
+              "sts": "QC-04",
+              "type": "IMPORT",
+              "container": "PG00000136",
+              "age": 300
+            },
+            {
+              "id": "VC-0002|IMPORT|PG00000147",
+              "status": "OPEN",
+              "reason": "NO_SAFE_YARD_DESTINATION",
+              "sts": "QC-04",
+              "type": "IMPORT",
+              "container": "PG00000147",
+              "age": 300
+            }
+          ],
+          "assignedAGVs": [
+            "AGV-13"
+          ],
+          "approachingAGVs": [
+            "AGV-13"
+          ],
+          "waitingCause": "AGV_IN_TRANSIT",
+          "waitingDuration": 29.76666666669007,
+          "waitCauses": {
+            "PARKING_DISPATCH_WAIT": 36.30000000000003,
+            "AGV_IN_TRANSIT": 115.8666666666658,
+            "DOWNSTREAM_YARD_CAPACITY": 98.63333333333277
+          },
+          "grossMovesPerHour": 24.005334518781755
+        },
+        {
+          "stsId": "QC-05",
+          "vesselCallId": "VC-0002",
+          "remainingDischarge": 2,
+          "remainingLoad": 3,
+          "outstandingRequests": [
+            {
+              "id": "VC-0002|IMPORT|PG00000175",
+              "status": "ASSIGNED",
+              "reason": null,
+              "sts": "QC-05",
+              "type": "IMPORT",
+              "container": "PG00000175",
+              "age": 300
+            },
+            {
+              "id": "VC-0002|IMPORT|PG00000184",
+              "status": "OPEN",
+              "reason": "NO_SAFE_YARD_DESTINATION",
+              "sts": "QC-05",
+              "type": "IMPORT",
+              "container": "PG00000184",
+              "age": 300
+            }
+          ],
+          "assignedAGVs": [
+            "AGV-15"
+          ],
+          "approachingAGVs": [
+            "AGV-15"
+          ],
+          "waitingCause": "AGV_IN_TRANSIT",
+          "waitingDuration": 44.80000000003497,
+          "waitCauses": {
+            "AGV_IN_TRANSIT": 221.83333333333417,
+            "DOWNSTREAM_YARD_CAPACITY": 13.56666666666667,
+            "STS_UNSERVED_DEMAND": 12.833333333333336
+          },
+          "grossMovesPerHour": 24.005334518781755
+        },
+        {
+          "stsId": "QC-06",
+          "vesselCallId": "VC-0002",
+          "remainingDischarge": 3,
+          "remainingLoad": 2,
+          "outstandingRequests": [
+            {
+              "id": "VC-0002|IMPORT|PG00000202",
+              "status": "ASSIGNED",
+              "reason": null,
+              "sts": "QC-06",
+              "type": "IMPORT",
+              "container": "PG00000202",
+              "age": 300
+            },
+            {
+              "id": "VC-0002|IMPORT|PG00000211",
+              "status": "OPEN",
+              "reason": "NO_SAFE_YARD_DESTINATION",
+              "sts": "QC-06",
+              "type": "IMPORT",
+              "container": "PG00000211",
+              "age": 300
+            },
+            {
+              "id": "VC-0002|IMPORT|PG00000221",
+              "status": "OPEN",
+              "reason": "NO_SAFE_YARD_DESTINATION",
+              "sts": "QC-06",
+              "type": "IMPORT",
+              "container": "PG00000221",
+              "age": 300
+            }
+          ],
+          "assignedAGVs": [
+            "AGV-17"
+          ],
+          "approachingAGVs": [
+            "AGV-17"
+          ],
+          "waitingCause": "AGV_IN_TRANSIT",
+          "waitingDuration": 43.333333333367534,
+          "waitCauses": {
+            "PARKING_DISPATCH_WAIT": 49.50000000000005,
+            "AGV_IN_TRANSIT": 187.3666666666668,
+            "DOWNSTREAM_YARD_CAPACITY": 10.633333333333333
+          },
+          "grossMovesPerHour": 24.005334518781755
+        },
+        {
+          "stsId": "QC-07",
+          "vesselCallId": "VC-0003",
+          "remainingDischarge": 3,
+          "remainingLoad": 3,
+          "outstandingRequests": [
+            {
+              "id": "VC-0003|IMPORT|PG00000240",
+              "status": "ASSIGNED",
+              "reason": null,
+              "sts": "QC-07",
+              "type": "IMPORT",
+              "container": "PG00000240",
+              "age": 300
+            },
+            {
+              "id": "VC-0003|IMPORT|PG00000248",
+              "status": "OPEN",
+              "reason": "NO_SAFE_YARD_DESTINATION",
+              "sts": "QC-07",
+              "type": "IMPORT",
+              "container": "PG00000248",
+              "age": 300
+            },
+            {
+              "id": "VC-0003|IMPORT|PG00000260",
+              "status": "OPEN",
+              "reason": "NO_SAFE_YARD_DESTINATION",
+              "sts": "QC-07",
+              "type": "IMPORT",
+              "container": "PG00000260",
+              "age": 300
+            }
+          ],
+          "assignedAGVs": [
+            "AGV-02"
+          ],
+          "approachingAGVs": [
+            "AGV-02"
+          ],
+          "waitingCause": "AGV_IN_TRANSIT",
+          "waitingDuration": 41.50000000003274,
+          "waitCauses": {
+            "PARKING_DISPATCH_WAIT": 13.56666666666667,
+            "AGV_IN_TRANSIT": 156.56666666666615,
+            "DOWNSTREAM_YARD_CAPACITY": 107.43333333333261
+          },
+          "grossMovesPerHour": 12.002667259390877
+        },
+        {
+          "stsId": "QC-08",
+          "vesselCallId": "VC-0003",
+          "remainingDischarge": 3,
+          "remainingLoad": 3,
+          "outstandingRequests": [
+            {
+              "id": "VC-0003|IMPORT|PG00000280",
+              "status": "ASSIGNED",
+              "reason": null,
+              "sts": "QC-08",
+              "type": "IMPORT",
+              "container": "PG00000280",
+              "age": 300
+            },
+            {
+              "id": "VC-0003|IMPORT|PG00000289",
+              "status": "OPEN",
+              "reason": "NO_SAFE_YARD_DESTINATION",
+              "sts": "QC-08",
+              "type": "IMPORT",
+              "container": "PG00000289",
+              "age": 300
+            },
+            {
+              "id": "VC-0003|IMPORT|PG00000299",
+              "status": "OPEN",
+              "reason": "NO_SAFE_YARD_DESTINATION",
+              "sts": "QC-08",
+              "type": "IMPORT",
+              "container": "PG00000299",
+              "age": 300
+            }
+          ],
+          "assignedAGVs": [
+            "AGV-18"
+          ],
+          "approachingAGVs": [],
+          "waitingCause": null,
+          "waitingDuration": 0,
+          "waitCauses": {
+            "PARKING_DISPATCH_WAIT": 64.16666666666673,
+            "AGV_IN_TRANSIT": 180.0333333333333,
+            "DOWNSTREAM_YARD_CAPACITY": 17.966666666666676
+          },
+          "grossMovesPerHour": 12.002667259390877
+        },
+        {
+          "stsId": "QC-09",
+          "vesselCallId": "VC-0003",
+          "remainingDischarge": 3,
+          "remainingLoad": 2,
+          "outstandingRequests": [
+            {
+              "id": "VC-0003|IMPORT|PG00000316",
+              "status": "ASSIGNED",
+              "reason": null,
+              "sts": "QC-09",
+              "type": "IMPORT",
+              "container": "PG00000316",
+              "age": 300
+            },
+            {
+              "id": "VC-0003|IMPORT|PG00000326",
+              "status": "OPEN",
+              "reason": "NO_SAFE_YARD_DESTINATION",
+              "sts": "QC-09",
+              "type": "IMPORT",
+              "container": "PG00000326",
+              "age": 300
+            },
+            {
+              "id": "VC-0003|IMPORT|PG00000336",
+              "status": "OPEN",
+              "reason": "NO_SAFE_YARD_DESTINATION",
+              "sts": "QC-09",
+              "type": "IMPORT",
+              "container": "PG00000336",
+              "age": 300
+            }
+          ],
+          "assignedAGVs": [
+            "AGV-14"
+          ],
+          "approachingAGVs": [],
+          "waitingCause": null,
+          "waitingDuration": 0,
+          "waitCauses": {
+            "STS_UNSERVED_DEMAND": 11.366666666666667,
+            "PARKING_DISPATCH_WAIT": 16.866666666666674,
+            "AGV_IN_TRANSIT": 173.43333333333317,
+            "DOWNSTREAM_YARD_CAPACITY": 67.83333333333333
+          },
+          "grossMovesPerHour": 12.002667259390877
+        }
+      ]
+    },
+    "eventCounts": {
+      "VESSEL_CALL_CREATED": 3,
+      "STS_DEMAND_ASSIGNED": 24,
+      "JOB_ASSIGNED": 42,
+      "TRUCK_ORDER_CREATED": 28,
+      "RELAY_ASSIGNED": 7,
+      "VEHICLE_TRANSITION": 288,
+      "RELAY_BUFFER_STORED": 7,
+      "JOB_DONE": 31,
+      "AGV_PREPOSITIONED": 6,
+      "CRANE_PICKUP_RELEASED": 19,
+      "RELAY_COMPLETED": 5,
+      "NO_PROGRESS": 35,
+      "YARD_CRANE_JIT_RESERVED": 15,
+      "VESSEL_WORK_CONFIRMED": 15,
+      "AGV_NEXT_JOB_READY": 15,
+      "AGV_DIRECT_REASSIGN": 11,
+      "AGV_CYCLE_ESCAPE": 2,
+      "AGV_YIELD_REPLANNED": 2,
+      "AGV_CONFLICT_REROUTE": 4
+    },
+    "control": {
+      "demandTotal": 36,
+      "demandOutstanding": 21,
+      "liveMissions": 9,
+      "missionStates": {
+        "RUNNING": 9
+      },
+      "blockingReasons": {},
+      "requests": [
+        {
+          "id": "VC-0001|IMPORT|PG00000005",
+          "status": "DONE",
+          "reason": null,
+          "sts": "QC-01",
+          "type": "IMPORT",
+          "container": "PG00000005",
+          "age": 300
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000014",
+          "status": "DONE",
+          "reason": null,
+          "sts": "QC-01",
+          "type": "IMPORT",
+          "container": "PG00000014",
+          "age": 300
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000024",
+          "status": "DONE",
+          "reason": null,
+          "sts": "QC-01",
+          "type": "IMPORT",
+          "container": "PG00000024",
+          "age": 300
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000034",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-01",
+          "type": "IMPORT",
+          "container": "PG00000034",
+          "age": 300
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000042",
+          "status": "DONE",
+          "reason": null,
+          "sts": "QC-02",
+          "type": "IMPORT",
+          "container": "PG00000042",
+          "age": 300
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000051",
+          "status": "DONE",
+          "reason": null,
+          "sts": "QC-02",
+          "type": "IMPORT",
+          "container": "PG00000051",
+          "age": 300
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000061",
+          "status": "DONE",
+          "reason": null,
+          "sts": "QC-02",
+          "type": "IMPORT",
+          "container": "PG00000061",
+          "age": 300
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000071",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-02",
+          "type": "IMPORT",
+          "container": "PG00000071",
+          "age": 300
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000079",
+          "status": "DONE",
+          "reason": null,
+          "sts": "QC-03",
+          "type": "IMPORT",
+          "container": "PG00000079",
+          "age": 300
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000089",
+          "status": "DONE",
+          "reason": null,
+          "sts": "QC-03",
+          "type": "IMPORT",
+          "container": "PG00000089",
+          "age": 300
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000099",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-03",
+          "type": "IMPORT",
+          "container": "PG00000099",
+          "age": 300
+        },
+        {
+          "id": "VC-0001|IMPORT|PG00000108",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-03",
+          "type": "IMPORT",
+          "container": "PG00000108",
+          "age": 300
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000115",
+          "status": "DONE",
+          "reason": null,
+          "sts": "QC-04",
+          "type": "IMPORT",
+          "container": "PG00000115",
+          "age": 300
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000126",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-04",
+          "type": "IMPORT",
+          "container": "PG00000126",
+          "age": 300
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000136",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-04",
+          "type": "IMPORT",
+          "container": "PG00000136",
+          "age": 300
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000147",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-04",
+          "type": "IMPORT",
+          "container": "PG00000147",
+          "age": 300
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000155",
+          "status": "DONE",
+          "reason": null,
+          "sts": "QC-05",
+          "type": "IMPORT",
+          "container": "PG00000155",
+          "age": 300
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000166",
+          "status": "DONE",
+          "reason": null,
+          "sts": "QC-05",
+          "type": "IMPORT",
+          "container": "PG00000166",
+          "age": 300
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000175",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-05",
+          "type": "IMPORT",
+          "container": "PG00000175",
+          "age": 300
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000184",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-05",
+          "type": "IMPORT",
+          "container": "PG00000184",
+          "age": 300
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000192",
+          "status": "DONE",
+          "reason": null,
+          "sts": "QC-06",
+          "type": "IMPORT",
+          "container": "PG00000192",
+          "age": 300
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000202",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-06",
+          "type": "IMPORT",
+          "container": "PG00000202",
+          "age": 300
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000211",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-06",
+          "type": "IMPORT",
+          "container": "PG00000211",
+          "age": 300
+        },
+        {
+          "id": "VC-0002|IMPORT|PG00000221",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-06",
+          "type": "IMPORT",
+          "container": "PG00000221",
+          "age": 300
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000228",
+          "status": "DONE",
+          "reason": null,
+          "sts": "QC-07",
+          "type": "IMPORT",
+          "container": "PG00000228",
+          "age": 300
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000240",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-07",
+          "type": "IMPORT",
+          "container": "PG00000240",
+          "age": 300
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000248",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-07",
+          "type": "IMPORT",
+          "container": "PG00000248",
+          "age": 300
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000260",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-07",
+          "type": "IMPORT",
+          "container": "PG00000260",
+          "age": 300
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000268",
+          "status": "DONE",
+          "reason": null,
+          "sts": "QC-08",
+          "type": "IMPORT",
+          "container": "PG00000268",
+          "age": 300
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000280",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-08",
+          "type": "IMPORT",
+          "container": "PG00000280",
+          "age": 300
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000289",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-08",
+          "type": "IMPORT",
+          "container": "PG00000289",
+          "age": 300
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000299",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-08",
+          "type": "IMPORT",
+          "container": "PG00000299",
+          "age": 300
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000306",
+          "status": "DONE",
+          "reason": null,
+          "sts": "QC-09",
+          "type": "IMPORT",
+          "container": "PG00000306",
+          "age": 300
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000316",
+          "status": "ASSIGNED",
+          "reason": null,
+          "sts": "QC-09",
+          "type": "IMPORT",
+          "container": "PG00000316",
+          "age": 300
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000326",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-09",
+          "type": "IMPORT",
+          "container": "PG00000326",
+          "age": 300
+        },
+        {
+          "id": "VC-0003|IMPORT|PG00000336",
+          "status": "OPEN",
+          "reason": "NO_SAFE_YARD_DESTINATION",
+          "sts": "QC-09",
+          "type": "IMPORT",
+          "container": "PG00000336",
+          "age": 300
+        }
+      ],
+      "missions": [
+        {
+          "id": "ORD-00034",
+          "requestKey": "VC-0002|IMPORT|PG00000126",
+          "sts": "QC-04",
+          "vehicle": "AGV-13",
+          "call": "VC-0002",
+          "type": "IMPORT",
+          "container": "PG00000126",
+          "state": "RUNNING",
+          "created": 88.09999999999756,
+          "reason": null,
+          "started": 244.13333333332204
+        },
+        {
+          "id": "ORD-00045",
+          "requestKey": "VC-0002|IMPORT|PG00000202",
+          "sts": "QC-06",
+          "vehicle": "AGV-17",
+          "call": "VC-0002",
+          "type": "IMPORT",
+          "container": "PG00000202",
+          "state": "RUNNING",
+          "created": 181.36666666665894,
+          "reason": null,
+          "started": 181.36666666665894
+        },
+        {
+          "id": "ORD-00047",
+          "requestKey": "VC-0001|IMPORT|PG00000071",
+          "sts": "QC-02",
+          "vehicle": "AGV-05",
+          "call": "VC-0001",
+          "type": "IMPORT",
+          "container": "PG00000071",
+          "state": "RUNNING",
+          "created": 214.4999999999904,
+          "reason": null,
+          "started": 214.4999999999904
+        },
+        {
+          "id": "ORD-00048",
+          "requestKey": "VC-0001|IMPORT|PG00000099",
+          "sts": "QC-03",
+          "vehicle": "AGV-20",
+          "call": "VC-0001",
+          "type": "IMPORT",
+          "container": "PG00000099",
+          "state": "RUNNING",
+          "created": 222.4666666666566,
+          "reason": null,
+          "started": 222.4666666666566
+        },
+        {
+          "id": "ORD-00049",
+          "requestKey": "VC-0003|IMPORT|PG00000280",
+          "sts": "QC-08",
+          "vehicle": "AGV-18",
+          "call": "VC-0003",
+          "type": "IMPORT",
+          "container": "PG00000280",
+          "state": "RUNNING",
+          "created": 226.76666666665636,
+          "reason": null,
+          "started": 226.76666666665636
+        },
+        {
+          "id": "ORD-00052",
+          "requestKey": "VC-0003|IMPORT|PG00000316",
+          "sts": "QC-09",
+          "vehicle": "AGV-14",
+          "call": "VC-0003",
+          "type": "IMPORT",
+          "container": "PG00000316",
+          "state": "RUNNING",
+          "created": 240.43333333332225,
+          "reason": null,
+          "started": 240.43333333332225
+        },
+        {
+          "id": "ORD-00054",
+          "requestKey": "VC-0002|IMPORT|PG00000175",
+          "sts": "QC-05",
+          "vehicle": "AGV-15",
+          "call": "VC-0002",
+          "type": "IMPORT",
+          "container": "PG00000175",
+          "state": "RUNNING",
+          "created": 255.49999999998806,
+          "reason": null,
+          "started": 255.49999999998806
+        },
+        {
+          "id": "ORD-00055",
+          "requestKey": "VC-0003|IMPORT|PG00000240",
+          "sts": "QC-07",
+          "vehicle": "AGV-02",
+          "call": "VC-0003",
+          "type": "IMPORT",
+          "container": "PG00000240",
+          "state": "RUNNING",
+          "created": 258.53333333332336,
+          "reason": null,
+          "started": 258.53333333332336
+        },
+        {
+          "id": "ORD-00057",
+          "requestKey": "VC-0001|IMPORT|PG00000034",
+          "sts": "QC-01",
+          "vehicle": "AGV-19",
+          "call": "VC-0001",
+          "type": "IMPORT",
+          "container": "PG00000034",
+          "state": "RUNNING",
+          "created": 271.56666666666706,
+          "reason": null,
+          "started": 271.56666666666706
+        }
+      ],
+      "metrics": {
+        "requestsCreated": 36,
+        "assigned": 24,
+        "started": 24,
+        "prepositioned": 6,
+        "finished": 15,
+        "blockedReasons": {
+          "PARKING_EXIT_CONFLICT": 1559,
+          "YARD_DELIVERY_CAPACITY_FULL": 812,
+          "STS_CRANE_BUSY": 30
+        },
+        "lastDispatchAt": 299.90000000002294
+      }
+    },
+    "agvFleet": [
+      {
+        "id": "AGV-01",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -444,
+          "z": 7
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-02",
+        "job": "JOB-00047",
+        "pendingOrder": null,
+        "container": "PG00000240",
+        "state": "TRAVEL",
+        "position": {
+          "x": 102,
+          "z": 12
+        },
+        "routeIndex": 36
+      },
+      {
+        "id": "AGV-03",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -444,
+          "z": 31
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-04",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -444,
+          "z": 43
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-05",
+        "job": "JOB-00037",
+        "pendingOrder": null,
+        "container": "PG00000071",
+        "state": "TRAVEL",
+        "position": {
+          "x": -300,
+          "z": 122.5
+        },
+        "routeIndex": 32
+      },
+      {
+        "id": "AGV-06",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -444,
+          "z": 67
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-07",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -444,
+          "z": 79
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-08",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -444,
+          "z": 91
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-09",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -444,
+          "z": 103
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-10",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -444,
+          "z": 115
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-11",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -444,
+          "z": 127
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-12",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -444,
+          "z": 139
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-13",
+        "job": "JOB-00026",
+        "pendingOrder": null,
+        "container": "PG00000126",
+        "state": "TRAVEL",
+        "position": {
+          "x": -286,
+          "z": -60
+        },
+        "routeIndex": 23
+      },
+      {
+        "id": "AGV-14",
+        "job": "JOB-00043",
+        "pendingOrder": null,
+        "container": "PG00000316",
+        "state": "DOCKED",
+        "position": {
+          "x": 264,
+          "z": -36
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-15",
+        "job": "JOB-00046",
+        "pendingOrder": null,
+        "container": "PG00000175",
+        "state": "TRAVEL",
+        "position": {
+          "x": -130.5,
+          "z": -60
+        },
+        "routeIndex": 21
+      },
+      {
+        "id": "AGV-16",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -396,
+          "z": 43
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-17",
+        "job": "JOB-00035",
+        "pendingOrder": null,
+        "container": "PG00000202",
+        "state": "TRAVEL",
+        "position": {
+          "x": -316,
+          "z": 88
+        },
+        "routeIndex": 47
+      },
+      {
+        "id": "AGV-18",
+        "job": "JOB-00040",
+        "pendingOrder": null,
+        "container": "PG00000280",
+        "state": "DOCKED",
+        "position": {
+          "x": 220,
+          "z": -48
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-19",
+        "job": "JOB-00048",
+        "pendingOrder": null,
+        "container": "PG00000034",
+        "state": "DOCKED",
+        "position": {
+          "x": -264,
+          "z": -72
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-20",
+        "job": "JOB-00039",
+        "pendingOrder": null,
+        "container": "PG00000099",
+        "state": "TRAVEL",
+        "position": {
+          "x": -327.5,
+          "z": 170.5
+        },
+        "routeIndex": 40
+      },
+      {
+        "id": "AGV-21",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -396,
+          "z": 103
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-22",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -396,
+          "z": 115
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-23",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -396,
+          "z": 127
+        },
+        "routeIndex": 0
+      },
+      {
+        "id": "AGV-24",
+        "job": null,
+        "pendingOrder": null,
+        "container": null,
+        "state": "PARKED",
+        "position": {
+          "x": -396,
+          "z": 139
+        },
+        "routeIndex": 0
+      }
+    ],
+    "yardCranePositions": [
+      {
+        "id": "YC-A01",
+        "role": "agv",
+        "yard": 0,
+        "x": -189.75,
+        "range": {
+          "min": -221,
+          "max": 221
+        }
+      },
+      {
+        "id": "YC-A02",
+        "role": "agv",
+        "yard": 1,
+        "x": -15.7,
+        "range": {
+          "min": -221,
+          "max": 221
+        }
+      },
+      {
+        "id": "YC-A03",
+        "role": "agv",
+        "yard": 2,
+        "x": -189.75,
+        "range": {
+          "min": -221,
+          "max": 221
+        }
+      },
+      {
+        "id": "YC-A04",
+        "role": "agv",
+        "yard": 3,
+        "x": -140.75,
+        "range": {
+          "min": -221,
+          "max": 221
+        }
+      },
+      {
+        "id": "YC-A05",
+        "role": "agv",
+        "yard": 4,
+        "x": -116.69,
+        "range": {
+          "min": -221,
+          "max": 221
+        }
+      },
+      {
+        "id": "YC-A06",
+        "role": "agv",
+        "yard": 5,
+        "x": -189.75,
+        "range": {
+          "min": -221,
+          "max": 221
+        }
+      },
+      {
+        "id": "YC-T01",
+        "role": "truck",
+        "yard": 0,
+        "x": 221,
+        "range": {
+          "min": -221,
+          "max": 221
+        }
+      },
+      {
+        "id": "YC-T02",
+        "role": "truck",
+        "yard": 1,
+        "x": 90,
+        "range": {
+          "min": -221,
+          "max": 221
+        }
+      },
+      {
+        "id": "YC-T03",
+        "role": "truck",
+        "yard": 2,
+        "x": 221,
+        "range": {
+          "min": -221,
+          "max": 221
+        }
+      },
+      {
+        "id": "YC-T04",
+        "role": "truck",
+        "yard": 3,
+        "x": 202.25,
+        "range": {
+          "min": -221,
+          "max": 221
+        }
+      },
+      {
+        "id": "YC-T05",
+        "role": "truck",
+        "yard": 4,
+        "x": 70,
+        "range": {
+          "min": -221,
+          "max": 221
+        }
+      },
+      {
+        "id": "YC-T06",
+        "role": "truck",
+        "yard": 5,
+        "x": 70,
+        "range": {
+          "min": -221,
+          "max": 221
+        }
+      }
+    ],
+    "yardCraneIncidents": [],
+    "stuck": [],
+    "jobs": [
+      {
+        "id": "JOB-00026",
+        "stage": "TO_DROPOFF",
+        "crane": "YC-A01",
+        "sts": "QC-04",
+        "vehicle": "AGV-13"
+      },
+      {
+        "id": "JOB-00035",
+        "stage": "TO_DROPOFF",
+        "crane": "YC-A03",
+        "sts": "QC-06",
+        "vehicle": "AGV-17"
+      },
+      {
+        "id": "JOB-00037",
+        "stage": "TO_DROPOFF",
+        "crane": "YC-A02",
+        "sts": "QC-02",
+        "vehicle": "AGV-05"
+      },
+      {
+        "id": "JOB-00039",
+        "stage": "TO_DROPOFF",
+        "crane": "YC-A03",
+        "sts": "QC-03",
+        "vehicle": "AGV-20"
+      },
+      {
+        "id": "JOB-00040",
+        "stage": "PICK",
+        "crane": "YC-A02",
+        "sts": "QC-08",
+        "vehicle": "AGV-18"
+      },
+      {
+        "id": "JOB-00041",
+        "stage": "TO_GATE",
+        "crane": "YC-T03",
+        "vehicle": "TRK-03"
+      },
+      {
+        "id": "JOB-00042",
+        "stage": "RELAY_TO_DESTINATION",
+        "crane": "YC-A05",
+        "vehicle": "RTG-PAIR"
+      },
+      {
+        "id": "JOB-00043",
+        "stage": "PICK",
+        "crane": "YC-A02",
+        "sts": "QC-09",
+        "vehicle": "AGV-14"
+      },
+      {
+        "id": "JOB-00044",
+        "stage": "RELAY_SOURCE_RETREAT",
+        "crane": "YC-A02",
+        "vehicle": "RTG-PAIR"
+      },
+      {
+        "id": "JOB-00046",
+        "stage": "TO_PICKUP",
+        "crane": "YC-A03",
+        "sts": "QC-05",
+        "vehicle": "AGV-15"
+      },
+      {
+        "id": "JOB-00047",
+        "stage": "TO_PICKUP",
+        "crane": "YC-A01",
+        "sts": "QC-07",
+        "vehicle": "AGV-02"
+      },
+      {
+        "id": "JOB-00048",
+        "stage": "PICK",
+        "crane": "YC-A01",
+        "sts": "QC-01",
+        "vehicle": "AGV-19"
+      },
+      {
+        "id": "JOB-00049",
+        "stage": "TO_PICKUP",
+        "crane": "YC-T04",
+        "vehicle": "TRK-07"
+      }
+    ]
+  }
+}

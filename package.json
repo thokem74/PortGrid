@@ -1,0 +1,13 @@
+{
+  "name": "portgrid",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {"node": ">=22"},
+  "scripts": {
+    "build": "node scripts/embed.js",
+    "check": "node tests/source-parity.test.js",
+    "test": "node tests/run-suite.js",
+    "test:extended": "node tests/run-suite.js --extended",
+    "test:browser": "node tests/browser.smoke.js"
+  }
+}
