@@ -103,10 +103,41 @@ console.log('PASS: long parking connector does not suppress safe physical revers
  Object.assign(front,{x:-308,z:0,heading:Math.PI/2,pending:'FIXTURE',job:null,state:'RETURNING',blockedTime:10,
   route:[{x:-308,z:12},{x:-308,z:0},{x:-378,z:0}],routeIndex:2,routeIntent:{type:'parking'}});
  Object.assign(rear,{x:-297.5,z:0,heading:Math.PI,pending:'FIXTURE',job:null,state:'RETURNING',blockedTime:10,
-  route:[{x:-275,z:0},{x:-286,z:0},{x:-297,z:0},{x:-308,z:0},{x:-378,z:0}],routeIndex:3,routeIntent:{type:'parking'}});
+  route:[{x:-297,z:12},{x:-297,z:0},{x:-308,z:0},{x:-378,z:0}],routeIndex:2,routeIntent:{type:'parking'}});
  for(let i=0;i<100;i++)sim.tick(.1);
  assert.ok(sim.eventCounts.AGV_PHYSICAL_YIELD>0,'empty follower backs away to permit a leading turn');
  assert.ok(front.x<-310,'the leading AGV clears the parking merge');
  assert.equal(sim.status().unsafeAgvBodyOverlaps,0);
  console.log('PASS: follower reverses over sufficient traversed nodes to release a leading turn');
+}
+{
+ const sim=createEngine({rng:()=>.5,dischargePerCall:3,loadPerCall:2,continuousVessels:false,preloadFutureCalls:false});
+ const a=sim.trucks[1],b=sim.trucks[6];
+ Object.assign(a,{x:314.6,z:115.5,heading:0,pending:'FIXTURE',job:null,state:'RETURNING',blockedTime:10,
+  route:[{x:221,z:115.5},{x:317,z:115.5},{x:317,z:123},{x:348,z:123}],routeIndex:1,routeIntent:{type:'gate'}});
+ Object.assign(b,{x:317,z:102.7,heading:Math.PI/2,pending:'FIXTURE',job:null,state:'RETURNING',blockedTime:10,
+  route:[{x:221,z:92},{x:317,z:92},{x:317,z:149.5},{x:367,z:149.5}],routeIndex:2,routeIntent:{type:'gate'}});
+ for(let i=0;i<400;i++)sim.tick(.1); // 93.6 m retreat at the existing 4 m/s reverse speed.
+ assert.ok(sim.eventCounts.TRUCK_RETURN_PHYSICAL_YIELD>0,'returning trucks can clear their own wait cycle without holding an RTG');
+ assert.ok(b.z>120,'the other returning truck clears the blocked crossing');
+ console.log('PASS: returning truck pair recovers along the traversed approach');
+}
+for(const crossingTurn of [false,true]){
+ const sim=createEngine({rng:()=>.5,dischargePerCall:3,loadPerCall:2,continuousVessels:false,preloadFutureCalls:false});
+ for(const v of sim.agvs)v.pending='FIXTURE';
+ const [merge,through]=sim.agvs;
+ for(const v of [merge,through]){
+  const slot=sim.yardSlots.find(s=>s.yard<3&&s.stack.length),c=sim.containers.get(slot.stack.pop());
+  Object.assign(c,{site:'agv',carrier:v,y:3.65});v.load=c.id;
+ }
+ Object.assign(merge,{x:-275,z:-24,heading:Math.PI/2,state:'TRAVEL',routeIndex:1,
+  route:[{x:-275,z:-24},{x:-275,z:-12},{x:-275,z:0},{x:-286,z:0},{x:-297,z:0},{x:-308,z:0},{x:-319,z:0},{x:-330,z:0},{x:-330,z:12},{x:-328,z:12},{x:-328,z:36},{x:-328,z:60}]});
+ Object.assign(through,{x:-242,z:0,heading:Math.PI,state:'TRAVEL',routeIndex:1,
+  route:crossingTurn?[{x:-242,z:0},{x:-253,z:0},{x:-264,z:0},{x:-275,z:0},{x:-275,z:12},{x:-264,z:12},{x:-253,z:12}]:
+   [{x:-242,z:0},{x:-253,z:0},{x:-264,z:0},{x:-275,z:0},{x:-286,z:0},{x:-297,z:0},{x:-308,z:0},{x:-378,z:0}]});
+ for(let i=0;i<120;i++)sim.tick(.1);
+ assert.ok(merge.x<-286&&(crossingTurn?through.z>=12:through.x<-308),'loaded crossing traffic and a perpendicular merge both clear');
+ assert.equal(sim.status().unsafeAgvBodyOverlaps,0);
+ assert.ok(sim.eventCounts.TURN_RESERVED>0&&sim.eventCounts.TURN_RELEASED>0,'turn space has finite physical ownership');
+ console.log('PASS: loaded merge/crossing turn reserves and releases swept clearance',crossingTurn);
 }

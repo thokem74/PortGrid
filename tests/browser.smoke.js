@@ -63,6 +63,7 @@ async function main(){
  }
  const status=await evaluate('PORTGRID.diagnostics()');
  assert.equal(status.unsafeAgvBodyOverlaps,0);assert.equal(status.gridRouteFailures,0);assert.equal(status.manifestViolations,0);
+ assert.equal(status.transferOwnershipViolations,0);assert.equal(status.craneRailViolations,0);assert.equal(status.eventCounts.JOB_ERROR||0,0);
  assert.equal(errors.length,0);assert.equal(consoleErrors.length,0);
  fs.writeFileSync(path.join(reports,'browser-smoke.json'),JSON.stringify({passed:true,sourceHashes,extended,coverage,time:status.time,errors,consoleErrors,status},null,2));
  console.log('PASS: Chromium rendering, top/quay cameras, actual AGV motion, console and safety smoke checks');

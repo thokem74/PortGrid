@@ -1,0 +1,35 @@
+{
+  "complete": true,
+  "results": [
+    {
+      "command": "node tests/integration.acceptance.js temporary-yard-outage",
+      "exitCode": 0,
+      "wallSeconds": 31.435184311
+    },
+    {
+      "command": "node tests/integration.acceptance.js blocked-parking-release",
+      "exitCode": 0,
+      "wallSeconds": 8.934858007999999
+    },
+    {
+      "command": "node tests/integration.acceptance.js complete-high-seed3",
+      "exitCode": 0,
+      "wallSeconds": 123.12214050400001
+    },
+    {
+      "command": "node tests/integration.acceptance.js continuous-small-seed7",
+      "exitCode": 0,
+      "wallSeconds": 25.635599787000015
+    },
+    {
+      "command": "node tests/integration.acceptance.js loaded-delivery-outage",
+      "exitCode": 0,
+      "wallSeconds": 5.467013834999991
+    },
+    {
+      "command": "node tests/integration.acceptance.js full-storage-recovery",
+      "exitCode": 0,
+      "wallSeconds": 24.602957211
+    }
+  ]
+}

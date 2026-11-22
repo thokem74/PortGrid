@@ -1,10 +1,10 @@
 {
   "complete": true,
-  "failures": 2,
+  "failures": 0,
   "results": [
     {
       "command": "node tests/source-parity.test.js",
-      "wallSeconds": 0.17196294599999998,
+      "wallSeconds": 0.161524596,
       "exitCode": 0,
       "signal": null,
       "error": null,
@@ -12,7 +12,7 @@
     },
     {
       "command": "node tests/control.unit.test.js",
-      "wallSeconds": 0.040811635,
+      "wallSeconds": 0.04003911500000001,
       "exitCode": 0,
       "signal": null,
       "error": null,
@@ -20,7 +20,7 @@
     },
     {
       "command": "node tests/reliability.unit.test.js",
-      "wallSeconds": 0.033429250999999965,
+      "wallSeconds": 0.028043104,
       "exitCode": 0,
       "signal": null,
       "error": null,
@@ -28,7 +28,7 @@
     },
     {
       "command": "node tests/traffic.test.js",
-      "wallSeconds": 0.376378834,
+      "wallSeconds": 0.912382862,
       "exitCode": 0,
       "signal": null,
       "error": null,
@@ -36,7 +36,7 @@
     },
     {
       "command": "node tests/physical-faults.test.js",
-      "wallSeconds": 0.37991343200000005,
+      "wallSeconds": 0.37555180900000007,
       "exitCode": 0,
       "signal": null,
       "error": null,
@@ -44,7 +44,7 @@
     },
     {
       "command": "node tests/sts-supply.test.js",
-      "wallSeconds": 3.4293771840000002,
+      "wallSeconds": 3.521132756,
       "exitCode": 0,
       "signal": null,
       "error": null,
@@ -52,7 +52,7 @@
     },
     {
       "command": "node tests/transfer-ownership.test.js",
-      "wallSeconds": 4.390151442000001,
+      "wallSeconds": 4.375976200000001,
       "exitCode": 0,
       "signal": null,
       "error": null,
@@ -60,7 +60,7 @@
     },
     {
       "command": "node tests/integration.acceptance.js complete-small-seed3",
-      "wallSeconds": 3.732017258,
+      "wallSeconds": 4.068385988,
       "exitCode": 0,
       "signal": null,
       "error": null,
@@ -68,7 +68,7 @@
     },
     {
       "command": "node tests/integration.acceptance.js complete-small-seed7",
-      "wallSeconds": 3.5986782710000007,
+      "wallSeconds": 4.201632585000001,
       "exitCode": 0,
       "signal": null,
       "error": null,
@@ -76,7 +76,7 @@
     },
     {
       "command": "node tests/integration.acceptance.js normal-load-first-service",
-      "wallSeconds": 3.5307237479999984,
+      "wallSeconds": 6.150215343,
       "exitCode": 0,
       "signal": null,
       "error": null,
@@ -84,7 +84,7 @@
     },
     {
       "command": "node tests/integration.acceptance.js complete-normal-seed3",
-      "wallSeconds": 27.494188415,
+      "wallSeconds": 47.81900199999999,
       "exitCode": 0,
       "signal": null,
       "error": null,
@@ -92,19 +92,19 @@
     },
     {
       "command": "node tests/integration.acceptance.js complete-normal-seed7",
-      "wallSeconds": 9.321362606000003,
-      "exitCode": 1,
+      "wallSeconds": 39.831844274999995,
+      "exitCode": 0,
       "signal": null,
       "error": null,
-      "outcome": "FAIL"
+      "outcome": "PASS"
     },
     {
       "command": "node tests/integration.acceptance.js complete-normal-seed11",
-      "wallSeconds": 6.983273395000004,
-      "exitCode": 1,
+      "wallSeconds": 36.585995968999995,
+      "exitCode": 0,
       "signal": null,
       "error": null,
-      "outcome": "FAIL"
+      "outcome": "PASS"
     }
   ]
 }

@@ -88,7 +88,7 @@ Maintain clear, independently testable components, even if their implementations
 6. **Execution adapter:** existing physical AGV movement, container pickup/drop-off, STS/RTG animations, vessel state progression and truck operations. The physical engine confirms completion.
 7. **KPI / event monitor:** time-based, cause-classified monitoring and actionable diagnostics. No KPI should be “improved” by hiding or redefining valid delays.
 
-The current controller adapter interface includes `now`, `demands`, `availableVehicles`, `isVehicleFree`, `pickup`, `stsWaiting`, `canReserve`, `reserve`, `progress`, `start`, `preposition`, and `waitReason`. Maintain or version this contract deliberately and add tests when changing it.
+The controller adapter interface includes `now`, `demands`, `availableVehicles`, `isVehicleFree`, `pickup`, `stsWaiting`, `canReserve`, `reserve`, `progress`, `start`, `preposition`, and `waitReason`. Its optional predictive extension adds `serviceStatus`, `serviceForecast`, and `estimateArrival`; `reserve` accepts optional request-timing context. See `docs/ARCHITECTURE.md` for the shapes and compatibility behavior. Maintain or version this contract deliberately and add tests when changing it.
 
 Current pure helpers include `authorizeParkingDeparture(vehicle, vehicles)` and `authorizeImportYard(capacityState)`; test these independently of Three.js.
 
@@ -113,6 +113,7 @@ Treat these as hard assertions; never sacrifice them to improve throughput:
 - No AGV body collision, unsafe overlap, invalid routing, unsafe rotation, or unrecoverable head-on conflict.
 - No RTG rail-envelope collision or out-of-range pick/place.
 - No unowned/duplicated crane transfer-bay reservation, stale reservation that cannot be expired/recovered, or mission that silently disappears.
+- AGVs and trucks outside their actual transfer slot must not own STS/RTG execution. Require stationary position and chassis alignment before acquisition; release pickup cranes before onward travel. Storage/bay reservations are separate. `transferOwnershipViolations` is a hard failure, including claims by approaching or gate-returning vehicles. Direct physical yard-relay jobs retain their separate crane authority.
 - No departure with unfinished physical cargo work.
 - Every parked/staged/blocked assigned AGV has a known active mission and machine-readable reason.
 - If safety and progress conflict, **safety wins** and the system must surface the reason and recovery action.
@@ -145,7 +146,7 @@ KPIs must drive fixes, not cosmetic UI changes. Success requires safe full cargo
 
 These are observed validations, **not** full-scale certification.
 
-### Mandatory outstanding gates
+### Mandatory qualification gates (consult TEST_STATUS.md for current evidence)
 
 1. Full **12 discharge + 8 load** cargo per vessel, all three vessels fully discharged, loaded and departed, without timeout.
 2. Repeat the full workload across multiple deterministic seeds, and a continuous-vessel pipeline over several vessel replacements.

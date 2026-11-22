@@ -6,7 +6,8 @@ const {createMonitor}=typeof module!=='undefined'&&module.exports?require('./por
 const  L={shipX:[-220,0,220],stsX:[-264,-220,-176,-44,0,44,176,220,264],shipZ:-152,stsZ:-95,stsDockZ:-60, /* Shared terminal geometry: ship berths, STS positions, yard blocks, transfer stations, and parking coordinates */
  yards:[{id:'IN-01',type:'inbound',z:92},{id:'IN-02',type:'inbound',z:126},{id:'IN-03',type:'inbound',z:160},{id:'OUT-01',type:'outbound',z:194},{id:'OUT-02',type:'outbound',z:228},{id:'OUT-03',type:'outbound',z:262}],agvDockX:-221,truckDockX:221,
  agvNorthX:-304,agvSouthX:-282,agvOuterWestZ:-72,agvWestZ:-60,agvEastZ:-48,agvOuterEastZ:-36,agvParkX:-420,truckInX:297,truckOutX:317,gateZ:301,
- yardStorageFirstX:-202,yardStorageStepX:12.25,yardStorageBays:34,yardTransferWidth:14};
+ yardStorageFirstX:-202,yardStorageStepX:12.25,yardStorageBays:34,yardTransferWidth:14,
+ agvStorageMaxX:-40,truckStorageMinX:45};
 const  STS_DOCK_LANES=[L.agvOuterWestZ,L.agvWestZ,L.agvEastZ,L.agvOuterEastZ]; /* Four ship-to-shore crane handoff lane coordinates */
 const  YARD_SLOT_OFFSETS=[-10.5,-3.5,3.5,10.5]; /* Relative positions of the four transfer bays at each yard */
 // Eight 12 m-spaced yard lanes: retain the four western incoming lanes,
@@ -39,6 +40,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
  const arrivalDistances=new Map(),serviceSamples=new Map();
  const cycleMetrics={completed:0,actualEmptyMeters:0,unpairedGraphMeters:0,savedMeters:0};
  const yardMetrics=new Map();
+ const turnReservations=new Map();
  let transferOwnershipViolations=0;
  function recordService(q,j){
   const started=q.type==='sts'?j.stsServiceStarted:j.rtgServiceStarted;
@@ -258,8 +260,12 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
        dualCycles:eventCounts.AGV_DOUBLE_CYCLE_ASSIGNED||0,agvEmptyShare:( ()=>{const  a=agvs.reduce( (n,v)=>n+v.emptyMeters,0), b=agvs.reduce( (n,v)=>n+v.loadedMeters,0);return a+b?100*a/(a+b):0})()}; /* Evaluates inline calculation callback */ /* First item being compared in getKPI() */ /* Second item being compared in getKPI() */
  }
  /* Appends a structured simulation event for auditing and troubleshooting */
-  function log(type,detail={}){const job=detail.job?jobs.find(j=>j.id===detail.job):null;
-   const order=job?.order||(detail.order?orders.find(o=>o.id===detail.order):null);
+  function log(type,detail={}){
+   const actor=[...agvs,...trucks].find(v=>v.id===(detail.vehicle||detail.agv));
+   const jobId=Object.hasOwn(detail,'job')?detail.job:actor?.job||actor?.pipelineJob;
+   const job=jobId?jobs.find(j=>j.id===jobId):null;
+   const order=job?.order||(detail.order?orders.find(o=>o.id===detail.order):null)||
+    (!Object.hasOwn(detail,'job')&&actor?.pending?orders.find(o=>o.id===actor.pending):null);
    const e={simulationTime:+t.toFixed(2),time:+t.toFixed(2),type,vehicleId:detail.vehicle||detail.agv||job?.vehicle?.id||null,
     vesselCallId:detail.call||order?.vesselCall||null,stsId:detail.sts||order?.crane||null,missionId:order?.id||null,
     containerId:detail.container||job?.container?.id||null,fromState:null,toState:null,blockingReason:null,blockingResourceId:null,routeOrReservationId:order?.id||null,...detail,
@@ -389,7 +395,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   function bookExports(call){
   const  qty=Math.max(0,vesselConfig.loadPerCall-(call.state==='SCHEDULED'?(options.truckExportQuota??1):0)); /* Local value for qty in bookExports() */
   /* Evaluates callback for yardSlots.filter using s */
-  const  candidates=yardSlots.filter( s=>s.x<=-40&&L.yards[s.yard].type==='outbound'&&s.stack.length) /* Flag indicating whether candidates */
+  const candidates=yardSlots.filter(s=>s.x<=L.agvStorageMaxX&&L.yards[s.yard].type==='outbound'&&s.stack.length)
     /* Evaluates callback for er(s=>s.x<=-40&&L.yards[s.yard].type==='outbound'&&s.stack.length) .map using s */
     /* Evaluates callback for tbound'&&s.stack.length) .map(s=>containers.get(s.stack.at(-1))).filter using c */
     .map( s=>containers.get(s.stack.at(-1))).filter( c=>c&&!c.loadCall&&!c.order&&c.site==='yard');
@@ -569,7 +575,8 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
  /* Finds accessible top containers for an RTG at a given yard */
   function topYard(bi,requireType,role){const  matches=[];for(const  slot of yardSlots){ /* Collection of matches */ /* Current storage or transfer slot in topYard() */
   /* Evaluates callback for jobs.some using j */
-  if(slot.yard!==bi||role==='agv'&&slot.x>Math.min(-45,rtgTruck[bi].x-YARD_RAIL_GAP-8)||role==='truck'&&slot.x>0&&slot.x<Math.max(45,rtgAgv[bi].x+YARD_RAIL_GAP+8)||role==='truck'&&slot.x<45||!slot.stack.length||jobs.some( j=>!j.completed&&j.slot===slot))continue;
+  if(slot.yard!==bi||role==='agv'&&slot.x>Math.min(L.agvStorageMaxX,rtgTruck[bi].x-YARD_RAIL_GAP-8)||
+   role==='truck'&&slot.x<Math.max(L.truckStorageMinX,rtgAgv[bi].x+YARD_RAIL_GAP+8)||!slot.stack.length||jobs.some(j=>!j.completed&&j.slot===slot))continue;
   const  c=containers.get(slot.stack.at(-1)); /* Current container or item being processed in topYard() */
   if(!c||c.site!=='yard'||c.order||requireType&&c.direction!==requireType)continue;
   matches.push(c);
@@ -577,7 +584,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
  /* Chooses an eligible physical storage slot for a container */
   function freeSlot(bi,role,choose=true){
   /* Evaluates callback for yardSlots.filter using s */
-  const  available=yardSlots.filter( s=>s.yard===bi&&(role==='agv'?s.x<=Math.min(-45,rtgTruck[bi].x-YARD_RAIL_GAP-8):role==='truck'?s.x>=Math.max(45,rtgAgv[bi].x+YARD_RAIL_GAP+8):true)&&s.stack.length<3&& /* Eligible items after filtering operational constraints in freeSlot() */
+  const available=yardSlots.filter(s=>s.yard===bi&&(role==='agv'?s.x<=Math.min(L.agvStorageMaxX,rtgTruck[bi].x-YARD_RAIL_GAP-8):role==='truck'?s.x>=Math.max(L.truckStorageMinX,rtgAgv[bi].x+YARD_RAIL_GAP+8):true)&&s.stack.length<3&&
     (!s.stack.length||(!containers.get(s.stack.at(-1))?.order&&!containers.get(s.stack.at(-1))?.loadCall))&&
     /* Evaluates callback for jobs.some using j */
     !jobs.some( j=>!j.completed&&(j.slot===s||j.finalSlot===s||j.buffer===s)));
@@ -1964,8 +1971,14 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
    // occupied by a loaded AGV may reverse to its previously traversed graph
    // node. This is an actual collision-checked vehicle movement, not a jump.
    for(const  v of vehiclesOnRoutes){ /* Current vehicle or value being processed in tick() */
-    if(v.recovery?.escape&&!v.load&&(v.blockedTime||0)>9){
+    if(v.recovery&&!v.load&&(v.blockedTime||0)>9){
      const origin=v.route[0],next=v.route[v.routeIndex];
+     if(origin&&dist(v,origin)<.15){
+      const intent=v.recovery.intent;v.recovery=null;v.nextReplanAt=t+6;
+      setRoute(v,intent.type,intent.crane);
+      log('AGV_ESCAPE_ABORTED',{vehicle:v.id,to:origin,blockingResourceId:v.trafficBlock?.resource||null});
+      continue;
+     }
      if(origin&&next&&dist(v,origin)>.15){
       const heading=Math.atan2(origin.z-v.z,origin.x-v.x),step=Math.min(.5,dist(v,origin));
       if(!agvs.some(o=>o!==v&&rectangularOverlap({x:v.x+Math.cos(heading)*step,z:v.z+Math.sin(heading)*step,heading:v.heading},o))){
@@ -1981,7 +1994,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
     if(!next||!prev)continue;
     const  movementAngle=Math.atan2(next.z-v.z,next.x-v.x); /* Local value for movement angle in tick() */
     /* Evaluates callback for agvs.some using o */
-    const  approaching=agvs.some( o=>o!==v&&o.route.length&&(o.blockedTime||0)>4&& /* Local value for approaching in tick() */
+    const approaching=agvs.filter(o=>o!==v&&o.route.length&&(o.blockedTime||0)>4&&
       Math.hypot(o.x-v.x,o.z-v.z)<48&&
       (o.load||v.id<o.id||(()=>{
        const target=o.route[o.routeIndex];if(!target)return false;
@@ -1989,14 +2002,30 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
        return Math.cos(direction-movementAngle)>.9&&
         Math.abs((o.x-v.x)*Math.sin(movementAngle)-(o.z-v.z)*Math.cos(movementAngle))<6;
       })())&&
-      ((o.x-v.x)*Math.cos(movementAngle)+(o.z-v.z)*Math.sin(movementAngle)>2));
+      ((o.x-v.x)*Math.cos(movementAngle)+(o.z-v.z)*Math.sin(movementAngle)>2))
+      .sort((a,b)=>dist(v,a)-dist(v,b))[0];
     if(!approaching)continue;
+    const minimumBackoff=Math.max(.15,PIVOT_SWEEP_RADIUS+BODY_LONG+.1-dist(v,approaching));
     const retreat=[];
     const reverseAngle=Math.atan2(prev.z-v.z,prev.x-v.x);
     for(const node of v.route.slice(0,v.routeIndex).reverse()){
      if(dist(node,v)<.15)continue;
      if(Math.abs((node.x-v.x)*Math.sin(reverseAngle)-(node.z-v.z)*Math.cos(reverseAngle))>.1)break;
-     retreat.push(node);if(dist(node,v)>=2*BODY_LONG+1)break;
+     retreat.push(node);if(dist(node,v)>=minimumBackoff)break;
+    }
+    // A follower may have turned less than a metre ago. Its traversed
+    // straight prefix is then too short to clear a leading turn. Extend
+    // the empty reverse onto adjacent real graph sections, under the same
+    // exclusive section/body guards, rather than backing sideways.
+    for(let extra=0;extra<2&&retreat.length&&dist(retreat.at(-1),v)<minimumBackoff;extra++){
+     const end=retreat.at(-1),key=gKey(end.x,end.z),neighbors=[];
+     for(const [id,edges] of AGV_GRID.edges)if(edges.some(e=>e.to===key)){
+      const node=AGV_GRID.nodes.get(id),dx=node.x-end.x,dz=node.z-end.z;
+      if(dx*Math.cos(reverseAngle)+dz*Math.sin(reverseAngle)>.1&&
+       Math.abs(dx*Math.sin(reverseAngle)-dz*Math.cos(reverseAngle))<.1&&dist(end,node)<=20)neighbors.push(node);
+     }
+     neighbors.sort((a,b)=>dist(end,a)-dist(end,b));if(!neighbors.length)break;
+     retreat.push(neighbors[0]);
     }
     const back=retreat.at(-1)||prev;
     const backDist=Math.hypot(v.x-back.x,v.z-back.z);
@@ -2020,12 +2049,19 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
    // In a reservation tick, pivots have priority over an approaching vehicle;
    // vehicles outside the circle continue using independent intersections.
    const  reservedPivots=[]; /* Collection of reserved pivots */
+   for(const [key,zone] of turnReservations){
+    const owner=agvs.find(v=>v.id===zone.vehicleId);
+    if(!owner?.route.length||owner.routeVersion!==zone.version||owner.routeIndex>zone.index&&dist(owner,zone)>PIVOT_SWEEP_RADIUS+BODY_LONG+.1){
+     turnReservations.delete(key);log('TURN_RELEASED',{job:zone.jobId,vehicle:zone.vehicleId,routeOrReservationId:key});
+    }
+   }
    for(const  v of vehiclesOnRoutes){ /* Current vehicle or value being processed in tick() */
     if(!v.pivot)continue;
     const  p=v.pivot; /* Current position, route, or temporary calculation value in tick() */
     if(!p.started){
      /* Evaluates callback for reservedPivots.some using o */
-     if(!pivotEnvelopeClear(v)||reservedPivots.some( o=>Math.hypot(o.x-v.x,o.z-v.z)<2*PIVOT_SWEEP_RADIUS)){
+     if(!pivotEnvelopeClear(v)||reservedPivots.some( o=>Math.hypot(o.x-v.x,o.z-v.z)<2*PIVOT_SWEEP_RADIUS)||
+      [...turnReservations.values()].some(zone=>zone.vehicleId!==v.id&&dist(zone,v)<2*PIVOT_SWEEP_RADIUS)){
       pivotDenied++;v.blockedTime+=h;continue;
      }
      const  next=v.route[v.routeIndex]; /* Next candidate or planned state in tick() */
@@ -2067,11 +2103,40 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
     const  collisionHeading=v.recovery?.reverse?v.heading:angle; /* Local value for collision heading in tick() */
     const  step=Math.min(d,h*v.speed); /* Local value for step in tick() */
     const  nx=v.x+(d?Math.cos(angle)*step:0), nz=v.z+(d?Math.sin(angle)*step:0); /* Local value for nx in tick() */ /* Local value for nz in tick() */
+    const reservedTurn=[...turnReservations.values()].find(zone=>zone.vehicleId!==v.id&&
+     circleIntersectsVehicle(zone.x,zone.z,PIVOT_SWEEP_RADIUS,{x:nx,z:nz,heading:collisionHeading}));
+    if(reservedTurn){v.trafficBlock={reason:'TURN_RESERVATION',resource:reservedTurn.vehicleId,section};v.blockedTime+=h;continue;}
+    if(!v.recovery?.reverse){
+     const following=agvs.find(other=>{
+      if(other===v)return false;
+      const target=other.route[other.routeIndex];if(!target)return false;
+      const planned=Math.atan2(target.z-other.z,target.x-other.x);
+      const ahead=(other.x-nx)*Math.cos(angle)+(other.z-nz)*Math.sin(angle);
+      const lateral=Math.abs((other.x-nx)*Math.sin(angle)-(other.z-nz)*Math.cos(angle));
+      return Math.cos(planned-angle)>.9&&lateral<2*BODY_WIDE+.1&&ahead>0&&ahead<PIVOT_SWEEP_RADIUS+BODY_LONG+.1;
+     });
+     if(following){v.trafficBlock={reason:'FOLLOWING_TURN_CLEARANCE',resource:following.id,section};v.blockedTime+=h;continue;}
+    }
     const  after=v.route[v.routeIndex+1]; /* Local value for after in tick() */
+    let pendingTurn=null;
     // No stopping inside a graph intersection: reserve the downstream exit
     // before the chassis enters the conflict zone.
     let  exitClear=true; /* Local value for exit clear in tick() */
     if(after&&d<18){
+     const exitHeading=Math.atan2(after.z-next.z,after.x-next.x);
+     const turning=Math.abs(turnDelta(exitHeading,angle))>.035;
+     const zoneKey=v.id+':'+v.routeVersion+':'+v.routeIndex;
+     const competingTurn=turning?[...turnReservations.values()].find(zone=>zone.vehicleId!==v.id&&dist(zone,next)<2*PIVOT_SWEEP_RADIUS):null;
+     if(competingTurn){v.trafficBlock={reason:'TURN_RESERVATION',resource:competingTurn.vehicleId,section};v.blockedTime+=h;continue;}
+     const turnBlocker=Math.abs(turnDelta(exitHeading,angle))>.035?
+      agvs.find(o=>o!==v&&circleIntersectsVehicle(next.x,next.z,PIVOT_SWEEP_RADIUS,o)):null;
+     if(turnBlocker){
+      v.trafficBlock={reason:'TURN_SWEEP_APPROACH',resource:turnBlocker.id,section};v.blockedTime+=h;continue;
+     }
+     if(turning&&!turnReservations.has(zoneKey)){
+      if(reservedPivots.some(other=>other!==v&&dist(other,next)<2*PIVOT_SWEEP_RADIUS)){v.blockedTime+=h;continue;}
+      pendingTurn={key:zoneKey,vehicleId:v.id,jobId:v.job||v.pipelineJob||null,x:next.x,z:next.z,index:v.routeIndex,version:v.routeVersion};
+     }
      const  exitKey=getEdge(next,after), owner=roadOccupied.get(exitKey); /* Local value for exit key in tick() */ /* Local value for owner in tick() */
      if(owner&&owner!==v.id){exitClear=false;v.trafficBlock={reason:'DOWNSTREAM_SECTION',resource:owner,section:exitKey};}
      const  exd=Math.hypot(after.x-next.x,after.z-next.z); /* Local value for exd in tick() */
@@ -2096,9 +2161,13 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
       v.trafficBlock={reason:'VEHICLE_BODY',resource:bodyBlocker.id,section};v.blockedTime+=h;continue;
     }
     if(after&&d<18){const  exitKey=getEdge(next,after);if(!roadOccupied.has(exitKey))roadOccupied.set(exitKey,v.id)} /* Local value for exit key in tick() */
-    const  oldIndex=v.routeIndex, headingBefore=v.heading; /* Local value for old index in tick() */ /* Local value for heading before in tick() */
+    const oldIndex=v.routeIndex,headingBefore=v.heading,oldPosition=point(v.x,v.z);
     moveVehicle(v,h);
     if(v.recovery?.reverse)v.heading=headingBefore;
+    if(pendingTurn&&(dist(v,oldPosition)>.001||v.routeIndex!==oldIndex)){
+     turnReservations.set(pendingTurn.key,pendingTurn);
+     log('TURN_RESERVED',{job:pendingTurn.jobId,vehicle:v.id,routeOrReservationId:pendingTurn.key,x:next.x,z:next.z});
+    }
     if(v.routeIndex!==oldIndex){
      roadOccupied.delete(section);
      if(after)roadOccupied.set(getEdge(next,after),v.id);
@@ -2166,9 +2235,21 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
      const  owner=trucks.find( o=>o.id===v.truckYield.opponent); /* Local value for owner in tick() */
      if(!owner||owner.state==='GATE'||Math.hypot(owner.x-v.x,owner.z-v.z)>48){
       const  intent=v.truckYield.intent;v.truckYield=null; /* Local value for intent in tick() */
-      if(intent?.type==='truck-yard'&&v.job){
+      if(intent?.type==='gate'||intent?.type==='truck-yard'&&v.job){
        setRoute(v,intent.type,intent.crane);
        log('TRUCK_GATE_YIELD_RESUMED',{vehicle:v.id,job:v.job});
+      }
+     }
+    }
+    if(!v.truckYield&&v.state==='RETURNING'&&(v.blockedTime||0)>8&&v.routeIntent?.type==='gate'){
+     const cycle=monitor.snapshot().cycles.find(ids=>ids.includes(v.id));
+     const other=trucks.find(o=>o!==v&&!o.truckYield&&cycle?.includes(o.id)&&v.id<o.id);
+     const reverse=reverseTruckRoute(v),next=reverse[1];
+     if(other&&next){
+      const d=dist(v,next),step=Math.min(.5,d),nx=v.x+(next.x-v.x)*step/d,nz=v.z+(next.z-v.z)*step/d;
+      if(dist({x:nx,z:nz},other)>dist(v,other)+.001&&!trucks.some(o=>o!==v&&dist({x:nx,z:nz},o)<13)){
+       v.truckYield={intent:v.routeIntent,opponent:other.id};v.route=reverse;v.routeIndex=1;v.routeVersion++;v.blockedTime=0;
+       log('TRUCK_RETURN_PHYSICAL_YIELD',{vehicle:v.id,opponent:other.id,to:reverse.at(-1)});
       }
      }
     }

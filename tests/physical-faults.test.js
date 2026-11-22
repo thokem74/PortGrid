@@ -5,7 +5,7 @@ function fixture(){let seed=3;return make({rng:()=>((seed=Math.imul(seed,1664525
  const sim=fixture();let serial=0;
  // Scenario setup before the first physical tick: fill the actual AGV-side
  // inbound stacks with identified, registered containers at valid elevations.
- for(const slot of sim.yardSlots.filter(s=>s.yard<3&&s.x<=-45))while(slot.stack.length<3){
+ for(const slot of sim.yardSlots.filter(s=>s.yard<3&&s.x<=sim.L.agvStorageMaxX))while(slot.stack.length<3){
   const id='FULL-YARD-'+(++serial),level=slot.stack.length;
   const c={id,site:'yard',yard:slot.yard,slot:slot.yard+'-'+slot.bay+'-'+slot.row,x:slot.x,z:slot.z,y:1.45+level*2.8,direction:'inbound',order:null,history:[]};
   sim.containers.set(id,c);slot.stack.push(id);
@@ -29,4 +29,17 @@ function fixture(){let seed=3;return make({rng:()=>((seed=Math.imul(seed,1664525
  assert.notDeepEqual(crane.hook,position,'physical handling resumes after outage expires');
  assert.equal(sim.status().manifestViolations,0);
  console.log('PASS: mid-lift crane outage freezes and resumes physical cargo safely');
+}
+{
+ const sim=fixture(),call=sim.vesselCalls[0],entry=call.load[0];
+ const slot=sim.yardSlots.find(s=>s.yard===3&&s.x===-42.75&&s.stack.length&&!sim.containers.get(s.stack.at(-1)).loadCall);
+ assert.ok(slot,'reproduce the real storage column between -45 and -40 m');
+ const cargo=sim.containers.get(slot.stack.at(-1)),previous=sim.containers.get(entry.container);
+ previous.loadCall=null;cargo.loadCall=call.id;entry.container=cargo.id;
+ for(let i=0;i<9000;i++)sim.tick(.1);
+ assert.ok(cargo.history.some(e=>e.action==='STOWED'),'manifest cargo at the booking boundary must be physically retrieved and stowed');
+ assert.equal(sim.status().vesselsDeparted,3);
+ assert.equal(sim.status().craneRailViolations,0);
+ assert.equal(sim.status().transferOwnershipViolations,0);
+ console.log('PASS: boundary-column export is physically retrieved without changing its identity');
 }

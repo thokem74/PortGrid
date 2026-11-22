@@ -32,7 +32,7 @@ const sim=PortGridEngine({rng,dischargePerCall:cfg.discharge,loadPerCall:cfg.loa
  continuousVessels:!!cfg.continuous,preloadFutureCalls:false,craneOutages:cfg.craneOutages,onEvent:recordEvent});
 if(cfg.fullStorage){
  let serial=0;
- for(const slot of sim.yardSlots.filter(s=>s.yard<3&&s.x<=-45))while(slot.stack.length<3){
+ for(const slot of sim.yardSlots.filter(s=>s.yard<3&&s.x<=sim.L.agvStorageMaxX))while(slot.stack.length<3){
   const id='FULL-STORAGE-'+(++serial);
   sim.containers.set(id,{id,site:'yard',yard:slot.yard,slot:slot.yard+'-'+slot.bay+'-'+slot.row,x:slot.x,z:slot.z,y:1.45+slot.stack.length*2.8,direction:'inbound',order:null,history:[]});slot.stack.push(id);
  }
@@ -107,6 +107,11 @@ if(cfg.name==='normal-load-first-service'){
  assert.ok(kpi.sts.every(x=>x.completed>0),'all nine STS must receive service');
 }
 if(cfg.departures===3)assert.equal(info.liveMissions,0,'no active missions after final cargo completion');
+for(const call of sim.vesselCalls)if(call.workStarted!=null){
+ assert.equal(call.discharge.length,cfg.discharge,'each working call retains the configured discharge manifest');
+ assert.equal(call.load.length,cfg.load,'each working call retains the configured export manifest');
+}
+result.traceValidation=require('./report-invariants.test.js')(result);
 if(cfg.kpiTarget){
  const checkWindow=(label,end,start=null)=>{
   const exposure=end.sts.reduce((sum,q)=>sum+q.workingSeconds,0)-(start?.sts.reduce((sum,q)=>sum+q.workingSeconds,0)||0);
