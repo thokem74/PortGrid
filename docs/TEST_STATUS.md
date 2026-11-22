@@ -1,8 +1,64 @@
-# Verification status — 2026-11-21
+# Verification status
+
+## Expanded quay and yard grids — 2026-11-22
+
+The focused grid fixture checks section lengths against the inflated AGV body and turn sweep, verifies that terminal crossings are shared graph nodes, and checks all four parking connectors. It stalls a downstream AGV on a real graph section in both zones and observes a loaded follower at the intermediate stop line while two other vehicles turn at its bounding junctions. It also verifies section exclusivity in opposing traffic, aligned loaded reverse from an RTG bay, and release to a second vehicle.
+
+`npm test` passed all 14 checks and scenarios on the expanded layout. The expanded graph has 323 travel sections measuring 36–54 m. The 18 m stop line leaves about 1.8 m of additional clearance beyond the code’s combined chassis and junction-sweep envelope. The existing acceptance horizons and KPI gates apply. The full normal-load gate requires 36 imports, 24 exports, three departures, zero safety violations, at least 25 gross moves per crane-hour and under 10% for both scheduler-delay shares. The reports include per-crane counts and waiting causes, fleet-time partitions, transport latencies and every physical safety counter.
+
+### Runs on the expanded layout
+
+Use `node tests/integration.acceptance.js SCENARIO` for each row. Each starts with three vessels, nine STSs, twelve RTGs, 24 AGVs and twelve trucks. D/L is the manifest per vessel. These runs used Node.js 26.13.1. Wall time includes contention from concurrent verification.
+
+| Scenario | Seed | D/L | Simulated s | Wall s | Imports / exports | Departures | Outcome |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| `complete-small-seed3` | 3 | 3/2 | 900 | 10.69 | 9 / 6 | 3 | PASS |
+| `complete-small-seed7` | 7 | 3/2 | 900 | 13.96 | 9 / 6 | 3 | PASS |
+| `normal-load-first-service` | 3 | 12/8 | 300 | 10.38 | 15 / 0 | 0 | PASS |
+| `complete-normal-seed3` | 3 | 12/8 | 2400 | 57.66 | 36 / 24 | 3 | PASS |
+| `complete-normal-seed7` | 7 | 12/8 | 2400 | 47.44 | 36 / 24 | 3 | PASS |
+| `complete-normal-seed11` | 11 | 12/8 | 2400 | 42.11 | 36 / 24 | 3 | PASS |
+| `temporary-yard-outage` | 3 | 3/2 | 1200 | 51.08 | 9 / 6 | 3 | PASS |
+| `blocked-parking-release` | 7 | 3/2 | 1200 | 11.86 | 9 / 6 | 3 | PASS |
+| `loaded-delivery-outage` | 3 | 3/2 | 1500 | 24.41 | 9 / 6 | 3 | PASS |
+| `full-storage-recovery` | 7 | 3/2 | 3600 | 100.90 | 9 / 6 | 3 | PASS |
+| `complete-high-seed3` | 3 | 18/12 | 3600 | 159.68 | 54 / 36 | 3 | PASS |
+| `continuous-small-seed7` | 7 | 3/2 | 3000 | 67.61 | 49 / 30 | 15 | PASS |
+| `continuous-normal-seed3` | 3 | 12/8 | 8580 | 1468.34 | 287 / 183 | 22 | WATCHDOG_FAILURE |
+| `continuous-normal-seed7` | 7 | 12/8 | 8640 | 1400.00 | 290 / 184 | 23 | WATCHDOG_FAILURE |
+| `continuous-normal-seed11` | 11 | 12/8 | 9660 | 1778.75 | 294 / 189 | 23 | Stopped at capacity bound |
+
+The temporary yard outage takes three inbound AGV-side RTGs out of service for 90 seconds. The loaded delivery outage interrupts a loaded AGV's destination service. The parking release case stalls an AGV until 90 seconds. Full-storage recovery starts with the AGV-side inbound inventory filled to capacity. The runner checks route and body safety, crane rail and handoff authority, manifest ordering, progress watchdogs, and the KPI arithmetic.
+
+| Scenario | Gross moves / crane-hour | Post-warmup moves / crane-hour | Gross STS waiting (%) | Estimated scheduler delay (%) | Evidenced scheduler delay (%) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `complete-normal-seed3` | 26.97 | — | 31.05 | 3.50 | 0.00 |
+| `complete-normal-seed7` | 27.12 | — | 31.71 | 3.40 | 0.00 |
+| `complete-normal-seed11` | 26.88 | — | 31.37 | 3.58 | 0.00 |
+
+The scene passed `node tests/browser.smoke.js --extended` with Chromium at seed 3 through 908.7 simulated seconds. It observed AGVs at the parking exits, STS stands and yard junctions, and trucks in their separate corridor. The top-down and quayside captures were inspected. The smoke test reported zero console and JavaScript errors or sampled safety failures.
+
+Extended results come from independent scenario runs. The duplicate serial suite was stopped. The continuous suite remains unqualified. The JSON reports and per-run event traces are under `reports/` in the verification copies. Reports include source hashes, the last physical cargo event, per-STS counts, wait causes, fleet time and latency distributions.
+
+### Reproduced conditions
+
+- Unconstrained bidirectional quay approaches formed a wait-for cycle around the parking gateway and later along the z = 72 m travel row. For example, AGV-20 and AGV-14 held successive sections while each waited for the other's section. The quay travel rows and columns now have assigned directions, with the parking feeder admitting traffic southbound and the STS approach columns carrying traffic northbound.
+- An initial full run completed every move with zero safety violations and fell short of the throughput gate. All 24 exports were booked in the same block. The other two outbound AGV-side RTGs completed zero exports while the booked block's four transfer reservations accumulated waiting. Export booking now distributes eligible cargo over all three outbound blocks before assigning container identities to a work list.
+- The full-storage case initially reached the 600-second vessel watchdog with no cargo moves. Its relay buffer and crane retreat positions still referenced the old yard origin. They now follow the translated rail and storage coordinates. The rerun completed all 15 moves and three departures.
+
+### Sustained inbound capacity
+
+The three inbound AGV-side zones can hold 504 containers in total. Their initial occupied counts are 271, 272 and 286 for seeds 3, 7 and 11. Terminal trucks retrieve from the truck-side zone. The 240-second inbound relay admission interval permits at most 45 freed AGV-side container positions per simulated hour across the three blocks once the initial free space is consumed, before crane contention. The continuous traces record increasing `NO_SAFE_YARD_DESTINATION` time as the initial space fills.
+
+Two extended runs reached the vehicle watchdog. In seed 3 at 8,580 seconds, inbound TRK-08 spent 353.4 seconds waiting for a journey permit held by TRK-01. In seed 7 at 8,640 seconds, returning TRK-07 waited 300.7 seconds for the same truck at the yard 5 transfer apron. Both runs reported zero safety or ownership violations. The next truck-traffic investigation is permit fairness among journeys converging on the same trunk.
+
+Seed 11 was stopped after its 9,660-second sample because it could no longer reach the throughput gate within the planned 10,800-second horizon. The trace recorded 77 inbound storage releases, with a generous upper bound of 18 further releases. With 218 initially free positions, this bounds imports at 313 and exports at 208 under the vessel phase rule. Even if no additional working crane-seconds accrued after the sample, the resulting upper bound would be 23.89 gross moves per crane-hour against the required 25. The run completed 23 departures and reported zero route failures, overlaps, rail, manifest, ownership, or job errors through that sample.
+
+## Prior qualification — 2026-11-21
 
 This qualification evaluates the new implementation against deterministic acceptance conditions, without a legacy benchmark. Results below are actual runs on the source hashes in `reports/qualification-summary.json`. A source mismatch is not current certification. Historical `tests/result-*.json` files remain historical evidence.
 
-## Source and focused checks
+### Source and focused checks
 
 Passed on the final source:
 
@@ -16,7 +72,7 @@ node tests/physical-faults.test.js
 
 These cover all embedded/source copies and JavaScript syntax (including the Three.js module), persistent demands, fair first admission across nine STSs, mission states, parking-row independence, yard capacity rules, wait-for cycles, watchdogs unaffected by rerouting, actual graph-backed quay/parking escapes, AGV versus truck bay envelopes, truck permit transfer and reverse-route construction. Physical fault fixtures also fill all real inbound AGV-side stacks to capacity before dispatch, and suspend/resume an actual attached-container lift during a crane outage. Full storage preserves all nine initial crane demands and admits zero unsafe pickups.
 
-## Physical acceptance
+### Physical acceptance
 
 Run each row with `node tests/integration.acceptance.js SCENARIO`. Initial fleet/resources: three working vessels, nine STSs, twelve RTGs, 24 AGVs and twelve trucks. No crane outage unless specified. D/L is the work list per vessel. Wall runtimes reflect concurrent local test execution and are not a browser frame-rate benchmark.
 
@@ -44,7 +100,7 @@ The runner saves progress every 60 simulated seconds. It fails on a 300-second p
 
 The final high-load run completed all cargo by 2070.80 s and its last departure by 2125.77 s; gross crane throughput was 21.09 moves/crane-hour, gross STS waiting 59.05%, and estimated scheduler share 15.26%. The continuous small run completed 61 imports and 38 exports with 19 departures in 3,000 s, no terminal wait-for cycle and zero AGVs above the 60-second physical-progress threshold. Its four active missions belong to ongoing replacement calls.
 
-## Full-normal KPIs
+### Full-normal KPIs
 
 Gross crane rate uses moves divided by working-vessel crane-hours. Gross waiting is the historical AGV-related waiting subset; **it is not proven scheduler-avoidable delay**. Scheduler share below divides the existing state-based delay estimate by the same working-vessel crane-seconds. Observation continues after vessels depart, so terminal throughput over the complete 2,400-second horizon is 90 completed vessel moves/hour; the last physical cargo and departure timestamps give a more useful completion horizon.
 
@@ -90,7 +146,7 @@ Gross STS wait breakdown in crane-seconds (unrounded source values are in each r
 | `YARD_CRANE_BUSY` | 221.47 | 173.43 | 183.70 |
 | `YARD_DELIVERY_CAPACITY_FULL` | 16.13 | 15.77 | 20.17 |
 
-## Reproductions and corrections
+### Reproductions and corrections
 
 - `reports/reproduction-quay-turn-seed3.json`: AGV-03 at (-275,-72) could not rotate west beside loaded AGV-15 at (-264,-72). Both repeatedly replanned without displacement for more than 300 seconds. First-edge body feasibility and a graph-backed empty-vehicle escape address this class; replanning does not reset the physical watchdog.
 - `reports/reproduction-export-access-seed7.json` and `reports/export-access-diagnosis.json`: vessel-booked containers remained physically on the truck side of outbound yard 4, while repeated truck admissions starved the two-RTG relay. Urgent active-vessel relay admission now precedes new truck admission when both cranes are free. Relay destination/buffer reservations also exclude unrelated placement.
@@ -102,13 +158,13 @@ Gross STS wait breakdown in crane-seconds (unrounded source values are in each r
 
 These archives intentionally preserve failed earlier revisions. They are diagnosis evidence, not current pass results.
 
-## Browser evidence
+### Browser evidence
 
 `node tests/browser.smoke.js` passed using Chromium, a loopback-only server and a disposable profile. The ordinary browser-access host was unavailable; the executable browser smoke test provided the fallback. The sandbox initially denied localhost listening; the authorized local test ran outside that restriction. No browser security interstitial or certificate bypass was used.
 
 The test loaded the real HTML and CDN Three.js, checked actual AGV displacement, operated top-down and quayside camera controls and asserted no JavaScript exceptions/console errors or sampled AGV/route/manifest violations. `reports/browser-smoke.json`, `reports/browser-top.png` and `reports/browser-quay.png` contain the result and inspected screenshots. Layout and graph meshes were preserved. This short smoke test does not certify frame rate, every parking/yard junction, all UI interactions or long-run rendered handling. Software-rendered screenshot FPS is not a throughput KPI.
 
-## Open qualification and capacity analysis
+### Open qualification and capacity analysis
 
 - Full normal-load continuous-vessel pipelines across multiple seeds; high load across multiple seeds and larger horizons.
 - Exhaustive blocked-route/stalled-vehicle combinations, scarce storage and recovery after actual full storage clears. Full-storage admission and a mid-lift outage are focused fixtures, not a full congestion recovery matrix.

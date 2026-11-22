@@ -95,8 +95,9 @@ Current pure helpers include `authorizeParkingDeparture(vehicle, vehicles)` and 
 ## 6. Geometry and visualization invariants
 
 - The terminal retains three berths and nine STS cranes, with three STSs per vessel.
-- The quay has eight evenly spaced lanes; existing longitudinal pitch is **12 m** and regular STS cross-grid pitch is **11 m**.
-- The yard has **eight** parallel guide lanes at **12 m** pitch: the first four incoming (quay → yard), the next four outgoing (yard → quay).
+- The quay has four one-way travel rows and four STS transfer rows. The travel rows and cross-grid use **36 m** spacing. Each crane has a protected drive-through service area.
+- The yard has **eight** parallel guide lanes at **36 m** pitch. Four carry incoming traffic and four carry outgoing traffic. Each block has separate entry and exit cross rows and a protected service aisle.
+- A waiting AGV on a travel link must clear the swept envelope of both adjoining junctions. Compact service-area junctions are protected together, with waiting space outside the area.
 - Parking comprises two distinct AGV parking rows and their graph-backed exit/return paths, with four explicit connectors to the quay network.
 - Truck movement remains a separate route network with its own gate, parking, transfer and yard-side connections.
 - Keep visual roads derived from logical graph edges. Do not add duplicate decorative slabs, unused grids, gaps, overlapping coplanar surfaces, or disconnected paths. Parking uses dark gray, yard dark cyan, and quay a distinct cyan; preserve unified zone coloring unless intentionally redesigned.

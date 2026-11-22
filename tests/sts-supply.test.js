@@ -15,7 +15,8 @@ function fixture(){let seed=3;return make({rng:()=>((seed=Math.imul(seed,1664525
 }
 {
  const sim=fixture();let lifts=0,successor=false;
- for(let i=0;i<2200;i++){
+ // Continue into the next supply wave on the larger terminal.
+ for(let i=0;i<4200;i++){
   sim.tick(.1);
   for(const q of sim.sts){
    if(!q.job)continue;
@@ -50,10 +51,12 @@ function fixture(){let seed=3;return make({rng:()=>((seed=Math.imul(seed,1664525
 }
 {
  const sim=fixture(),v=sim.agvs[0];
- Object.assign(v,{x:-242,z:12,route:[{x:-242,z:12},{x:-253,z:12}],routeIndex:1,state:'RETURNING',load:null});
+ const [left,right]=sim.agvGuideGraph.columns;
+ const z=sim.agvGuideGraph.quayTravelRows[1];
+ Object.assign(v,{x:left,z,route:[{x:left,z},{x:right,z}],routeIndex:1,state:'RETURNING',load:null});
  assert.equal(sim.resources.isVehicleDispatchable(v),true,'an empty return is reusable at a graph node');
- v.x=-242.5;assert.equal(sim.resources.isVehicleDispatchable(v),false,'mid-edge diversion is forbidden');
- v.x=-242;v.load='FIXTURE';assert.equal(sim.resources.isVehicleDispatchable(v),false,'loaded vehicles are never dispatchable');
+ v.x=left+.5;assert.equal(sim.resources.isVehicleDispatchable(v),false,'mid-edge diversion is forbidden');
+ v.x=left;v.load='FIXTURE';assert.equal(sim.resources.isVehicleDispatchable(v),false,'loaded vehicles are never dispatchable');
  v.load=null;
  const call=sim.vesselCalls[0],work=call.discharge[0],q={type:'IMPORT',qc:sim.sts[0],c:sim.containers.get(work.container),call,work};
  const status=sim.status(),before=JSON.stringify(sim.agvs);

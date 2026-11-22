@@ -18,7 +18,7 @@ node tests/integration.acceptance.js list
 node tests/integration.acceptance.js complete-normal-seed3
 ```
 
-`npm test` includes source/syntax checks, controller/monitor/traffic/physical-fault/supply/transfer-ownership tests, both shipped small scenarios, early normal service and full normal seeds 3, 7 and 11. Full normal acceptance additionally requires at least 25 gross moves per crane-hour and under 10% estimated and evidenced scheduler delay. These are project targets, not guaranteed results. The extended suite also runs temporary yard outage, blocked parking release, loaded-delivery outage, physical full-storage recovery, high load, and small and normal continuous-vessel pipelines. Normal continuous scenarios use seeds 3, 7 and 11 over 10,800 simulated seconds. A failed acceptance returns a nonzero exit code; inspect the actual report rather than assuming every listed scenario is certified.
+`npm test` includes source/syntax checks, controller, monitor, traffic, grid clearance, physical fault, supply, and transfer ownership tests, both shipped small scenarios, early normal service and full normal seeds 3, 7 and 11. Full normal acceptance additionally requires at least 25 gross moves per crane-hour and under 10% estimated and evidenced scheduler delay. These are project targets, not guaranteed results. The extended suite also runs temporary yard outage, blocked parking release, loaded-delivery outage, physical full-storage recovery, high load, and small and normal continuous-vessel pipelines. Normal continuous scenarios use seeds 3, 7 and 11 over 10,800 simulated seconds. A failed acceptance returns a nonzero exit code; inspect the actual report rather than assuming every listed scenario is certified.
 
 Reports in `reports/` contain scenario configuration, source hashes, actual simulated/wall time, result, cumulative safety counts, per-STS/yard/fleet KPIs, physical stage latency summaries and progress snapshots. Each run streams a unique `reports/runs/SCENARIO-RUN_ID.events.ndjson` referenced by its report, preventing concurrent runs from mixing event traces. `*.progress.json` remains useful during a long run. Suite reports record each command and exit status. `reproduction-*.json` preserves earlier failing conditions and must not be read as current certification.
 
@@ -42,6 +42,8 @@ console.log(sim.getKPI(), sim.reliabilityDiagnostics());
 ```
 
 STS demand persists without yard capacity. Physical crane transfers confirm cargo completion; discharge-before-load and collision/rail interlocks remain authoritative. Diagnostics expose blockers and bounded recovery attempts. Gross STS waiting is distinct from the estimated scheduler-delay subset.
+
+Quay and yard travel intersections are spaced at least 36 m apart. An AGV can wait 18 m short of the next junction while vehicles turn at either end of the link. Compact STS and RTG approaches use protected service areas. The two parking rows and their four connectors retain their original geometry. The standalone scene draws the same directed road network used by the engine.
 
 An AGV or truck outside its transfer slot cannot occupy STS/RTG execution. `resources.craneOccupancy()` exposes each physical crane owner and alignment; `status().transferOwnershipViolations` is a cumulative hard-failure counter. Storage and arrival-slot reservations remain separate from crane execution. Trucks release the RTG after yard pickup, before travelling to the gate.
 

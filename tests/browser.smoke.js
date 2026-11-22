@@ -32,6 +32,11 @@ async function main(){
  const send=(method,params={})=>new Promise((resolve,reject)=>{const id=++seq;pending.set(id,{resolve,reject});socket.send(JSON.stringify({id,method,params}));});
  const evaluate=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(JSON.stringify(r.exceptionDetails));return r.result.value;};
  await send('Runtime.enable');await send('Page.enable');
+ const seed=3;
+ await send('Page.addScriptToEvaluateOnNewDocument',{source:`{
+  let seed=${seed};
+  Math.random=()=>((seed=Math.imul(seed,1664525)+1013904223|0)>>>0)/4294967296;
+ }`});
  await send('Page.navigate',{url:'http://127.0.0.1:'+server.address().port+'/'});
  await until(()=>evaluate('!!(window.PORTGRID && document.querySelector("#render canvas") && document.querySelector("#loading").style.display === "none")'),45);
  const start=await evaluate('({time:PORTGRID.time,positions:PORTGRID.agvs.map(v=>({x:v.x,z:v.z}))})');
@@ -43,11 +48,13 @@ async function main(){
   for(const target of [60,180,360,600,900]){
    while(await evaluate('PORTGRID.time')<target){
     const sample=await evaluate(`(()=>{for(let i=0;i<100&&PORTGRID.running;i++)PORTGRID.tick(.1);
+     const graph=PORTGRID.agvGuideGraph;
+     const {agvDockX,truckDockX,truckOutX}=PORTGRID.L;
      return {running:PORTGRID.running,
       parkingExit:PORTGRID.agvs.some(v=>v.route.length&&v.x<-308&&v.z<0),
       quayStand:PORTGRID.agvs.some(v=>v.state==='DOCKED'&&PORTGRID.sts.some(q=>Math.abs(v.x-q.homeX)<.2)&&v.z<0),
-      yardJunction:PORTGRID.agvs.some(v=>v.route.length&&v.x>=-328&&v.x<=-244&&v.z>=36),
-      truckCorridor:PORTGRID.trucks.some(v=>v.route.length&&v.x>=221&&v.x<=317)};})()`);
+      yardJunction:PORTGRID.agvs.some(v=>v.route.length&&v.x>=graph.yardIncomingColumns[0]&&v.x<=agvDockX&&v.z>=graph.yardMouthZ+36),
+      truckCorridor:PORTGRID.trucks.some(v=>v.route.length&&v.x>=truckDockX&&v.x<=truckOutX)};})()`);
     assert.ok(sample.running,'rendered engine must remain running');
     for(const key of Object.keys(coverage))coverage[key]||=sample[key];
     await evaluate('new Promise(resolve=>requestAnimationFrame(resolve))');
@@ -65,7 +72,7 @@ async function main(){
  assert.equal(status.unsafeAgvBodyOverlaps,0);assert.equal(status.gridRouteFailures,0);assert.equal(status.manifestViolations,0);
  assert.equal(status.transferOwnershipViolations,0);assert.equal(status.craneRailViolations,0);assert.equal(status.eventCounts.JOB_ERROR||0,0);
  assert.equal(errors.length,0);assert.equal(consoleErrors.length,0);
- fs.writeFileSync(path.join(reports,'browser-smoke.json'),JSON.stringify({passed:true,sourceHashes,extended,coverage,time:status.time,errors,consoleErrors,status},null,2));
+ fs.writeFileSync(path.join(reports,'browser-smoke.json'),JSON.stringify({passed:true,sourceHashes,seed,extended,coverage,time:status.time,errors,consoleErrors,status},null,2));
  console.log('PASS: Chromium rendering, top/quay cameras, actual AGV motion, console and safety smoke checks');
 }
 main().catch(error=>{fs.writeFileSync(path.join(reports,'browser-smoke.json'),JSON.stringify({passed:false,sourceHashes,error:String(error),errors,consoleErrors},null,2));console.error(error);process.exitCode=1;}).finally(async()=>{

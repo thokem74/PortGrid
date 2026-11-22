@@ -36,7 +36,7 @@
  <section class="section"><div class="eyebrow">CAMERAS</div><div class="buttons" id="views"><button class="btn active" data-view="overview">◈ Overview</button><button class="btn" data-view="top">⊞ Top-down</button><button class="btn" data-view="quay">⚓ Quayside</button><button class="btn" data-view="yards">▤ Parallel yards</button></div></section>
  <section class="section"><div class="eyebrow">OPERATIONS WINDOWS</div><div class="buttons"><button class="btn primary" id="showJobs">▦ Jobs</button><button class="btn primary" id="showVessels">⚓ Vessels</button><button class="btn primary" id="showContainers">▤ Containers</button><button class="btn primary" id="showKPI">▥ KPI Dashboard</button></div><div class="note" style="margin-top:8px">Live fleet, crane and container tables sourced from the simulation scheduler.</div></section>
  <section class="section"><div class="eyebrow">SIMULATION</div><div class="line"><span>Simulation speed</span><b id="speedText">4×</b></div><input class="field" type="range" id="speed" min="1" max="12" value="4" step="1"><div class="buttons" style="margin-top:12px"><button class="btn primary" id="pause">Ⅱ Pause</button><button class="btn" id="restart">↺ Reset</button></div><div class="line"><span>Show zone labels</span><input type="checkbox" id="labels" checked></div><div class="line"><span>Container highlight</span><input type="checkbox" id="highlight" checked></div></section>
- <section class="section"><div class="eyebrow">TRAFFIC & YARD LEGEND</div><div class="legend"><i class="square" style="background:#187fab"></i>8 quay lanes (12 m pitch) · single 11 m cross-grid</div><div class="legend"><i class="square" style="background:#2b7187"></i>4 incoming yard lanes · quay → yard</div><div class="legend"><i class="square" style="background:#278c99"></i>4 outgoing yard lanes · yard → quay</div><div class="legend"><i class="square" style="background:#24a7a1"></i>Cross-lanes and block guide paths</div><div class="legend"><i class="square" style="background:#b78340"></i>STS transfer uses any reserved quay lane</div><div class="legend"><i class="square" style="background:#8c6baa"></i>AGV-only left-edge transfer corridor</div><div class="legend"><i class="square" style="background:#547d45"></i>External truck right-edge transfer corridor</div><div class="legend"><i class="square" style="background:#d2a34c"></i>Incoming / import yard</div><div class="legend"><i class="square" style="background:#4a93ba"></i>Outgoing / export yard</div></section>
+ <section class="section"><div class="eyebrow">TRAFFIC & YARD LEGEND</div><div class="legend"><i class="square" style="background:#187fab"></i>4 quay travel lanes · 36 m junction spacing</div><div class="legend"><i class="square" style="background:#2b7187"></i>4 incoming yard lanes · quay → yard</div><div class="legend"><i class="square" style="background:#278c99"></i>4 outgoing yard lanes · yard → quay</div><div class="legend"><i class="square" style="background:#24a7a1"></i>Yard cross-lanes · 36 m minimum spacing</div><div class="legend"><i class="square" style="background:#b78340"></i>STS transfer uses any reserved quay lane</div><div class="legend"><i class="square" style="background:#8c6baa"></i>AGV-only left-edge transfer corridor</div><div class="legend"><i class="square" style="background:#547d45"></i>External truck right-edge transfer corridor</div><div class="legend"><i class="square" style="background:#d2a34c"></i>Incoming / import yard</div><div class="legend"><i class="square" style="background:#4a93ba"></i>Outgoing / export yard</div></section>
  <div class="note">Eight 12m-pitch yard guide lanes (4 incoming + 4 outgoing) and eight uniformly spaced (12m) quay lanes, with 11m equal-pitch STS cross-grid cells and separate yard-access connectors, with intersection-level traffic checks and reserved in-place turn maneuvers; no temporary waiting bays. Assigned AGVs can remain parked until a safe crane slot is available. Dispatch favors existing manifest orders, load-balanced import/export cycles and physical crane readiness. AGVs queue only at crane transfer positions; only independently clear road sections run together. Current vehicle motion and crane handling are reported separately. Both gantries maintain rail separation and coordinate physical yard handovers. Click a container, AGV, truck or crane to inspect it. Drag to rotate, scroll to zoom and right-drag to pan. Cargo is transferred only by the assigned equipment.</div>
 </aside>
 <aside id="right">
@@ -277,20 +277,35 @@ if(typeof module!=='undefined'&&module.exports)module.exports={createMonitor,fin
 ( function(root){'use strict';
 const PortGridControl=typeof module!=='undefined'&&module.exports?require('./portgrid-control.js'):root.PortGridControl;
 const {createMonitor}=typeof module!=='undefined'&&module.exports?require('./portgrid-monitor.js'):root.PortGridMonitor;
-const  L={shipX:[-220,0,220],stsX:[-264,-220,-176,-44,0,44,176,220,264],shipZ:-152,stsZ:-95,stsDockZ:-60, /* Shared terminal geometry: ship berths, STS positions, yard blocks, transfer stations, and parking coordinates */
- yards:[{id:'IN-01',type:'inbound',z:92},{id:'IN-02',type:'inbound',z:126},{id:'IN-03',type:'inbound',z:160},{id:'OUT-01',type:'outbound',z:194},{id:'OUT-02',type:'outbound',z:228},{id:'OUT-03',type:'outbound',z:262}],agvDockX:-221,truckDockX:221,
- agvNorthX:-304,agvSouthX:-282,agvOuterWestZ:-72,agvWestZ:-60,agvEastZ:-48,agvOuterEastZ:-36,agvParkX:-420,truckInX:297,truckOutX:317,gateZ:301,
- yardStorageFirstX:-202,yardStorageStepX:12.25,yardStorageBays:34,yardTransferWidth:14};
-const  STS_DOCK_LANES=[L.agvOuterWestZ,L.agvWestZ,L.agvEastZ,L.agvOuterEastZ]; /* Four ship-to-shore crane handoff lane coordinates */
-const  YARD_SLOT_OFFSETS=[-10.5,-3.5,3.5,10.5]; /* Relative positions of the four transfer bays at each yard */
-// Eight 12 m-spaced yard lanes: retain the four western incoming lanes,
- // add four eastern outgoing lanes. Direction applies to long N/S travel;
- // each yard docking cross-branch permits safe lateral access.
- const  YARD_INCOMING_X=[-328,-316,-304,-292]; /* Four dedicated quay-to-yard north/south guide lanes */
- const  YARD_OUTGOING_X=[-280,-268,-256,-244]; /* Four dedicated yard-to-quay north/south guide lanes */
- const  BLOCK_GRID_X=[...YARD_INCOMING_X,...YARD_OUTGOING_X]; /* All eight yard guide-lane X coordinates */
- const  YARD_LANE_PITCH=12; /* Fixed spacing between adjacent yard guide lanes (metres) */
-/* Evaluates callback for L.yards.map using y */
+const TRAVEL_PITCH=36, PARKING_CONNECTOR_X=-308;
+const QUAY_TRAVEL_ROWS=[0,36,72,108];
+const [QUAY_WESTBOUND_Z,QUAY_EASTBOUND_Z]=QUAY_TRAVEL_ROWS;
+const YARD_MOUTH_Z=QUAY_TRAVEL_ROWS.at(-1);
+const QUAY_COLUMNS=Array.from({length:21},(_,i)=>PARKING_CONNECTOR_X+i*TRAVEL_PITCH);
+const STS_ACCESS=Array.from({length:9},(_,i)=>{
+ const west=QUAY_COLUMNS[1+2*i+Math.floor(i/3)];
+ const east=west+TRAVEL_PITCH;
+ return {west,east,x:(west+east)/2,id:'STS-SERVICE-'+(i+1)};
+});
+const BLOCK_GRID_X=QUAY_COLUMNS.slice(0,8);
+const YARD_INCOMING_X=BLOCK_GRID_X.slice(0,4), YARD_OUTGOING_X=BLOCK_GRID_X.slice(4);
+const YARD_SERVICE_X=BLOCK_GRID_X.at(-1)+TRAVEL_PITCH;
+const YARD_X_SHIFT=237;
+const L={
+ shipX:[STS_ACCESS[1].x,STS_ACCESS[4].x,STS_ACCESS[7].x],stsX:STS_ACCESS.map(access=>access.x),
+ shipZ:-152,stsZ:-95,stsDockZ:-60,
+ yards:Array.from({length:6},(_,i)=>{
+  const inbound=i<3;
+  return {id:(inbound?'IN':'OUT')+'-0'+(i%3+1),type:inbound?'inbound':'outbound',z:180+i*72};
+ }),
+ agvDockX:-221+YARD_X_SHIFT,truckDockX:221+YARD_X_SHIFT,
+ truckInX:297+YARD_X_SHIFT,truckOutX:317+YARD_X_SHIFT,gateZ:579,
+ agvOuterWestZ:-72,agvWestZ:-60,agvEastZ:-48,agvOuterEastZ:-36,
+ yardStorageFirstX:-202+YARD_X_SHIFT,yardStorageStepX:12.25,yardStorageBays:34,yardTransferWidth:14,
+ agvStorageMaxX:-40+YARD_X_SHIFT,truckStorageMinX:45+YARD_X_SHIFT
+};
+const STS_DOCK_LANES=[L.agvOuterWestZ,L.agvWestZ,L.agvEastZ,L.agvOuterEastZ];
+const YARD_SLOT_OFFSETS=[-10.5,-3.5,3.5,10.5];
 /* Evaluates callback for YARD_SLOT_OFFSETS.map using dz, lane */
 const  YARD_AGV_BAYS=L.yards.map( y=>YARD_SLOT_OFFSETS.map( (dz,lane)=>({x:L.agvDockX,z:y.z+dz,lane,yard:y.id,side:'agv'}))); /* AGV-accessible crane transfer positions for each yard block */
 /* Evaluates callback for L.yards.map using y */
@@ -305,7 +320,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
  const  bodyBounds=heading=>Math.abs(Math.cos(heading))>=Math.abs(Math.sin(heading))? /* Computes body bounds for the current simulation operation */
    {hx:BODY_LONG,hz:BODY_WIDE}:{hx:BODY_WIDE,hz:BODY_LONG};
 
- let  t=0, serial=0, jobSeq=0, orderSeq=0, moveCount=0, started=true, roadBlocked=0, craneWaits=0, westOwner=null, truckOwner=null; /* Elapsed simulation time in seconds */ /* Counter used to issue unique container IDs */ /* Counter used to issue unique job IDs */ /* Counter used to issue unique order IDs */ /* Number of completed physical moves */ /* Whether simulation time advances */ /* Accumulated blocked traffic steps */ /* Count of crane-related waits */ /* Local value for west owner in makeEngine() */ /* Local value for truck owner in makeEngine() */
+ let  t=0, serial=0, jobSeq=0, orderSeq=0, moveCount=0, started=true, roadBlocked=0, craneWaits=0, truckOwner=null; /* Elapsed simulation time in seconds */ /* Counter used to issue unique container IDs */ /* Counter used to issue unique job IDs */ /* Counter used to issue unique order IDs */ /* Number of completed physical moves */ /* Whether simulation time advances */ /* Accumulated blocked traffic steps */ /* Count of crane-related waits */ /* Local value for west owner in makeEngine() */ /* Local value for truck owner in makeEngine() */
  const  containers=new Map(), history=[], jobs=[], orders=[], events=[], agvs=[], trucks=[], cranes=[], yardSlots=[]; /* Container records indexed by unique container ID */ /* Chronological container movement audit trail */ /* Physical handling and transport jobs */ /* Container transport orders */ /* Simulation events and diagnostic history */ /* Fleet of autonomous guided vehicles */ /* Fleet of gate trucks */ /* All physical crane equipment instances */ /* Physical yard storage slots with container stacks */
  const monitor=createMonitor({threshold:options.noProgressSeconds??60,emit:e=>log(e.type,e)});
  let lastMonitorAt=-Infinity;
@@ -313,7 +328,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
  const arrivalDistances=new Map(),serviceSamples=new Map();
  const cycleMetrics={completed:0,actualEmptyMeters:0,unpairedGraphMeters:0,savedMeters:0};
  const yardMetrics=new Map();
- const turnReservations=new Map();
+ const turnReservations=new Map(), serviceReservations=new Map();
  let transferOwnershipViolations=0;
  function recordService(q,j){
   const started=q.type==='sts'?j.stsServiceStarted:j.rtgServiceStarted;
@@ -327,7 +342,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
  // Static directed graph distances are cached by destination. Forecasting
  // never calls the mutating route planner, consumes RNG or grants movement.
  function graphDistance(from,to){
-  const goal=gKey(to.x,to.z),allowParking=from.x<-330||to.x<-330,cacheKey=goal+'|'+allowParking;
+  const goal=gKey(to.x,to.z),allowParking=from.x<PARKING_CONNECTOR_X||to.x<PARKING_CONNECTOR_X,cacheKey=goal+'|'+allowParking;
   if(!arrivalDistances.has(cacheKey)){
    const reverse=new Map();
    for(const [id,edges] of AGV_GRID.edges)for(const edge of edges){
@@ -349,8 +364,9 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   return dist(from,nearest)+(nodes.get(gKey(nearest.x,nearest.z))??Infinity);
  }
  function estimateArrival(q,v){
-  const bz=12;
-  const quay={x:q.qc.homeX+11,z:bz},tail=Math.abs(bz-L.stsDockZ)+11;
+  const access=STS_ACCESS.find(area=>area.x===q.qc.homeX);
+  const quay={x:access.east,z:QUAY_EASTBOUND_Z};
+  const tail=graphDistance(quay,{x:access.x,z:L.stsDockZ});
   let distance,handling=0;
   const approach=target=>{
    if(v.x<-360&&v.z>-40&&v.z<170){
@@ -558,17 +574,17 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
  /* Evaluates callback for L.stsX.map using x, i */
  const  sts=L.stsX.map( (x,i)=>makeCrane('sts','QC-'+String(i+1).padStart(2,'0'),x,L.stsZ,{ship:Math.floor(i/3)})); /* Nine ship-to-shore cranes, three allocated to each berth */
  /* Evaluates callback for L.yards.map using y, i */
- const  rtgAgv=L.yards.map( (y,i)=>makeCrane('rtg','YC-A'+String(i+1).padStart(2,'0'),-86,y.z,{yard:i,role:'agv'})); /* Yard cranes assigned to AGV-side operations */
+ const  rtgAgv=L.yards.map( (y,i)=>makeCrane('rtg','YC-A'+String(i+1).padStart(2,'0'),YARD_X_SHIFT-86,y.z,{yard:i,role:'agv'})); /* Yard cranes assigned to AGV-side operations */
  /* Evaluates callback for L.yards.map using y, i */
- const  rtgTruck=L.yards.map( (y,i)=>makeCrane('rtg','YC-T'+String(i+1).padStart(2,'0'),86,y.z,{yard:i,role:'truck'})); /* Yard cranes assigned to truck-side operations */
+ const  rtgTruck=L.yards.map( (y,i)=>makeCrane('rtg','YC-T'+String(i+1).padStart(2,'0'),YARD_X_SHIFT+86,y.z,{yard:i,role:'truck'})); /* Yard cranes assigned to truck-side operations */
  const  rtgs=[...rtgAgv,...rtgTruck]; /* All yard cranes serving AGVs and trucks */
  const  YARD_RAIL_GAP=40; // minimum gantry-centre separation on common rails /* Minimum permitted separation between shared-rail yard cranes */
  // Both RTGs may use the entire working block, with outer sidings to yield.
  // The AGV-side crane must remain to the left of the truck-side crane.
- // The gantry itself travels onto the AGV (-221) and truck (+221)
- // transfer positions; there is no extra longitudinal trolley extension.
- const  YARD_LIMITS={agv:{min:-221,max:221},truck:{min:-221,max:221}}; /* Physical travel limits of both yard-crane gantries */
- const  YARD_AGV_CLEAR_X=-70, YARD_TRUCK_CLEAR_X=70; /* World-coordinate value for yard agv clear x */ /* World-coordinate value for yard truck clear x */
+ // The gantry itself travels onto the AGV and truck transfer positions.
+ const railLimits={min:L.agvDockX,max:L.truckDockX};
+ const YARD_LIMITS={agv:railLimits,truck:railLimits}; /* Physical travel limits of both yard-crane gantries */
+ const  YARD_AGV_CLEAR_X=YARD_X_SHIFT-70, YARD_TRUCK_CLEAR_X=YARD_X_SHIFT+70; /* World-coordinate value for yard agv clear x */ /* World-coordinate value for yard truck clear x */
  let  completedRelays=0; /* Local value for completed relays in makeEngine() */
  const  lastRelayAt=Array(L.yards.length).fill(-400); /* Simulation timestamp for last relay at */
  const  yardCraneIncidents=[]; /* Collection of yard crane incidents */
@@ -637,7 +653,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
  }
  // Truck parking is outside the yard, on the landside apron.
  for(let  i=0;i<12;i++){ /* Loop index for the current collection in makeEngine() */
-  const  x=348+Math.floor(i/6)*19, z=87+(i%6)*36+Math.floor(i/6)*16; /* Horizontal world coordinate in makeEngine() */ /* Longitudinal world coordinate in makeEngine() */
+  const  x=L.truckOutX+31+Math.floor(i/6)*19, z=L.yards[i%6].z-5+Math.floor(i/6)*16; /* Horizontal world coordinate in makeEngine() */ /* Longitudinal world coordinate in makeEngine() */
   trucks.push({id:'TRK-'+String(i+1).padStart(2,'0'),type:'truck',x,z,heading:0,speed:12,job:null,load:null,route:[],routeIndex:0,
    state:'GATE',home:point(x,z),completed:0,loadedMeters:0,emptyMeters:0,blocked:0,blockedTime:0,priority:0});
  }
@@ -668,14 +684,21 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   function bookExports(call){
   const  qty=Math.max(0,vesselConfig.loadPerCall-(call.state==='SCHEDULED'?(options.truckExportQuota??1):0)); /* Local value for qty in bookExports() */
   /* Evaluates callback for yardSlots.filter using s */
-  const  candidates=yardSlots.filter( s=>s.x<=-40&&L.yards[s.yard].type==='outbound'&&s.stack.length) /* Flag indicating whether candidates */
-    /* Evaluates callback for er(s=>s.x<=-40&&L.yards[s.yard].type==='outbound'&&s.stack.length) .map using s */
-    /* Evaluates callback for tbound'&&s.stack.length) .map(s=>containers.get(s.stack.at(-1))).filter using c */
-    .map( s=>containers.get(s.stack.at(-1))).filter( c=>c&&!c.loadCall&&!c.order&&c.site==='yard');
-  /* Evaluates callback for candidates.sort using a, b */
-  candidates.sort( (a,b)=>a.yard-b.yard||a.x-b.x);
-  const  offset=(call.berth*2)%Math.max(1,candidates.length); /* Local value for offset in bookExports() */
-  for(let  i=0;i<Math.min(qty,candidates.length);i++)appendManifest(call,'LOAD',candidates[(i+offset)%candidates.length]); /* Loop index for the current collection in bookExports() */
+  const blocks=L.yards.flatMap((yard,bi)=>{
+   if(yard.type!=='outbound')return [];
+   const candidates=yardSlots.filter(slot=>slot.yard===bi&&slot.x<=L.agvStorageMaxX&&slot.stack.length)
+     .map(slot=>containers.get(slot.stack.at(-1)));
+   const committed=candidates.filter(c=>c.loadCall&&c.site==='yard').length;
+   const available=candidates.filter(c=>!c.loadCall&&!c.order&&c.site==='yard').sort((a,b)=>a.x-b.x);
+   return [{bi,committed,available}];
+  });
+  for(let i=0;i<qty;i++){
+   const next=blocks.filter(block=>block.available.length)
+    .sort((a,b)=>a.committed-b.committed||a.bi-b.bi)[0];
+   if(!next)break;
+   appendManifest(call,'LOAD',next.available.shift());
+   next.committed++;
+  }
  }
  /* Assigns loading tasks to STS territories and ship stowage positions */
   function planStowage(call){
@@ -848,7 +871,8 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
  /* Finds accessible top containers for an RTG at a given yard */
   function topYard(bi,requireType,role){const  matches=[];for(const  slot of yardSlots){ /* Collection of matches */ /* Current storage or transfer slot in topYard() */
   /* Evaluates callback for jobs.some using j */
-  if(slot.yard!==bi||role==='agv'&&slot.x>Math.min(-45,rtgTruck[bi].x-YARD_RAIL_GAP-8)||role==='truck'&&slot.x>0&&slot.x<Math.max(45,rtgAgv[bi].x+YARD_RAIL_GAP+8)||role==='truck'&&slot.x<45||!slot.stack.length||jobs.some( j=>!j.completed&&j.slot===slot))continue;
+  if(slot.yard!==bi||role==='agv'&&slot.x>Math.min(L.agvStorageMaxX,rtgTruck[bi].x-YARD_RAIL_GAP-8)||
+   role==='truck'&&slot.x<Math.max(L.truckStorageMinX,rtgAgv[bi].x+YARD_RAIL_GAP+8)||!slot.stack.length||jobs.some(j=>!j.completed&&j.slot===slot))continue;
   const  c=containers.get(slot.stack.at(-1)); /* Current container or item being processed in topYard() */
   if(!c||c.site!=='yard'||c.order||requireType&&c.direction!==requireType)continue;
   matches.push(c);
@@ -856,7 +880,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
  /* Chooses an eligible physical storage slot for a container */
   function freeSlot(bi,role,choose=true){
   /* Evaluates callback for yardSlots.filter using s */
-  const  available=yardSlots.filter( s=>s.yard===bi&&(role==='agv'?s.x<=Math.min(-45,rtgTruck[bi].x-YARD_RAIL_GAP-8):role==='truck'?s.x>=Math.max(45,rtgAgv[bi].x+YARD_RAIL_GAP+8):true)&&s.stack.length<3&& /* Eligible items after filtering operational constraints in freeSlot() */
+  const available=yardSlots.filter(s=>s.yard===bi&&(role==='agv'?s.x<=Math.min(L.agvStorageMaxX,rtgTruck[bi].x-YARD_RAIL_GAP-8):role==='truck'?s.x>=Math.max(L.truckStorageMinX,rtgAgv[bi].x+YARD_RAIL_GAP+8):true)&&s.stack.length<3&&
     (!s.stack.length||(!containers.get(s.stack.at(-1))?.order&&!containers.get(s.stack.at(-1))?.loadCall))&&
     /* Evaluates callback for jobs.some using j */
     !jobs.some( j=>!j.completed&&(j.slot===s||j.finalSlot===s||j.buffer===s)));
@@ -973,55 +997,65 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
  /* Evaluates callback for STS_DOCK_LANES.map using z, lane */
  const  CRANE_QUEUE_BAYS=[...sts.flatMap( q=>STS_DOCK_LANES.map( (z,lane)=>({x:q.homeX,z,lane,crane:q.id,side:'sts'}))), /* Collection of crane queue bays */
    ...YARD_AGV_BAYS.flat()];
- // The three STS per ship share one exact rectangular 11 m x 12 m quay grid.
- // STS centres are 44 m apart (= four 11 m cells), so each berth repeats
- // precisely the same column layout. Local approaches use the same pitch.
- const  QUAY_GRID_PITCH_X=11, STS_ACCESS_OFFSET=QUAY_GRID_PITCH_X; /* Uniform longitudinal grid-column spacing across the quay */ /* Offset used for STS approach and departure connectors */
- const  EIGHT_QUAY_ROWS=[-72,-60,-48,-36,-24,-12,0,12]; /* Eight equally spaced AGV quay lane Z coordinates */
- // Entire quay uses ONE uniformly spaced lattice. Yard-guide columns and
- // parking entrances are branches, not extra full-height quay columns.
- /* Evaluates callback for Array.from using _, i */
- const  REGULAR_QUAY_COLUMNS=Array.from({length:61}, (_,i)=>-330+i*QUAY_GRID_PITCH_X); /* Uniform quay-grid X coordinates */
- const  AGV_GRID={nodes:new Map(),edges:new Map(),quayRows:EIGHT_QUAY_ROWS.slice(), /* Directed navigation graph shared by AGV route planning and road visualization */
-   /* Evaluates callback for L.yards.map using y */
-   columns:REGULAR_QUAY_COLUMNS.slice(),yardRows:L.yards.map( y=>y.z)};
- /* Produces a stable lookup key from a grid coordinate */
-  function gKey(x,z){return `${Math.round(x*1000)/1000},${Math.round(z*1000)/1000}`}
- /* Creates or reuses a routing graph intersection */
-  function graphNode(x,z,zone){const  k=gKey(x,z);if(!AGV_GRID.nodes.has(k)){ /* Current loop key or index in graphNode() */
-   AGV_GRID.nodes.set(k,{x,z,zone,id:k});AGV_GRID.edges.set(k,[]);
-  }return k}
- /* Connects two grid nodes with a directed or bidirectional edge */
-  function graphLink(x1,z1,x2,z2,oneWay=false,zone='GUIDE',multiplier=1){
-  const  a=graphNode(x1,z1,zone), b=graphNode(x2,z2,zone), cost=Math.hypot(x2-x1,z2-z1)*multiplier; /* First item being compared in graphLink() */ /* Second item being compared in graphLink() */ /* Local value for cost in graphLink() */
-  AGV_GRID.edges.get(a).push({to:b,cost,zone});if(!oneWay)AGV_GRID.edges.get(b).push({to:a,cost,zone});
+ const QUAY_ROWS=[...STS_DOCK_LANES,...QUAY_TRAVEL_ROWS];
+ const AGV_GRID={
+  nodes:new Map(),edges:new Map(),sections:new Map(),
+  quayRows:QUAY_ROWS.slice(),quayTravelRows:QUAY_TRAVEL_ROWS.slice(), columns:QUAY_COLUMNS.slice(),
+  yardRows:L.yards.map(y=>y.z),yardIncomingColumns:YARD_INCOMING_X.slice(),
+  yardOutgoingColumns:YARD_OUTGOING_X.slice(),yardPitch:TRAVEL_PITCH,
+  quayTravelPitch:TRAVEL_PITCH,yardMouthZ:YARD_MOUTH_Z
+ };
+ function gKey(x,z){return `${Math.round(x*1000)/1000},${Math.round(z*1000)/1000}`}
+ const sectionKey=(a,b)=>[gKey(a.x,a.z),gKey(b.x,b.z)].sort().join('|');
+ function graphNode(x,z,zone){
+  const id=gKey(x,z);
+  if(!AGV_GRID.nodes.has(id)){AGV_GRID.nodes.set(id,{x,z,zone,id});AGV_GRID.edges.set(id,[]);}
+  return AGV_GRID.nodes.get(id);
  }
- // Quay lanes alternate westbound/eastbound. Local crane connectors permit a
- // final short manoeuvre along the container's X axis under the spreader.
- for(let  i=0;i<AGV_GRID.quayRows.length;i++){ /* Loop index for the current collection in makeEngine() */
-  const  z=AGV_GRID.quayRows[i]; /* Longitudinal world coordinate in makeEngine() */
-  for(let  j=1;j<AGV_GRID.columns.length;j++){ /* Loop index for the current nested collection in makeEngine() */
-   const  x0=AGV_GRID.columns[j-1], x1=AGV_GRID.columns[j]; /* Local value for x0 in makeEngine() */ /* Local value for x1 in makeEngine() */
-   if(z===0)graphLink(x1,z,x0,z,true,'QUAY_WESTBOUND');
-   else if(z===12)graphLink(x0,z,x1,z,true,'QUAY_EASTBOUND');
-   else graphLink(x0,z,x1,z,false,'QUAY_BIDIRECTIONAL');
+ function graphLink(x1,z1,x2,z2,oneWay,zone,{area=null,travel=false,reverse=false,multiplier=1}={}){
+  const a=graphNode(x1,z1,zone),b=graphNode(x2,z2,zone),length=dist(a,b);
+  if(!length||(a.x!==b.x&&a.z!==b.z))throw Error('Invalid AGV connection '+a.id+' to '+b.id);
+  if(travel&&length<TRAVEL_PITCH)throw Error('Travel connection cannot hold an AGV '+a.id+' to '+b.id);
+  const section={id:sectionKey(a,b),length,zone,area,travel};
+  if(AGV_GRID.sections.has(section.id))throw Error('Duplicate AGV connection '+section.id);
+  AGV_GRID.sections.set(section.id,section);
+  AGV_GRID.edges.get(a.id).push({to:b.id,cost:length*multiplier,zone,section});
+  if(!oneWay)AGV_GRID.edges.get(b.id).push({to:a.id,cost:length*multiplier,zone,section,reverse});
+ }
+ for(const [row,z] of QUAY_TRAVEL_ROWS.entries()){
+  const westbound=row%2===0;
+  for(let i=1;i<QUAY_COLUMNS.length;i++){
+   const west=QUAY_COLUMNS[i-1],east=QUAY_COLUMNS[i];
+   graphLink(westbound?east:west,z,westbound?west:east,z,true,
+    westbound?'QUAY_WESTBOUND':'QUAY_EASTBOUND',{travel:true});
   }
  }
- // Full-height intersections at a consistent pitch. Graph and rendered
- // guide strips use identical links, so visual cells cannot drift from routes.
- for(const  x of AGV_GRID.columns) /* Horizontal world coordinate in makeEngine() */
-  for(let  i=1;i<AGV_GRID.quayRows.length;i++) /* Loop index for the current collection in makeEngine() */
-   graphLink(x,AGV_GRID.quayRows[i-1],x,AGV_GRID.quayRows[i],false,'QUAY_INTERSECTION',1.3);
- // Access-column branches are real road links, but they do not introduce
- // distorted full-height cells into the quay lattice. Each branch joins its
- // nearest existing uniform intersection at the very same Z coordinate.
- const  attachQuayBranch=(x,z)=>{ /* Computes attach quay branch for the current simulation operation */
-  /* Evaluates callback for REGULAR_QUAY_COLUMNS.reduce using a, b */
-  const  closest=REGULAR_QUAY_COLUMNS.reduce( (a,b)=>Math.abs(b-x)<Math.abs(a-x)?b:a); /* Local value for closest in attachQuayBranch() */
-  if(Math.abs(closest-x)>1e-7)graphLink(x,z,closest,z,false,'QUAY_ACCESS_CONNECTOR',1.05);
- };
- // Both groups of four yard-guide lanes join the uniform quay grid.
- for(const  x of BLOCK_GRID_X)attachQuayBranch(x,12); /* Horizontal world coordinate in makeEngine() */
+ for(const x of QUAY_COLUMNS){
+  // The approach columns carry northbound flow into the STS service areas.
+  // The other columns carry southbound flow, including the parking feeder.
+  const northbound=STS_ACCESS.some(access=>access.east===x);
+  for(let i=1;i<QUAY_TRAVEL_ROWS.length;i++){
+   const north=QUAY_TRAVEL_ROWS[i-1],south=QUAY_TRAVEL_ROWS[i];
+   graphLink(x,northbound?south:north,x,northbound?north:south,true,'QUAY_INTERSECTION',{travel:true});
+  }
+ }
+ for(const {west,east,x,id} of STS_ACCESS){
+  const area={area:id};
+  const rows=[...STS_DOCK_LANES,QUAY_WESTBOUND_Z];
+  for(let i=1;i<rows.length;i++){
+   graphLink(east,rows[i],east,rows[i-1],true,'QUAY_SERVICE',area);
+   graphLink(west,rows[i-1],west,rows[i],true,'QUAY_SERVICE',area);
+  }
+  for(const z of STS_DOCK_LANES){
+   graphLink(east,z,x,z,true,'QUAY_SERVICE',area);
+   graphLink(x,z,west,z,true,'QUAY_SERVICE',area);
+  }
+ }
+ const parkingGateway={area:'PARKING-GATEWAY'};
+ const gatewayRows=[-36,-24,-12,QUAY_WESTBOUND_Z];
+ for(let i=1;i<gatewayRows.length;i++){
+  graphLink(PARKING_CONNECTOR_X,gatewayRows[i-1],PARKING_CONNECTOR_X,gatewayRows[i],false,'QUAY_ACCESS_CONNECTOR',parkingGateway);
+ }
  // The parking road network is an independent two-row block. Both rows
  // use identical offsets from the stall centre: an exit spine 18m west and
  // a return spine 18m east. No parking spine intrudes into the quay or yard.
@@ -1032,10 +1066,9 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   {stallX:-444,exitX:-462,returnX:-426,exitZ:-24,returnZ:-12},
   {stallX:-396,exitX:-414,returnX:-378,exitZ:-36,returnZ:0}
  ];
- const  PARKING_CONNECTOR_X=-308; /* World-coordinate value for parking connector x */
  const  addParkingSpine=(x,firstZ,zone)=>{ /* Computes add parking spine for the current simulation operation */
   const  points=[firstZ,...PARKING_STALL_Z]; /* Collection of points */
-  for(let  i=1;i<points.length;i++)graphLink(x,points[i-1],x,points[i],false,zone,1.15); /* Loop index for the current collection in addParkingSpine() */
+  for(let  i=1;i<points.length;i++)graphLink(x,points[i-1],x,points[i],false,zone,{multiplier:1.15}); /* Loop index for the current collection in addParkingSpine() */
  };
  for(const  row of PARKING_ROWS){ /* Current grid row or formatted table record in makeEngine() */
   addParkingSpine(row.exitX,row.exitZ,'PARKING_EXIT');
@@ -1045,8 +1078,8 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
    graphLink(row.stallX,z,row.returnX,z,false,'PARKING_STALL_RETURN');
   }
   // One exit and one return per row. These are the ONLY four connectors.
-  graphLink(row.exitX,row.exitZ,PARKING_CONNECTOR_X,row.exitZ,false,'PARKING_QUAY_CONNECTOR',1.15);
-  graphLink(row.returnX,row.returnZ,PARKING_CONNECTOR_X,row.returnZ,false,'PARKING_QUAY_CONNECTOR',1.15);
+  graphLink(row.exitX,row.exitZ,PARKING_CONNECTOR_X,row.exitZ,false,'PARKING_QUAY_CONNECTOR',{multiplier:1.15});
+  graphLink(row.returnX,row.returnZ,PARKING_CONNECTOR_X,row.returnZ,false,'PARKING_QUAY_CONNECTOR',{multiplier:1.15});
  }
  // Verify shared connection locations and the separation from yard lanes.
  for(const  row of PARKING_ROWS){ /* Current grid row or formatted table record in makeEngine() */
@@ -1055,58 +1088,33 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   if(row.returnX>=Math.min(...BLOCK_GRID_X)-30)
    throw Error('Parking spine enters the yard-grid approach');
  }
- // Eight equally spaced N/S lanes, with directional road authority:
- // the original four guide lanes are inbound (quay -> yard), and the
- // additional four are outbound (yard -> quay). Every segment is a real
- // graph edge; no decorative or disconnected yard lane is added.
- /* Evaluates callback for L.yards.flatMap using y */
- /* Evaluates callback for YARD_SLOT_OFFSETS.map using dz */
- /* Evaluates callback for 36,60,78,...L.yards.flatMap(y=>YARD_SLOT_OFFSETS.map(dz=>y.z+dz)),286].sort using a, b */
- const  crossZ=[12,36,60,78,...L.yards.flatMap( y=>YARD_SLOT_OFFSETS.map( dz=>y.z+dz)),286].sort( (a,b)=>a-b); /* World-coordinate value for cross z */
- /* Evaluates callback for BLOCK_GRID_X.some using x, i */
- if(BLOCK_GRID_X.length!==8||BLOCK_GRID_X.some( (x,i)=>i&&Math.abs(x-BLOCK_GRID_X[i-1]-YARD_LANE_PITCH)>1e-8))
-  throw Error('Yard 8-lane grid has inconsistent pitch');
- for(const  x of YARD_INCOMING_X)for(let  i=1;i<crossZ.length;i++) /* Horizontal world coordinate in makeEngine() */ /* Loop index for the current collection in makeEngine() */
-  graphLink(x,crossZ[i-1],x,crossZ[i],true,'YARD_INCOMING');
- for(const  x of YARD_OUTGOING_X)for(let  i=1;i<crossZ.length;i++) /* Horizontal world coordinate in makeEngine() */ /* Loop index for the current collection in makeEngine() */
-  graphLink(x,crossZ[i],x,crossZ[i-1],true,'YARD_OUTGOING');
- // Every crane transfer position can be approached from the four incoming
- // lanes and departed through the four outgoing lanes. The crossing is a
- // physical, bidirectional link on the exact dock-bay row.
- for(let  bi=0;bi<L.yards.length;bi++)for(const  bay of YARD_AGV_BAYS[bi]){ /* Index of the current yard block in makeEngine() */ /* Local value for bay in makeEngine() */
-  for(let  i=1;i<BLOCK_GRID_X.length;i++) /* Loop index for the current collection in makeEngine() */
-   graphLink(BLOCK_GRID_X[i-1],bay.z,BLOCK_GRID_X[i],bay.z,false,'BLOCK_INTERSECTION',1.2);
-  graphLink(BLOCK_GRID_X.at(-1),bay.z,bay.x,bay.z,false,'AGV_TRANSFER',1.05);
- }
- // Yard metadata exposed for verification and visual/UI consumers.
- AGV_GRID.yardIncomingColumns=YARD_INCOMING_X.slice();
- AGV_GRID.yardOutgoingColumns=YARD_OUTGOING_X.slice();
- AGV_GRID.yardPitch=YARD_LANE_PITCH;
- // Eight identical 12-metre quay lanes. No unused duplicate bypass grid.
- const  QUAY_ROW_PITCH=12; /* Local value for quay row pitch in makeEngine() */
- /* Evaluates callback for EIGHT_QUAY_ROWS.some using z, i */
- if(EIGHT_QUAY_ROWS.some( (z,i)=>i&&Math.abs(z-EIGHT_QUAY_ROWS[i-1]-QUAY_ROW_PITCH)>1e-8))
-  throw Error('Quay guide path rows have inconsistent pitch');
- // Guard the repeating visual + routing grid for all three STS of each ship.
- for(const  shipX of L.shipX){ /* World-coordinate value for ship x */
-  /* Evaluates callback for REGULAR_QUAY_COLUMNS.filter using x */
-  const  berthXs=REGULAR_QUAY_COLUMNS.filter( x=>x>=shipX-66&&x<=shipX+66); /* Local value for berth xs in makeEngine() */
-  /* Evaluates callback for berthXs.some using x, i */
-  if(berthXs.length!==13||berthXs.some( (x,i)=>i&&Math.abs(x-berthXs[i-1]-QUAY_GRID_PITCH_X)>1e-8))
-   throw Error('STS berth quay columns are not equally spaced');
-  for(const  craneX of [shipX-44,shipX,shipX+44]) /* World-coordinate value for crane x */
-   if(!berthXs.includes(craneX)||!berthXs.includes(craneX+STS_ACCESS_OFFSET)||!berthXs.includes(craneX-STS_ACCESS_OFFSET))
-    throw Error('STS crane / approach not aligned to the quay grid');
- }
-
- for(const  [key,edges] of AGV_GRID.edges){const  a=AGV_GRID.nodes.get(key); /* Local value for [key,edges] in makeEngine() */ /* First item being compared in makeEngine() */
-  for(const  edge of edges){const  b=AGV_GRID.nodes.get(edge.to); /* Local value for edge in makeEngine() */ /* Second item being compared in makeEngine() */
-   if(Math.abs(a.x-b.x)>1e-6&&Math.abs(a.z-b.z)>1e-6)
-    throw Error('Non-orthogonal, offset guide-path connection '+key+' to '+edge.to);
+ const yardAreas=L.yards.map(y=>({id:'YARD-SERVICE-'+y.id,entry:y.z-18,exit:y.z+18}));
+ const yardCrossRows=yardAreas.flatMap(({entry,exit})=>[entry,exit]);
+ const yardRows=[YARD_MOUTH_Z,...yardCrossRows];
+ for(const x of BLOCK_GRID_X){
+  const incoming=YARD_INCOMING_X.includes(x);
+  for(let i=1;i<yardRows.length;i++){
+   const low=yardRows[i-1],high=yardRows[i];
+   graphLink(x,incoming?low:high,x,incoming?high:low,true,incoming?'YARD_INCOMING':'YARD_OUTGOING',{travel:true});
   }
  }
+ for(let i=0;i<yardAreas.length;i++){
+  const {id,entry,exit}=yardAreas[i], bays=YARD_AGV_BAYS[i], area={area:id};
+  for(let j=1;j<BLOCK_GRID_X.length;j++){
+   graphLink(BLOCK_GRID_X[j-1],entry,BLOCK_GRID_X[j],entry,true,'BLOCK_INTERSECTION',{travel:true});
+   graphLink(BLOCK_GRID_X[j],exit,BLOCK_GRID_X[j-1],exit,true,'BLOCK_INTERSECTION',{travel:true});
+  }
+  graphLink(BLOCK_GRID_X.at(-1),entry,YARD_SERVICE_X,entry,true,'BLOCK_INTERSECTION',area);
+  graphLink(YARD_SERVICE_X,exit,BLOCK_GRID_X.at(-1),exit,true,'BLOCK_INTERSECTION',area);
+  const levels=[entry,...bays.map(bay=>bay.z),exit];
+  for(let j=1;j<levels.length;j++){
+   graphLink(YARD_SERVICE_X,levels[j-1],YARD_SERVICE_X,levels[j],true,'YARD_SERVICE',area);
+  }
+  for(const bay of bays)graphLink(YARD_SERVICE_X,bay.z,bay.x,bay.z,false,'AGV_TRANSFER',{...area,reverse:true});
+ }
+ const QUAY_ROW_PITCH=TRAVEL_PITCH;
  /* Plans a shortest feasible AGV route through the logical guide-path graph */
-  function shortestGrid(from,to,vehicle=null){
+  function shortestGrid(from,to,vehicle=null,edgeAllowed=()=>true){
   const  source=gKey(from.x,from.z), goal=gKey(to.x,to.z); /* Source location or graph node in shortestGrid() */ /* Local value for goal in shortestGrid() */
   if(!AGV_GRID.nodes.has(source)||!AGV_GRID.nodes.has(goal))return null;
   const  distMap=new Map([[source,0]]), prev=new Map(), open=[source], closed=new Set(); /* Lookup table holding dist map */ /* Previous state, item, or location in shortestGrid() */ /* Collection of open */ /* Unique values for closed */
@@ -1116,7 +1124,8 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
    for(const  e of AGV_GRID.edges.get(id)||[]){ /* Local value for e in shortestGrid() */
     // Parking is an ingress/egress resource, never a congestion bypass for
     // a journey whose source and destination are both in the terminal.
-    if(from.x>=-330&&to.x>=-330&&e.zone.startsWith('PARKING'))continue;
+    if(from.x>=PARKING_CONNECTOR_X&&to.x>=PARKING_CONNECTOR_X&&e.zone.startsWith('PARKING'))continue;
+    if(!edgeAllowed(e))continue;
     // STS handover rows are local crane approaches, not a bypass between
     // yard/quay travel points. Opposite loaded flows stay on rows 0 and 12.
     if(from.z>=0&&to.z>=0&&AGV_GRID.nodes.get(e.to).z<0)continue;
@@ -1158,150 +1167,106 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   nodes.push(AGV_GRID.nodes.get(source));return nodes.reverse().map( n=>point(n.x,n.z));
  }
  let  gridRoutes=0, gridRouteFailures=0; /* Local value for grid routes in makeEngine() */ /* Local value for grid route failures in makeEngine() */
- /* Chooses a suitable incoming or outgoing yard lane based on traffic */
-  function selectGridTravelLane(v,towardYard){
-  const  desired=towardYard?1:-1; /* Local value for desired in selectGridTravelLane() */
-  const  eligible=towardYard?YARD_INCOMING_X:YARD_OUTGOING_X; /* Local value for eligible in selectGridTravelLane() */
-  const  idx=Number(v.id.slice(-2))%eligible.length; /* Index of the selected item in selectGridTravelLane() */
-  /* Evaluates callback for eligible.map using x, i */
-  return eligible.map( (x,i)=>{
-   let  cost=((i-idx+eligible.length)%eligible.length)*.2; /* Local value for cost in selectGridTravelLane() */
-   for(const  a of agvs){ /* First item being compared in selectGridTravelLane() */
-    if(a===v||Math.abs(a.x-x)>6||a.z<-36||a.z>295)continue;
-    const  next=a.route?.[a.routeIndex]; /* Next candidate or planned state in selectGridTravelLane() */
-    const  direction=next?Math.sign(next.z-a.z):0; /* Local value for direction in selectGridTravelLane() */
-    // Make room for loaded departing AGVs at the quay/yard transition.
-    // A blocked vertical lane is not selected merely because its occupied
-    // segment lies just short of the first storage-yard block.
-    cost+=direction&&direction!==desired?5000:(a.blockedTime>5?400:20);
+ function selectGridTravelLane(v,towardYard){
+  const eligible=towardYard?YARD_INCOMING_X:YARD_OUTGOING_X;
+  const preferred=Number(v.id.slice(-2))%eligible.length;
+  return eligible.map((x,i)=>{
+   let cost=((i-preferred+eligible.length)%eligible.length)*.2;
+   for(const other of agvs){
+    if(other===v||Math.abs(other.x-x)>6||other.z<YARD_MOUTH_Z)continue;
+    cost+=other.blockedTime>5?400:20;
    }
    return {x,cost};
-  /* Evaluates callback for ==desired?5000:(a.blockedTime>5?400:20); } return {x,cost}; }).sort using a, b */
-  }).sort( (a,b)=>a.cost-b.cost)[0].x;
+  }).sort((a,b)=>a.cost-b.cost)[0].x;
  }
- /* Builds a physical waypoint route between AGV equipment and destinations */
-  function routeAGV(v,type,crane){
-  const  p=[point(v.x,v.z)], x=crane?.homeX??crane?.x, z=crane?.homeZ??crane?.z, dockZ=crane?.dockZ??L.stsDockZ; /* Current position, route, or temporary calculation value in routeAGV() */ /* Horizontal world coordinate in routeAGV() */ /* Longitudinal world coordinate in routeAGV() */ /* World-coordinate value for dock z */
-  /* Evaluates callback for L.stsX.some using q */
-  const  atSts=agvAtStsLane(v)&&L.stsX.some( q=>Math.abs(v.x-q)<.2); /* Local value for at sts in routeAGV() */
-  /* Evaluates callback for YARD_AGV_BAYS.flat().some using p */
-  const  atYard=Math.abs(v.x-L.agvDockX)<1.5&&YARD_AGV_BAYS.flat().some( p=>Math.abs(p.z-v.z)<.5); /* Local value for at yard in routeAGV() */
-  const  atStaging=!!v.stageBay&&Math.abs(v.x-v.stageBay.x)<.1&&Math.abs(v.z-v.stageBay.z)<.1; /* Local value for at staging in routeAGV() */
-  // Off-road yard holding bays have x<-320 but are NOT the remote parking lot.
-  // Test these bay coordinates before classifying the vehicle as in parking.
-  const inParking=Math.abs(v.x-v.home.x)<.1&&Math.abs(v.z-v.home.z)<.1&&!atStaging;
-  const exitSpine=v.home.x<-420?-462:-414,exitZ=v.home.x<-420?-24:-36;
-  const onParkingExit=Math.abs(v.x-exitSpine)<.1&&v.z>=exitZ||Math.abs(v.z-exitZ)<.1&&v.x>=exitSpine&&v.x<-308;
-  const  tail=(pts)=>{for(const  q of pts){const  last=p[p.length-1];if(Math.hypot(q.x-last.x,q.z-last.z)>.01)p.push(q)}return p}; /* Computes tail for the current simulation operation */ /* Current crane or queued item in tail() */ /* Local value for last in tail() */
-  if(type==='parking'&&v.x<-308){
-   const returnX=v.home.x<-420?-426:-378,returnZ=v.home.x<-420?-12:0;
-   if(Math.abs(v.z-returnZ)<.1&&v.x>=returnX||Math.abs(v.x-returnX)<.1)
-    return tail([point(returnX,v.z),point(returnX,v.home.z),point(v.home.x,v.home.z)]);
-  }
-  let  start; /* Initial route point or calculation boundary in routeAGV() */
-  if(inParking){
-   // Both parking rows use the same logical pattern: leave via that row's
-   // outbound spine and join the shared terminal grid through one of four
-   // dedicated parking connector lanes.
-   const  westRow=v.home.x<-420; /* Local value for west row in routeAGV() */
-   const  exitSpine=westRow?-462:-414; /* Local value for exit spine in routeAGV() */
-   const  exitZ=westRow?-24:-36; /* World-coordinate value for exit z */
-   tail([point(exitSpine,v.z),point(exitSpine,exitZ),point(-308,exitZ)]);
-   start=point(-308,exitZ);
-  }
-  else if(onParkingExit&&type!=='parking'){
-   tail([point(exitSpine===v.x?exitSpine:v.x,exitZ),point(-308,exitZ)]);
-   start=point(-308,exitZ);
-  }
-  else if(atStaging){start=point(v.x,v.z)}
-  else if(atYard){start=point(-221,v.z)}
-  else if(atSts){start=point(v.x,v.z)}
-  else{
-   // Re-entry and congestion replans use the closest *actual network node*,
-   // not the closest quay lane. Otherwise a vehicle on the bypass is routed
-   // backwards to the waterfront at every retry and can never reach the yard.
-   /* Evaluates callback for [...AGV_GRID.nodes.values()].reduce using a, b */
-   const  node=[...AGV_GRID.nodes.values()].reduce( (a,b)=> /* Local value for node in routeAGV() */
-     Math.hypot(b.x-v.x,b.z-v.z)<Math.hypot(a.x-v.x,a.z-v.z)?b:a);
-   tail([point(node.x,node.z)]);start=point(node.x,node.z);
-  }
-  if(type==='yard'&&atSts){
-   // Outbound egress is west of the crane; inbound approach is east.
-   // No opposing AGVs meet on the same column beneath STS backreach.
-   const  accessX=v.x-STS_ACCESS_OFFSET; /* World-coordinate value for access x */
-   const bypassZ=0; // Loaded discharge uses the westbound bypass.
-   /* Evaluates callback for EIGHT_QUAY_ROWS.filter using row */
-   /* Evaluates callback for EIGHT_QUAY_ROWS.filter(row=>row>v.z&&row<=bypassZ).map using row */
-   tail([point(accessX,v.z),...EIGHT_QUAY_ROWS.filter( row=>row>v.z&&row<=bypassZ).map( row=>point(accessX,row))]);
-   start=point(accessX,bypassZ);
-  }
-  else if(type==='yard'&&v.load&&v.z<0){
-   // A congestion replan must preserve the loaded AGV's quay egress.
-   // Cutting west through other STS handover rows can trap loaded traffic
-   // behind staged vehicles. Reach the westbound bypass on this column.
-   const column=EIGHT_QUAY_ROWS.filter(row=>row>v.z&&row<=0).map(row=>point(v.x,row));
-   let previous=start;
-   if(column.length&&column.every(node=>{
-    const linked=(AGV_GRID.edges.get(gKey(previous.x,previous.z))||[]).some(e=>e.to===gKey(node.x,node.z));previous=node;return linked;
-   })){
-    tail(column);start=point(v.x,0);
+ function gridEdge(a,b){
+  return AGV_GRID.edges.get(gKey(a.x,a.z))?.find(edge=>edge.to===gKey(b.x,b.z));
+ }
+ function routeAGV(v,type,crane){
+  const p=[point(v.x,v.z)];
+  const westRow=v.home.x<-420;
+  const exitX=westRow?-462:-414, exitZ=westRow?-24:-36;
+  const returnX=westRow?-426:-378, returnZ=westRow?-12:0;
+  const atHome=dist(v,v.home)<.1;
+  const onExit=Math.abs(v.x-exitX)<.1&&v.z>=exitZ||
+   Math.abs(v.z-exitZ)<.1&&v.x>=exitX&&v.x<PARKING_CONNECTOR_X;
+  const append=(...points)=>{
+   for(const next of points){
+    const previous=p.at(-1);
+    if(dist(previous,next)<.01)continue;
+    const edge=gridEdge(previous,next);
+    p.push(edge?.reverse?{...next,reverse:true}:next);
+   }
+  };
+  const via=(target,allowed)=>{
+   const start=p.at(-1),path=shortestGrid(start,target,v,allowed);
+   if(!path){
+    gridRouteFailures++;
+    throw Error('No grid path '+gKey(start.x,start.z)+' to '+gKey(target.x,target.z));
+   }
+   append(...path);
+  };
+  const travel=edge=>edge.section.travel;
+  const quay=edge=>travel(edge)&&edge.zone.startsWith('QUAY_');
+  const through=edge=>quay(edge)||edge.section.area===parkingGateway.area;
+  const onlyArea=id=>edge=>edge.section.area===id;
+  if(type==='parking'&&v.x<PARKING_CONNECTOR_X){
+   if(Math.abs(v.z-returnZ)<.1&&v.x>=returnX||Math.abs(v.x-returnX)<.1){
+    append(point(returnX,v.z),point(returnX,v.home.z),v.home);
+    return p;
    }
   }
-  let  end, finish=[]; /* Final route point or calculation boundary in routeAGV() */ /* Collection of finish */
-  if(type==='staging'){
-   const  bay=v.stageBay; /* Local value for bay in routeAGV() */
-   if(!bay)throw Error('Assigned crane queue slot missing');
-   if(bay.side==='sts'){
-    const bz=12; // Crane arrivals use the eastbound bypass.
-    end=point(bay.x+STS_ACCESS_OFFSET,bz);
-    /* Evaluates callback for EIGHT_QUAY_ROWS.filter using row */
-    /* Evaluates callback for EIGHT_QUAY_ROWS.filter(row=>row<bz&&row>=bay.z).reverse().map using row */
-    finish=[...EIGHT_QUAY_ROWS.filter( row=>row<bz&&row>=bay.z).reverse().map( row=>point(bay.x+STS_ACCESS_OFFSET,row)),point(bay.x,bay.z)];
-   }
-   else {end=point(bay.x,bay.z);}
+  if(atHome&&type==='parking')return p;
+  if(atHome){
+   append(point(exitX,v.z),point(exitX,exitZ),point(PARKING_CONNECTOR_X,exitZ));
+  }else if(onExit&&type!=='parking'){
+   append(point(exitX===v.x?exitX:v.x,exitZ),point(PARKING_CONNECTOR_X,exitZ));
+  }else if(!AGV_GRID.nodes.has(gKey(v.x,v.z))){
+   throw Error('AGV route must start on the guide graph '+v.id+' '+gKey(v.x,v.z));
   }
-  else if(type==='yard'){end=point(-221,crane?.dockZ??z)}
-  else if(type==='sts'){
-   // Approach from the east along a quay row for correct AGV orientation.
-   const bz=12;
-   end=point(x+STS_ACCESS_OFFSET,bz);
-   /* Evaluates callback for EIGHT_QUAY_ROWS.filter using row */
-   /* Evaluates callback for EIGHT_QUAY_ROWS.filter(row=>row<bz&&row>=dockZ).reverse().map using row */
-   finish=[...EIGHT_QUAY_ROWS.filter( row=>row<bz&&row>=dockZ).reverse().map( row=>point(x+STS_ACCESS_OFFSET,row)),point(x,dockZ)];
+  const staging=type==='staging'?v.stageBay:null;
+  const stsTarget=type==='sts'||staging?.side==='sts';
+  const yardTarget=type==='yard'||staging?.side==='agv';
+  const start=p.at(-1), startEdges=AGV_GRID.edges.get(gKey(start.x,start.z));
+  const originSts=STS_ACCESS.find(area=>start.z<0&&startEdges.some(edge=>edge.section.area===area.id));
+  if(originSts)via(point(originSts.west,QUAY_WESTBOUND_Z),onlyArea(originSts.id));
+  const originYard=yardAreas.find(area=>startEdges.some(edge=>edge.section.area===area.id)&&start.x>BLOCK_GRID_X.at(-1));
+  if(originYard){
+   const lane=selectGridTravelLane(v,false);
+   via(point(BLOCK_GRID_X.at(-1),originYard.exit),onlyArea(originYard.id));
+   via(point(lane,originYard.exit),travel);
+   via(point(lane,YARD_MOUTH_Z),edge=>edge.zone==='YARD_OUTGOING');
+  }else if(start.z>YARD_MOUTH_Z){
+   // Resume a mission at a yard cross row without going against a trunk lane.
+   if(!yardTarget||YARD_OUTGOING_X.includes(start.x)){
+    const lane=selectGridTravelLane(v,false);
+    via(point(lane,YARD_MOUTH_Z),travel);
+   }
+  }
+  if(stsTarget){
+   const x=staging?.x??crane.homeX??crane.x;
+   const z=staging?.z??crane.dockZ??L.stsDockZ;
+   const access=STS_ACCESS.find(area=>area.x===x);
+   via(point(access.east,QUAY_EASTBOUND_Z),through);
+   via(point(access.east,QUAY_WESTBOUND_Z),quay);
+   via(point(x,z),onlyArea(access.id));
+  }else if(yardTarget){
+   const z=staging?.z??crane.dockZ??crane.homeZ??crane.z;
+   const block=YARD_AGV_BAYS.findIndex(bays=>bays.some(bay=>bay.z===z));
+   const area=yardAreas[block];
+   const current=p.at(-1);
+   const underway=current.z>YARD_MOUTH_Z&&YARD_INCOMING_X.includes(current.x)&&current.z<=area.entry;
+   const lane=underway?current.x:selectGridTravelLane(v,true);
+   if(!underway)via(point(lane,YARD_MOUTH_Z),through);
+   via(point(lane,area.entry),edge=>edge.zone==='YARD_INCOMING');
+   via(point(BLOCK_GRID_X.at(-1),area.entry),edge=>edge.zone==='BLOCK_INTERSECTION'&&edge.section.travel);
+   via(point(L.agvDockX,z),onlyArea(area.id));
   }else if(type==='parking'){
-   const  westRow=v.home.x<-420; /* Local value for west row in routeAGV() */
-   const  returnSpine=westRow?-426:-378; /* Local value for return spine in routeAGV() */
-   const  returnZ=westRow?-12:0; /* World-coordinate value for return z */
-   end=point(-308,returnZ);finish=[point(returnSpine,returnZ),point(returnSpine,v.home.z),point(v.home.x,v.home.z)];
-  }else return p;
-  let  waypoints=[]; /* Collection of waypoints */
-  const  yardTarget=(type==='yard'||(type==='staging'&&v.stageBay?.side==='agv')); /* Local value for yard target in routeAGV() */
-  const  quayTarget=(type==='sts'||(type==='staging'&&v.stageBay?.side==='sts')); /* Local value for quay target in routeAGV() */
-  if(yardTarget||quayTarget){
-   const  gridX=inParking?(v.x<-410?-328:-304):selectGridTravelLane(v,yardTarget), lastZ=yardTarget?end.z:12; /* World-coordinate value for grid x */ /* World-coordinate value for last z */
-   if(yardTarget){
-    waypoints=[point(gridX,12),point(gridX,lastZ),point(end.x,lastZ)];
-   }else if(atYard){
-    waypoints=[point(gridX,start.z),point(gridX,12),end];
-   }else waypoints=inParking||onParkingExit?[point(start.x,12),end]:[end];
-  }else waypoints=[end];
-  for(const  waypoint of waypoints){ /* Local value for waypoint in routeAGV() */
-   const  path=shortestGrid(start,waypoint,v); /* Path returned by the routing algorithm in routeAGV() */
-   if(!path){gridRouteFailures++;throw Error(`No grid path ${gKey(start.x,start.z)} to ${gKey(waypoint.x,waypoint.z)}`)}
-   tail(path);start=waypoint;
+   via(point(PARKING_CONNECTOR_X,returnZ),through);
+   append(point(returnX,returnZ),point(returnX,v.home.z),v.home);
   }
-  gridRoutes++;tail(finish);
-  // Congestion-aware paths to successive waypoints can visit a connector
-  // and immediately return over the same edge. Remove that dead-end spur
-  // before execution, rather than stranding an AGV at a one-exit branch.
-  const route=[];
-  for(let i=0;i<p.length;i++){
-   const node=p[i];
-   // Keep the final approach edge: it establishes physical deck alignment.
-   if(i<p.length-1&&route.length>1&&dist(route[route.length-2],node)<.01)route.pop();
-   else if(!route.length||dist(route[route.length-1],node)>.01)route.push(node);
-  }
-  return route;
+  gridRoutes++;
+  return p;
  }
  // Truck transport geometry is a separate logical network. Its segments
  // represent every possible physical line used by routeTruck: the inbound
@@ -1373,8 +1338,6 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   if(v.route.length<2){v.route=[];v.routeIndex=0;v.state=type==='staging'?'STAGED':'DOCKED';}
 
   /* Evaluates callback for v.route.some using p */
-  v.needsWest=v.type==='agv'&&v.route.some( p=>p.x<=L.agvNorthX+.1);
-  if(v.needsWest&&!westOwner)westOwner=v.id;
   if(v.type==='truck'&&!truckOwner)truckOwner=v.id;
  }
 
@@ -1414,7 +1377,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   // A non-empty handover stack is legal only when its top is not reserved.
   const  mid=(left.x+right.x)*.5; /* Local value for mid in makeRelay() */
   /* Evaluates callback for yardSlots.filter using sl */
-  const  buffer=yardSlots.filter( sl=>sl.yard===bi&&sl.zone==='shared'&&Math.abs(sl.x)<=24&&sl.stack.length<3&& /* Local value for buffer in makeRelay() */
+  const  buffer=yardSlots.filter( sl=>sl.yard===bi&&sl.zone==='shared'&&Math.abs(sl.x-YARD_X_SHIFT)<=24&&sl.stack.length<3&& /* Local value for buffer in makeRelay() */
     (!sl.stack.length||!containers.get(sl.stack.at(-1))?.order)&&
     /* Evaluates callback for jobs.some using j */
     !jobs.some( j=>!j.completed&&(j.buffer===sl||j.slot===sl||j.finalSlot===sl)))
@@ -1449,7 +1412,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   if(j.stage==='CROSS_CLEAR_TRACK'){
     // The other RTG moves to its own outside siding, allowing the working
     // RTG to serve the opposite end without overtaking another gantry.
-    const  siding=from.role==='agv'?202:-202; /* Local value for siding in tickRelay() */
+    const siding=YARD_X_SHIFT+(from.role==='agv'?202:-202); /* Local value for siding in tickRelay() */
     if(retreatCrane(to,siding))j.stage='CROSS_CARRY_CONTAINER';
   }else if(j.stage==='CROSS_CARRY_CONTAINER'){
     const  source={x:c.x,z:c.z,y:c.y,carrier:'yard'}; /* Source location or graph node in tickRelay() */
@@ -1468,7 +1431,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
     // Withdraw both gantries to opposite sides of the shared handover buffer.
     // This is real, animated rail travel, not a location jump.
     const  a=rtgAgv[j.rtg.yard], b=rtgTruck[j.rtg.yard]; /* First item being compared in tickRelay() */ /* Second item being compared in tickRelay() */
-    const  aa=retreatCrane(a,-90), bb=retreatCrane(b,90); /* Local value for aa in tickRelay() */ /* Local value for bb in tickRelay() */
+    const aa=retreatCrane(a,YARD_X_SHIFT-90), bb=retreatCrane(b,YARD_X_SHIFT+90); /* Local value for aa in tickRelay() */ /* Local value for bb in tickRelay() */
     if(aa&&bb)j.stage='RELAY_TO_BUFFER';
   }else if(j.stage==='RELAY_TO_BUFFER'){
     const  source={x:c.x,z:c.z,y:c.y,carrier:'yard'}; /* Source location or graph node in tickRelay() */
@@ -1570,7 +1533,8 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
  function vehicleDispatchable(v){
   return !v.job&&!v.pending&&!v.pipelineJob&&!v.load&&!v.pivot&&!v.recovery&&
    (!v.route.length&&['PARKED','AVAILABLE'].includes(v.state)||
-    v.state==='RETURNING'&&v.x>=-308&&AGV_GRID.nodes.has(gKey(v.x,v.z)));
+    v.state==='RETURNING'&&(AGV_GRID.edges.get(gKey(v.x,v.z))||[]).some(edge=>edge.section.travel)&&
+    ![...serviceReservations.values()].some(permit=>permit.vehicleId===v.id));
  }
  function selectPickupStand(v,pick){
   if(pick.type==='IMPORT'){
@@ -2022,29 +1986,23 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   }
  }
  /* Handles move vehicle in the terminal simulation */
-  function moveVehicle(v,dt){if(!v.route.length)return;const  next=v.route[v.routeIndex]; /* Next candidate or planned state in moveVehicle() */
-  if(!next){v.route=[];v.routeIndex=0;v.state=v.truckYield?'TRUCK_YIELD':v.job?'DOCKED':v.type==='agv'?(v.pipelineJob?'STAGED':'PARKED'):'GATE';v.blockedTime=0;if(westOwner===v.id)westOwner=null;if(truckOwner===v.id)truckOwner=null;v.needsWest=false;return;}
+  function moveVehicle(v,dt,limit=Infinity){if(!v.route.length)return;const  next=v.route[v.routeIndex]; /* Next candidate or planned state in moveVehicle() */
+  if(!next){v.route=[];v.routeIndex=0;v.state=v.truckYield?'TRUCK_YIELD':v.job?'DOCKED':v.type==='agv'?(v.pipelineJob?'STAGED':'PARKED'):'GATE';v.blockedTime=0;if(truckOwner===v.id)truckOwner=null;return;}
   const  from=point(v.x,v.z), d=dist(from,next); /* Local value for from in moveVehicle() */ /* Local value for d in moveVehicle() */
   if(d<.08){v.x=next.x;v.z=next.z;v.routeIndex++;return;}
-  // Do not enter the southbound road from a yard bay if another carrier is
-  // already passing the merge. Waiting at the dock keeps the through lane clear.
-  if(v.type==='agv'&&v.x>-253&&next.x===L.agvSouthX&&Math.abs(next.z-v.z)<.1){
-   /* Evaluates callback for agvs.some using o */
-   const  occupied=agvs.some( o=>o!==v&&o.x<L.agvSouthX+10&&o.x>L.agvSouthX-10&&Math.abs(o.z-v.z)<24); /* Currently occupied or reserved positions in moveVehicle() */
-   if(occupied){v.blockedTime+=dt;return;}
-  }
-  const  step=Math.min(d,(v.truckYield?4:v.speed)*dt), nx=v.x+(next.x-v.x)*step/d, nz=v.z+(next.z-v.z)*step/d; /* Local value for step in moveVehicle() */ /* Local value for nx in moveVehicle() */ /* Local value for nz in moveVehicle() */
+  const reversing=v.type==='agv'&&(next.reverse||v.recovery?.reverse);
+  const step=Math.min(d,limit,(v.truckYield?4:next.reverse?v.speed/3:v.speed)*dt), nx=v.x+(next.x-v.x)*step/d, nz=v.z+(next.z-v.z)*step/d; /* Local value for step in moveVehicle() */ /* Local value for nx in moveVehicle() */ /* Local value for nz in moveVehicle() */
   // Physical AGV separation. Parked AGVs remain in off-road pockets.
   let  obstruct=false; /* Local value for obstruct in moveVehicle() */
   for(const  other of v.type==='agv'?agvs:trucks){if(other===v)continue; /* Local value for other in moveVehicle() */
    const  clearance=v.type==='agv'?10.5:13; /* Local value for clearance in moveVehicle() */
    if(v.type==='agv'){
-    const  heading=Math.atan2(next.z-v.z,next.x-v.x); /* Local value for heading in moveVehicle() */
+    const heading=reversing?v.heading:Math.atan2(next.z-v.z,next.x-v.x); /* Local value for heading in moveVehicle() */
     if(rectangularOverlap({x:nx,z:nz,heading},other)){obstruct=true;break}
    }else if(Math.hypot(nx-other.x,nz-other.z)<clearance){v.trafficBlock={reason:'VEHICLE_BODY',resource:other.id};obstruct=true;break}
   }
   if(obstruct){roadBlocked++;v.blocked++;v.blockedTime+=dt;return;}
-  const  prevX=v.x, prevZ=v.z, oldHeading=v.heading;v.x=nx;v.z=nz;v.heading=v.truckYield?oldHeading:Math.atan2(nz-prevZ,nx-prevX); /* World-coordinate value for prev x */ /* World-coordinate value for prev z */ /* Local value for old heading in moveVehicle() */
+  const  prevX=v.x, prevZ=v.z, oldHeading=v.heading;v.x=nx;v.z=nz;v.heading=v.truckYield||reversing?oldHeading:Math.atan2(nz-prevZ,nx-prevX); /* World-coordinate value for prev x */ /* World-coordinate value for prev z */ /* Local value for old heading in moveVehicle() */
   const order=v.type==='agv'?(jobs.find(j=>j.id===(v.job||v.pipelineJob))?.order||orders.find(o=>o.id===v.pending)):null;
   if(order&&order.departedAt==null&&step>.001){order.departedAt=t;log('AGV_MISSION_DEPARTED',{vehicle:v.id,order:order.id});}
   if(v.load){const  c=containers.get(v.load);c.x=nx;c.z=nz;c.y=v.type==='agv'?3.65:3.5;v.loadedMeters+=step} /* Current container or item being processed in moveVehicle() */
@@ -2101,7 +2059,10 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
  // maneuver, never used for routine turns or ordinary crane approaches.
  // The whole swept footprint and exit remain subject to safety interlocks.
  // Unit scale: metres. 14 x 4.3 m body with a conservative safety envelope.
- const  PIVOT_SWEEP_RADIUS=Math.hypot(7.5,2.65)+.65; /* Local value for pivot sweep radius in makeEngine() */
+ const  PIVOT_SWEEP_RADIUS=Math.hypot(BODY_LONG,BODY_WIDE)+.65; /* Local value for pivot sweep radius in makeEngine() */
+ const STOP_LINE=TRAVEL_PITCH/2;
+ const JUNCTION_CLEARANCE=PIVOT_SWEEP_RADIUS+BODY_LONG+.1;
+ if(STOP_LINE<=JUNCTION_CLEARANCE)throw Error('AGV stop line intersects a junction sweep');
  const  PIVOT_ANGULAR_SPEED=.58; // radians per simulated second /* Local value for pivot angular speed in makeEngine() */
  let  pivotStarted=0, pivotCompleted=0, pivotDenied=0, pivotSeconds=0; /* Local value for pivot started in makeEngine() */ /* Local value for pivot completed in makeEngine() */ /* Local value for pivot denied in makeEngine() */ /* Local value for pivot seconds in makeEngine() */
  const  turnDelta=(target,current)=>Math.atan2(Math.sin(target-current),Math.cos(target-current)); /* Computes turn delta for the current simulation operation */
@@ -2134,6 +2095,21 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
  // Bounded escape for an empty AGV in a measured wait-for cycle. The
  // vehicle follows an existing adjacent graph edge under normal traffic guards.
  function reverseTruckRoute(v){return simplify([point(v.x,v.z),...v.route.slice(0,v.routeIndex).reverse().map(clone)]);}
+ function blockerAlongLeg(v,from,to,{heading=Math.atan2(to.z-from.z,to.x-from.x),turn=false,length=dist(from,to)}={}){
+  const direction=Math.atan2(to.z-from.z,to.x-from.x);
+  const dx=Math.cos(direction),dz=Math.sin(direction);
+  return agvs.find(other=>{
+   if(other===v)return false;
+   if(turn&&circleIntersectsVehicle(to.x,to.z,PIVOT_SWEEP_RADIUS,other))return true;
+   const along=Math.max(0,Math.min(length,(other.x-from.x)*dx+(other.z-from.z)*dz));
+   return rectangularOverlap({x:from.x+along*dx,z:from.z+along*dz,heading},other);
+  });
+ }
+ function exitBlocker(v,from,to){
+  const length=dist(from,to);
+  const hold=length>=TRAVEL_PITCH?length-STOP_LINE:length;
+  return blockerAlongLeg(v,from,to,{length:hold});
+ }
  function planEscape(v){
   if(v.load)return null;
   const key=gKey(v.x,v.z),next=v.route[v.routeIndex];
@@ -2145,11 +2121,11 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   // pivot, body and section guards, just as on the parking connector.
   if(traversed&&!neighbors.some(n=>dist(n,traversed)<.1))neighbors.push(traversed);
   const candidates=neighbors.filter(n=>{
-   const d=Math.hypot(n.x-v.x,n.z-v.z);if(d<1||d>20&&n!==traversed||next&&gKey(n.x,n.z)===gKey(next.x,next.z))return false;
+   const d=Math.hypot(n.x-v.x,n.z-v.z);const edge=gridEdge(v,n);
+   if(d<1||d>20&&n!==traversed&&!edge?.section.travel||next&&gKey(n.x,n.z)===gKey(next.x,next.z))return false;
    const heading=Math.atan2(n.z-v.z,n.x-v.x);
-   return !agvs.some(o=>{
+   return !blockerAlongLeg(v,v,n,{heading})&&!agvs.some(o=>{
     if(o===v)return false;
-    if(rectangularOverlap({x:v.x+Math.cos(heading)*.5,z:v.z+Math.sin(heading)*.5,heading},o)||rectangularOverlap({x:n.x,z:n.z,heading},o))return true;
     const next=o.route[o.routeIndex];
     // Do not escape into the approach of another moving vehicle. Its body
     // may be clear now while its next section already converges on this node.
@@ -2220,22 +2196,31 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
      if(v){moveVehicle(v,h);if(!v.route.length)permits.delete(id)}
     }
    };
-   // INDEPENDENT INTERSECTION RESERVATIONS: no whole-journey admission.
-   // Road sections are claimed only while physically occupied, with a one-section
-   // exit lookahead at junctions. A vehicle may wait before a junction, never
-   // within its reserved conflict zone. All 4 north/south and quay lanes are
-   // bidirectional; oppositely directed entries require the same edge token.
    activePermits.clear();
-   const  vehiclesOnRoutes=travelAgvs; /* Local value for vehicles on routes in tick() */
-   const  getEdge=(a,b)=>[gKey(a.x,a.z),gKey(b.x,b.z)].sort().join('|'); /* Returns edge */
-   const  roadOccupied=new Map(), nodeOccupied=new Map(); /* Lookup table holding road occupied */ /* Lookup table holding node occupied */
-   // Retain physical ownership of segments until the AGV fully clears them.
-   for(const  v of vehiclesOnRoutes){ /* Current vehicle or value being processed in tick() */
-    const  dest=v.route[v.routeIndex]; /* Destination location or graph node in tick() */
-    if(!dest)continue;
-    const  old=v.route[Math.max(0,v.routeIndex-1)]||point(v.x,v.z); /* Local value for old in tick() */
-    const  key=getEdge(old,dest); /* Local value for key in tick() */
-    if(!roadOccupied.has(key))roadOccupied.set(key,v.id);
+   const vehiclesOnRoutes=travelAgvs;
+   const getEdge=sectionKey;
+   const roadOccupied=new Map();
+   const claim=(id,vehicle)=>{if(!roadOccupied.has(id))roadOccupied.set(id,vehicle);};
+   for(const v of vehiclesOnRoutes){
+    const dest=v.route[v.routeIndex], old=v.route[v.routeIndex-1];
+    if(!dest||!old)continue;
+    // A parked chassis presents a body obstacle, not an advance reservation.
+    if(dist(old,v)>.01)claim(getEdge(old,dest),v.id);
+    const previous=v.route[v.routeIndex-2];
+    if(previous&&dist(old,v)<BODY_LONG)claim(getEdge(previous,old),v.id);
+   }
+   for(const [id,permit] of serviceReservations){
+    const owner=travelAgvs.find(v=>v.id===permit.vehicleId);
+    if(!owner||owner.routeVersion!==permit.version||!owner.route[owner.routeIndex]||
+      (owner.routeIndex===permit.end+1&&dist(owner,owner.route[permit.end])>=JUNCTION_CLEARANCE)||
+      owner.routeIndex>permit.end+1){
+     serviceReservations.delete(id);
+     log('SERVICE_AREA_RELEASED',{vehicle:permit.vehicleId,routeOrReservationId:id});
+    }else if(permit.exit)claim(permit.exit,owner.id);
+   }
+   for(const zone of turnReservations.values()){
+    const owner=travelAgvs.find(v=>v.id===zone.vehicleId);
+    if(zone.exit&&owner?.routeVersion===zone.version&&owner.routeIndex<=zone.index)claim(zone.exit,owner.id);
    }
    // Only after 9 seconds of persistent obstruction by loaded traffic;
    // all ordinary motion uses normal wheel-directed driving.
@@ -2261,9 +2246,11 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
       }
      }
     }
-    if(v.recovery||!v.routeIntent||(v.blockedTime||0)<9||v.load)continue;
+    if(v.recovery||!v.routeIntent||(v.blockedTime||0)<9||v.load||
+     [...serviceReservations.values()].some(permit=>permit.vehicleId===v.id))continue;
     const  next=v.route[v.routeIndex], prev=v.route[v.routeIndex-1]; /* Next candidate or planned state in tick() */ /* Previous state, item, or location in tick() */
     if(!next||!prev)continue;
+    if(gridEdge(prev,next)?.section.travel&&dist(v,next)>=STOP_LINE-.01&&dist(v,prev)>JUNCTION_CLEARANCE)continue;
     const  movementAngle=Math.atan2(next.z-v.z,next.x-v.x); /* Local value for movement angle in tick() */
     /* Evaluates callback for agvs.some using o */
     const approaching=agvs.filter(o=>o!==v&&o.route.length&&(o.blockedTime||0)>4&&
@@ -2323,7 +2310,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
    const  reservedPivots=[]; /* Collection of reserved pivots */
    for(const [key,zone] of turnReservations){
     const owner=agvs.find(v=>v.id===zone.vehicleId);
-    if(!owner?.route.length||owner.routeVersion!==zone.version||owner.routeIndex>zone.index&&dist(owner,zone)>PIVOT_SWEEP_RADIUS+BODY_LONG+.1){
+    if(!owner?.route.length||owner.routeVersion!==zone.version||owner.routeIndex>zone.index&&dist(owner,zone)>JUNCTION_CLEARANCE){
      turnReservations.delete(key);log('TURN_RELEASED',{job:zone.jobId,vehicle:zone.vehicleId,routeOrReservationId:key});
     }
    }
@@ -2369,16 +2356,60 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
     if(!next){moveVehicle(v,h);continue;}
     const  old=v.route[Math.max(0,v.routeIndex-1)]||point(v.x,v.z); /* Local value for old in tick() */
     const  section=getEdge(old,next); /* Local value for section in tick() */
-    if(roadOccupied.get(section)!==v.id){v.trafficBlock={reason:'ROAD_SECTION',resource:roadOccupied.get(section),section};v.blockedTime+=h;continue;}
-    const  d=Math.hypot(next.x-v.x,next.z-v.z); /* Local value for d in tick() */
-    const  angle=d>.001?Math.atan2(next.z-v.z,next.x-v.x):v.heading; /* Local value for angle in tick() */
-    const  collisionHeading=v.recovery?.reverse?v.heading:angle; /* Local value for collision heading in tick() */
-    const  step=Math.min(d,h*v.speed); /* Local value for step in tick() */
-    const  nx=v.x+(d?Math.cos(angle)*step:0), nz=v.z+(d?Math.sin(angle)*step:0); /* Local value for nx in tick() */ /* Local value for nz in tick() */
+    const occupiedBy=roadOccupied.get(section);
+    if(occupiedBy&&occupiedBy!==v.id){
+     v.trafficBlock={reason:'ROAD_SECTION',resource:occupiedBy,section};v.blockedTime+=h;continue;
+    }
+    const edge=gridEdge(old,next);
+    const after=v.route[v.routeIndex+1];
+    const nextEdge=after&&gridEdge(next,after);
+    const d=dist(v,next);
+    const angle=d>.001?Math.atan2(next.z-v.z,next.x-v.x):v.heading;
+    const reversing=next.reverse||v.recovery?.reverse;
+    const collisionHeading=reversing?v.heading:angle;
+    const requestedStep=Math.min(d,h*(next.reverse?v.speed/3:v.speed));
+    const checksAhead=!!after&&d<=STOP_LINE+.00001;
+    // Advance right up to the stop line. A discrete simulation step must
+    // never carry an unpermitted vehicle across it.
+    const limit=edge?.section.travel&&after&&!checksAhead?d-STOP_LINE:Infinity;
+    const step=Math.min(requestedStep,limit);
+    const nx=v.x+Math.cos(angle)*step, nz=v.z+Math.sin(angle)*step;
+    let pendingService=null;
+    const area=edge?.section.area||(checksAhead&&nextEdge?.section.area);
+    if(area){
+     const permit=serviceReservations.get(area);
+     if(permit&&permit.vehicleId!==v.id){
+      v.trafficBlock={reason:'SERVICE_AREA',resource:permit.vehicleId,section:area};v.blockedTime+=h;continue;
+     }
+     if(!permit){
+      let end=edge?.section.area===area?v.routeIndex:v.routeIndex+1;
+      while(v.route[end+1]&&gridEdge(v.route[end],v.route[end+1])?.section.area===area)end++;
+      const exit=v.route[end+1]&&getEdge(v.route[end],v.route[end+1]);
+      const exitOwner=exit&&roadOccupied.get(exit);
+      if(exitOwner&&exitOwner!==v.id){
+       v.trafficBlock={reason:'SERVICE_AREA_EXIT',resource:exitOwner,section:exit};v.blockedTime+=h;continue;
+      }
+      // Check the full path through the protected area before leaving safe
+      // waiting space. A docked neighbor can stay in its adjacent spur.
+      const first=edge?.section.area===area?v.routeIndex:v.routeIndex+1;
+      let blocker=null;
+      for(let i=first;i<=end&&!blocker;i++){
+       const from=v.route[i-1],to=v.route[i],following=v.route[i+1];
+       const heading=Math.atan2(to.z-from.z,to.x-from.x)+(to.reverse?Math.PI:0);
+       const turn=following&&Math.abs(turnDelta(Math.atan2(following.z-to.z,following.x-to.x),heading))>.035;
+       blocker=blockerAlongLeg(v,from,to,{heading,turn});
+      }
+      if(!blocker&&exit)blocker=exitBlocker(v,v.route[end],v.route[end+1]);
+      if(blocker){
+       v.trafficBlock={reason:'SERVICE_AREA_BODY',resource:blocker.id,section:area};v.blockedTime+=h;continue;
+      }
+      pendingService={vehicleId:v.id,version:v.routeVersion,end,exit};
+     }
+    }
     const reservedTurn=[...turnReservations.values()].find(zone=>zone.vehicleId!==v.id&&
      circleIntersectsVehicle(zone.x,zone.z,PIVOT_SWEEP_RADIUS,{x:nx,z:nz,heading:collisionHeading}));
     if(reservedTurn){v.trafficBlock={reason:'TURN_RESERVATION',resource:reservedTurn.vehicleId,section};v.blockedTime+=h;continue;}
-    if(!v.recovery?.reverse){
+    if(!reversing){
      const following=agvs.find(other=>{
       if(other===v)return false;
       const target=other.route[other.routeIndex];if(!target)return false;
@@ -2389,33 +2420,30 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
      });
      if(following){v.trafficBlock={reason:'FOLLOWING_TURN_CLEARANCE',resource:following.id,section};v.blockedTime+=h;continue;}
     }
-    const  after=v.route[v.routeIndex+1]; /* Local value for after in tick() */
     let pendingTurn=null;
     // No stopping inside a graph intersection: reserve the downstream exit
     // before the chassis enters the conflict zone.
     let  exitClear=true; /* Local value for exit clear in tick() */
-    if(after&&d<18){
+    if(checksAhead){
      const exitHeading=Math.atan2(after.z-next.z,after.x-next.x);
-     const turning=Math.abs(turnDelta(exitHeading,angle))>.035;
+     const turning=Math.abs(turnDelta(exitHeading,collisionHeading))>.035;
+     const protect=turning||edge?.section.travel||nextEdge?.section.travel;
+     const exitKey=getEdge(next,after);
      const zoneKey=v.id+':'+v.routeVersion+':'+v.routeIndex;
-     const competingTurn=turning?[...turnReservations.values()].find(zone=>zone.vehicleId!==v.id&&dist(zone,next)<2*PIVOT_SWEEP_RADIUS):null;
+     const competingTurn=protect?[...turnReservations.values()].find(zone=>zone.vehicleId!==v.id&&dist(zone,next)<2*PIVOT_SWEEP_RADIUS):null;
      if(competingTurn){v.trafficBlock={reason:'TURN_RESERVATION',resource:competingTurn.vehicleId,section};v.blockedTime+=h;continue;}
-     const turnBlocker=Math.abs(turnDelta(exitHeading,angle))>.035?
+     const turnBlocker=protect?
       agvs.find(o=>o!==v&&circleIntersectsVehicle(next.x,next.z,PIVOT_SWEEP_RADIUS,o)):null;
      if(turnBlocker){
       v.trafficBlock={reason:'TURN_SWEEP_APPROACH',resource:turnBlocker.id,section};v.blockedTime+=h;continue;
      }
-     if(turning&&!turnReservations.has(zoneKey)){
+     if(protect&&!turnReservations.has(zoneKey)){
       if(reservedPivots.some(other=>other!==v&&dist(other,next)<2*PIVOT_SWEEP_RADIUS)){v.blockedTime+=h;continue;}
-      pendingTurn={key:zoneKey,vehicleId:v.id,jobId:v.job||v.pipelineJob||null,x:next.x,z:next.z,index:v.routeIndex,version:v.routeVersion};
+      pendingTurn={key:zoneKey,vehicleId:v.id,jobId:v.job||v.pipelineJob||null,x:next.x,z:next.z,index:v.routeIndex,version:v.routeVersion,exit:exitKey};
      }
-     const  exitKey=getEdge(next,after), owner=roadOccupied.get(exitKey); /* Local value for exit key in tick() */ /* Local value for owner in tick() */
+     const owner=roadOccupied.get(exitKey); /* Local value for exit key in tick() */ /* Local value for owner in tick() */
      if(owner&&owner!==v.id){exitClear=false;v.trafficBlock={reason:'DOWNSTREAM_SECTION',resource:owner,section:exitKey};}
-     const  exd=Math.hypot(after.x-next.x,after.z-next.z); /* Local value for exd in tick() */
-     const  px=next.x+(after.x-next.x)*Math.min(18,exd)/Math.max(.001,exd); /* Local value for px in tick() */
-     const  pz=next.z+(after.z-next.z)*Math.min(18,exd)/Math.max(.001,exd); /* Local value for pz in tick() */
-     /* Evaluates callback for agvs.some using o */
-     const blocker=agvs.find(o=>o!==v&&rectangularOverlap({x:px,z:pz,heading:Math.atan2(after.z-next.z,after.x-next.x)},o));
+     const blocker=exitBlocker(v,next,after);
      if(blocker){exitClear=false;v.trafficBlock={reason:'JUNCTION_EXIT_BODY',resource:blocker.id,section:exitKey};}
      // Do not claim a downstream section until the chassis actually advances.
      // An earlier version leaked phantom ownership when a later body check failed.
@@ -2423,7 +2451,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
     if(!exitClear){v.blockedTime+=h;continue;}
     // A translating AGV may not enter the reserved rotation circle.
     /* Evaluates callback for reservedPivots.some using o */
-    if(reservedPivots.some( o=>o!==v&&circleIntersectsVehicle(o.x,o.z,PIVOT_SWEEP_RADIUS,{x:nx,z:nz,heading:angle}))){
+    if(reservedPivots.some( o=>o!==v&&circleIntersectsVehicle(o.x,o.z,PIVOT_SWEEP_RADIUS,{x:nx,z:nz,heading:collisionHeading}))){
       v.blockedTime+=h;continue;
     }
     // Actual full-rectangle collision guard independent of reservations.
@@ -2432,17 +2460,20 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
     if(bodyBlocker){
       v.trafficBlock={reason:'VEHICLE_BODY',resource:bodyBlocker.id,section};v.blockedTime+=h;continue;
     }
-    if(after&&d<18){const  exitKey=getEdge(next,after);if(!roadOccupied.has(exitKey))roadOccupied.set(exitKey,v.id)} /* Local value for exit key in tick() */
-    const oldIndex=v.routeIndex,headingBefore=v.heading,oldPosition=point(v.x,v.z);
-    moveVehicle(v,h);
-    if(v.recovery?.reverse)v.heading=headingBefore;
-    if(pendingTurn&&(dist(v,oldPosition)>.001||v.routeIndex!==oldIndex)){
-     turnReservations.set(pendingTurn.key,pendingTurn);
-     log('TURN_RESERVED',{job:pendingTurn.jobId,vehicle:v.id,routeOrReservationId:pendingTurn.key,x:next.x,z:next.z});
-    }
-    if(v.routeIndex!==oldIndex){
-     roadOccupied.delete(section);
-     if(after)roadOccupied.set(getEdge(next,after),v.id);
+    const oldIndex=v.routeIndex, oldPosition=point(v.x,v.z);
+    moveVehicle(v,h,limit);
+    if(dist(v,oldPosition)>.001||v.routeIndex!==oldIndex){
+     claim(section,v.id);
+     if(checksAhead)claim(getEdge(next,after),v.id);
+     if(pendingService){
+      serviceReservations.set(area,pendingService);
+      if(pendingService.exit)claim(pendingService.exit,v.id);
+      log('SERVICE_AREA_RESERVED',{vehicle:v.id,routeOrReservationId:area});
+     }
+     if(pendingTurn){
+      turnReservations.set(pendingTurn.key,pendingTurn);
+      log('TURN_RESERVED',{job:pendingTurn.jobId,vehicle:v.id,routeOrReservationId:pendingTurn.key,x:next.x,z:next.z});
+     }
     }
     if(Math.hypot(v.x-nx,v.z-nz)<.1&&step>.001){
      activePermits.add(v.id);rollingSectionGrants++;rollingSectionReleases++;
@@ -2451,7 +2482,8 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
    // Avoid stale reservations and allow every vehicle to reattempt on the
    // next fixed simulation tick. An AGV never holds an entire route token.
    for(const  v of travelAgvs){ /* Current vehicle or value being processed in tick() */
-    if(activePermits.has(v.id)||!v.routeIntent||v.recovery||v.pivot)continue;
+    if(activePermits.has(v.id)||!v.routeIntent||v.recovery||v.pivot||
+      [...serviceReservations.values()].some(permit=>permit.vehicleId===v.id))continue;
     /* Evaluates callback for [...AGV_GRID.nodes.values()].some using n */
     if((v.blockedTime||0)<=3||t<(v.nextReplanAt||0)||v.x<-330)continue;
     const nearNode=[...AGV_GRID.nodes.values()].some(n=>Math.hypot(n.x-v.x,n.z-v.z)<.12); /* Local value for near node in tick() */
@@ -2595,7 +2627,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
    return {vehicleId:v.id,missionId:mission?.id||order?.id||null,vesselCallId:order?.vesselCall||null,stsId:order?.crane||null,
     vehicleType:v.type,containerId:v.load||order?.container||null,toState:job?.stage||mission?.state||v.state,
     active:!!(order||v.route.length),position:{x:v.x,z:v.z},destination:next?{x:next.x,z:next.z}:null,
-    blockingReason,blockingResourceId,routeOrReservationId:v.route.length?v.id+':'+v.routeVersion+':'+v.routeIndex:order?.id||null,
+    blockingReason,blockingResourceId,routeOrReservationId:v.route.length?v.trafficBlock?.section||v.id+':'+v.routeVersion+':'+v.routeIndex:order?.id||null,
     trafficAuthorized:(v.type==='truck'?activeTruckPermits:activePermits).has(v.id),recoveryToken:v.recoveryToken||null,
     plannedNextAction:v.route.length?'FOLLOW_ROUTE':job?.stage==='PICK'||job?.stage==='PLACE'?'PHYSICAL_HANDOVER':order?'RETRY_AUTHORIZATION':'AWAIT_DEMAND',
     progressSignature:[job?.id,job?.stage,job?.phase,job?.container?.history.length,v.completed].join('|')};
@@ -2686,7 +2718,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   /* Evaluates callback for events.filter using e */
   errors:events.filter( e=>e.type==='JOB_ERROR').slice(-5),
   blocked:roadBlocked,craneWaits,craneRailViolations:yardCraneIncidents.length,relaysCompleted:completedRelays,
-rollingSectionGrants,rollingSectionReleases,quayLaneCount:8,quayLanePitch:QUAY_ROW_PITCH,yardLaneCount:BLOCK_GRID_X.length,yardInboundLanes:YARD_INCOMING_X.length,yardOutboundLanes:YARD_OUTGOING_X.length,yardLanePitch:YARD_LANE_PITCH,
+rollingSectionGrants,rollingSectionReleases,quayLaneCount:8,quayLanePitch:QUAY_ROW_PITCH,yardLaneCount:BLOCK_GRID_X.length,yardInboundLanes:YARD_INCOMING_X.length,yardOutboundLanes:YARD_OUTGOING_X.length,yardLanePitch:TRAVEL_PITCH,
   /* Evaluates callback for events.filter using e */
   /* Evaluates callback for events.filter using e */
   /* Evaluates callback for events.filter using e */
@@ -2721,7 +2753,7 @@ rollingSectionGrants,rollingSectionReleases,quayLaneCount:8,quayLanePitch:QUAY_R
   return [...containers.values()].filter(filter).map( c=>({id:c.id,location:c.site==='yard'?L.yards[c.yard].id:c.site==='ship'?'VES-'+(c.ship+1):c.site,
     /* Evaluates callback for orders.find using o */
     order:c.order||'—',scheduled:orders.find( o=>o.id===c.order)?.type||'—',carrier:c.carrier?.id||'—',x:c.x,z:c.z,y:c.y}));}
- return {quayRows:EIGHT_QUAY_ROWS,quayPitch:QUAY_ROW_PITCH,pivotSafety:{radius:PIVOT_SWEEP_RADIUS,turnDelta,circleIntersectsVehicle,pivotEnvelopeClear},L,YARD_AGV_BAYS,YARD_TRUCK_BAYS,CRANE_QUEUE_BAYS,vesselCalls,berths,vesselRows,vesselWorklist,agvGuideGraph:AGV_GRID,truckRoadGraph:TRUCK_GRID,containers,history,jobs,orders,events,agvs,trucks,sts,rtgs,yardSlots,tick,status,equipmentRows,containerRows,
+ return {quayRows:QUAY_ROWS,quayPitch:QUAY_ROW_PITCH,pivotSafety:{radius:PIVOT_SWEEP_RADIUS,stopLine:STOP_LINE,junctionClearance:JUNCTION_CLEARANCE,turnDelta,circleIntersectsVehicle,pivotEnvelopeClear},L,YARD_AGV_BAYS,YARD_TRUCK_BAYS,CRANE_QUEUE_BAYS,vesselCalls,berths,vesselRows,vesselWorklist,agvGuideGraph:AGV_GRID,truckRoadGraph:TRUCK_GRID,containers,history,jobs,orders,events,agvs,trucks,sts,rtgs,yardSlots,tick,status,equipmentRows,containerRows,
   /* Handles time in the terminal simulation */
   /* Handles running in the terminal simulation */
   /* Handles pause in the terminal simulation */
@@ -2748,7 +2780,7 @@ import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 const  $=id=>document.getElementById(id); /* DOM element lookup by element ID */
 const  sim=window.PORTGRID=window.PortGridEngine(); /* Shared simulation engine instance consumed by the 3D view and dashboard */
-const  scene=new THREE.Scene();scene.background=new THREE.Color('#99b8c4');scene.fog=new THREE.Fog('#99b8c4',650,1450); /* Three.js scene containing all rendered terminal objects */
+const  scene=new THREE.Scene();scene.background=new THREE.Color('#99b8c4');scene.fog=new THREE.Fog('#99b8c4',950,2000); /* Three.js scene containing all rendered terminal objects */
 const  camera=new THREE.PerspectiveCamera(48,innerWidth/innerHeight,1,2800); /* Perspective camera for the terminal view */
 camera.position.set(530,440,440);camera.lookAt(0,0,45);
 const  renderer=new THREE.WebGLRenderer({antialias:false,powerPreference:'high-performance'}); /* WebGL renderer for the Three.js scene */
@@ -2769,11 +2801,18 @@ const  unitBox=new THREE.BoxGeometry(1,1,1), cyl=new THREE.CylinderGeometry(.1,.
 /* Adds a structural beam mesh between 3D endpoints */
  function strut(a,b,r,color,parent){const  p=new THREE.Vector3(...a), q=new THREE.Vector3(...b), m=new THREE.Mesh(cyl,mat(color));m.position.copy(p).add(q).multiplyScalar(.5);m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),q.clone().sub(p).normalize());m.scale.set(r*10,p.distanceTo(q),r*10);parent.add(m);return m} /* Current position, route, or temporary calculation value in strut() */ /* Current crane or queued item in strut() */ /* Rendered Three.js mesh for m */
 // Permanent site and explicitly routed roads. Land-side trucks do not use AGV lanes.
-box(970,1,490,0,-.65,65,M.ground);
-box(850,1,145,10,-.5,-140,M.sea);
-box(740,.45,37,0,.0,-90,M.concrete);
-box(665,.14,137,0,.03,-1,0x718b91);
-box(600,.17,260,0,-.06,181,0xa1acb0);
+const agvGraph=sim.agvGuideGraph;
+const siteNodes=[...agvGraph.nodes.values(),...sim.truckRoadGraph.nodes.values()];
+const siteWest=Math.min(...siteNodes.map(n=>n.x))-30;
+const siteEast=Math.max(...siteNodes.map(n=>n.x))+30;
+const siteWidth=siteEast-siteWest, siteX=(siteWest+siteEast)/2;
+const shoreZ=sim.L.stsZ-21, siteSouth=sim.L.gateZ+28;
+const siteZ=(shoreZ+siteSouth)/2;
+box(siteWidth,1,siteSouth-shoreZ,siteX,-.65,siteZ,M.ground);
+box(siteWidth+120,1,310,siteX,-.5,shoreZ-155,M.sea);
+const quayWest=agvGraph.columns[0]-5,quayEast=agvGraph.columns.at(-1)+5;
+const quayX=(quayWest+quayEast)/2;
+box(quayEast-quayWest,.14,agvGraph.yardMouthZ-shoreZ+6,quayX,.03,(shoreZ+agvGraph.yardMouthZ+6)/2,0x718b91);
 // Guide-path grid constructed from the SAME nodes/links as the dispatch engine.
 // Colored sections: quay lanes cyan, cross-lanes violet, block movement blue,
 // parking aisle slate, yard interchange amber.
@@ -2785,15 +2824,16 @@ box(600,.17,260,0,-.06,181,0xa1acb0);
 // quay/yard accesses inconsistently and caused mixed-colour junctions.
 const  PARKING_GRID_COLOR=0x64747a,  YARD_GRID_COLOR=0x2b7187; /* Local value for parking grid color */ /* Local value for yard grid color */
 const  ROUTE_STYLE={ /* Visual color and lane width assigned to each logical road zone */
- QUAY_BIDIRECTIONAL:{color:0x2ba8c8,width:7},
  QUAY_WESTBOUND:{color:0x2ba8c8,width:7},
  QUAY_EASTBOUND:{color:0x2ba8c8,width:7},
  QUAY_INTERSECTION:{color:0x2ba8c8,width:7},
  QUAY_ACCESS_CONNECTOR:{color:0x2ba8c8,width:7},
+ QUAY_SERVICE:{color:0x2ba8c8,width:7},
  YARD_INCOMING:{color:YARD_GRID_COLOR,width:6.2},
  YARD_OUTGOING:{color:YARD_GRID_COLOR,width:6.2},
- BLOCK_INTERSECTION:{color:YARD_GRID_COLOR,width:4.4},
- AGV_TRANSFER:{color:YARD_GRID_COLOR,width:4.4},
+ BLOCK_INTERSECTION:{color:YARD_GRID_COLOR,width:6.2},
+ YARD_SERVICE:{color:YARD_GRID_COLOR,width:6.2},
+ AGV_TRANSFER:{color:YARD_GRID_COLOR,width:6.2},
  PARKING_DEFAULT:{color:PARKING_GRID_COLOR,width:5.2},
  PARKING_QUAY_CONNECTOR:{color:PARKING_GRID_COLOR,width:5.2}
 };
@@ -2903,7 +2943,8 @@ for(const  [color,tiles] of tilesByColor){ /* Local value for [color,tiles] */
  mesh.instanceMatrix.needsUpdate=true;scene.add(mesh);
 }
 // One graph edge => one footprint, with no independent parking/quay/yard mesh.
-if(visitedEdges.size+sim.truckRoadGraph.edges.length+sim.truckRoadGraph.nodes.size!==roadFootprints.length-graphNodeStyle.size)
+if(visitedEdges.size!==agvGraph.sections.size||
+   visitedEdges.size+sim.truckRoadGraph.edges.length+sim.truckRoadGraph.nodes.size!==roadFootprints.length-graphNodeStyle.size)
  throw Error('Logical AGV edges and visual road-footprints differ');
 // Parking and quay have separate logical domains and separate road colors.
 // Only four connector edges join them, and the planar road partition gives
@@ -2912,11 +2953,6 @@ if(visitedEdges.size+sim.truckRoadGraph.edges.length+sim.truckRoadGraph.nodes.si
 for(const  a of sim.agvs){ /* First item being compared */
  for(const  zEdge of [-3.7,3.7])box(14,.025,.18,a.home.x,.325,a.home.z+zEdge,0x8eabb4); /* Local value for z edge */
 }
-// Yard approaches use only the actual AGV_GRAPH links: four north/south
-// guide lanes, independently reachable yard transfer branches and bays.
-// In particular, there must NOT be a continuous painted AGV corridor at
-// x=-221: the graph has 24 individual transfer endpoints, not a fifth
-// north/south through-lane there.
 const  storageStart=sim.L.yardStorageFirstX-5, storageEnd=sim.L.yardStorageFirstX+(sim.L.yardStorageBays-1)*sim.L.yardStorageStepX+5; /* Local value for storage start */ /* Local value for storage end */
 const  storageWidth=storageEnd-storageStart, storageCenter=(storageStart+storageEnd)*.5; /* Local value for storage width */ /* Local value for storage center */
 // Truck transfer surface is now derived exclusively from sim.truckRoadGraph.
@@ -2927,22 +2963,14 @@ for(let  i=0;i<sim.L.yards.length;i++){ /* Loop index for the current collection
  box(storageWidth,.06,.48,storageCenter,.27,y.z-14,color);
  box(storageWidth,.06,.48,storageCenter,.27,y.z+14,color);
  // Shared full-yard crane rails: both gantries operate along their full lengths.
- box(448,.045,1.0,0,.34,y.z-12.7,0x71828b);
- box(448,.045,1.0,0,.34,y.z+12.7,0x71828b);
+ const railWidth=sim.L.truckDockX-sim.L.agvDockX+6;
+ const railCenter=(sim.L.agvDockX+sim.L.truckDockX)/2;
+ for(const dz of [-12.7,12.7])box(railWidth,.045,1,railCenter,.34,y.z+dz,0x71828b);
  // Rail stops are beyond the actual AGV/truck transfer positions.
- for(const  xx of [-223,223])for(const  zz of [-12.7,12.7])box(1.4,1.1,2.5,xx,.7,y.z+zz,0xd8b05a); /* Local value for xx */ /* Local value for zz */
+ for(const xx of [sim.L.agvDockX-2,sim.L.truckDockX+2])for(const  zz of [-12.7,12.7])box(1.4,1.1,2.5,xx,.7,y.z+zz,0xd8b05a); /* Local value for xx */ /* Local value for zz */
  // Four independent physical docking bays on each side of each yard.
- for(const  [side,x] of [['agv',sim.L.agvDockX],['truck',sim.L.truckDockX]]){ /* Local value for [side,x] */
-  for(const  dz of [-10.5,-3.5,3.5,10.5]){ /* Local value for dz */
-   // The AGV bay lies on a real AGV_TRANSFER graph endpoint and uses the
-   // same road colour; only its two narrow edge markers are decorative.
-   if(side==='agv'){
-    const  node=`${Math.round(x*1000)/1000},${Math.round((y.z+dz)*1000)/1000}`; /* Local value for node */
-    if(!sim.agvGuideGraph.nodes.has(node))throw Error('Rendered yard bay has no logical node: '+node);
-    // The logical transfer endpoint is already painted by the node renderer.
-   }
-   for(const  xx of [-5.6,5.6])box(.24,.035,side==='agv'?4.4:5.2,x+xx,.41,y.z+dz,0xf8f3dd); /* Local value for xx */
-  }
+ for(const {side,x,z} of [...sim.YARD_AGV_BAYS[i],...sim.YARD_TRUCK_BAYS[i]]){
+  for(const dx of [-5.6,5.6])box(.24,.035,side==='agv'?6.2:5.2,x+dx,.41,z,0xf8f3dd);
  }
  // All AGV transfers come from the AGV graph, all truck transfers from the truck graph.
  // Truck crane transfer lanes are generated from TRUCK_YARD_TRANSFER edges.
@@ -2953,7 +2981,9 @@ for(let  i=0;i<sim.L.yards.length;i++){ /* Loop index for the current collection
 }
 // Truck grid, gate branches, and transfer lanes are all drawn by the
 // truckRoadGraph footprint union above; the truck gate building is retained.
-box(33,2.5,18,355,1.25,303,0x2c5260);box(35,.8,21,355,3,303,0x337a96);
+const gateX=sim.L.truckOutX+38;
+box(33,2.5,18,gateX,1.25,sim.L.gateZ,0x2c5260);
+box(35,.8,21,gateX,3,sim.L.gateZ,0x337a96);
 for(const  v of sim.trucks){ /* Current vehicle or value being processed */
  for(const  dz of [-4.6,4.6])box(18,.025,.17,v.home.x,.37,v.home.z+dz,0xc8d4c5); /* Local value for dz */
 }
@@ -2962,9 +2992,9 @@ for(const  v of sim.trucks){ /* Current vehicle or value being processed */
 const  vesselGroups=[]; /* Collection of vessel groups */
 for(let  i=0;i<3;i++){ /* Loop index for the current collection */
  const  vg=new THREE.Group();scene.add(vg);vesselGroups.push(vg); /* Three.js object group for vg */
- const  x=sim.L.shipX[i];box(200,9,29,x,-1.0,-151,M.ship,vg);box(193,1.2,28,x,3.8,-151,M.deck,vg); /* Horizontal world coordinate */
- box(17,12,23,x-77,10,-151,M.white,vg);box(13,4,17,x-77,18,-151,M.white,vg);box(3,8,3,x-81,22,-151,M.dark,vg);
- box(1,.7,27,x+98,3.6,-151,0xe08e4e,vg);
+ const  x=sim.L.shipX[i];box(232,9,29,x,-1.0,sim.L.shipZ,M.ship,vg);box(225,1.2,28,x,3.8,sim.L.shipZ,M.deck,vg); /* Horizontal world coordinate */
+ box(17,12,23,x-103,10,sim.L.shipZ,M.white,vg);box(13,4,17,x-103,18,sim.L.shipZ,M.white,vg);box(3,8,3,x-107,22,sim.L.shipZ,M.dark,vg);
+ box(1,.7,27,x+114,3.6,sim.L.shipZ,0xe08e4e,vg);
 }
 // High performance container visual: one instanced draw call with per-instance color.
 const  cargoGeometry=new THREE.BoxGeometry(10,2.7,2.6); /* Local value for cargo geometry */
@@ -3034,10 +3064,12 @@ const  labels=[]; function label(str,x,y,z,color='#ecf7fa'){ /* Collection of la
  ctx.fillStyle='rgba(8,29,41,.82)';ctx.fillRect(0,5,512,65);ctx.fillStyle=color;ctx.font='bold 31px system-ui';ctx.textAlign='center';ctx.fillText(str,256,52);
  const  texture=new THREE.CanvasTexture(canvas);const  sp=new THREE.Sprite(new THREE.SpriteMaterial({map:texture,transparent:true,depthWrite:false}));sp.position.set(x,y,z);sp.scale.set(42,7,1);scene.add(sp);labels.push(sp) /* Local value for texture in label() */ /* Local value for sp in label() */
 }
-for(const  y of sim.L.yards)label(`${y.id} · ${y.type.toUpperCase()}`,0,33,y.z,y.type==='inbound'?'#f1ce7d':'#8dd7f2'); /* Vertical world coordinate */
-for(let  i=0;i<3;i++)label('VESSEL '+(i+1),sim.L.shipX[i],34,-151,'#fffbef'); /* Loop index for the current collection */
-label('AGV YARD TRANSFER',-221,7,70,'#e0c5ff');label('TRUCK YARD TRANSFER',221,7,70,'#deefb1');
-label('4 STS TRANSFER + 4 BYPASS · 12 m PITCH',-40,4,-54,'#a6e9ff');label('AGV PARKING BAND',-420,10,80,'#d8f2fb');label('TRUCK GATE',354,13,305,'#d1eab3');
+for(const  y of sim.L.yards)label(`${y.id} · ${y.type.toUpperCase()}`,storageCenter,33,y.z,y.type==='inbound'?'#f1ce7d':'#8dd7f2'); /* Vertical world coordinate */
+for(let  i=0;i<3;i++)label('VESSEL '+(i+1),sim.L.shipX[i],34,sim.L.shipZ,'#fffbef'); /* Loop index for the current collection */
+label('AGV YARD TRANSFER',sim.L.agvDockX,7,sim.L.yards[0].z-23,'#e0c5ff');
+label('TRUCK YARD TRANSFER',sim.L.truckDockX,7,sim.L.yards[0].z-23,'#deefb1');
+label('AGV PARKING',-420,10,80,'#d8f2fb');
+label('TRUCK GATE',gateX,13,sim.L.gateZ,'#d1eab3');
 const  visibleContainers=[]; /* Collection of visible containers */
 /* Handles frame containers in the terminal simulation */
 /* Evaluates callback for palette.map using c */
@@ -3099,7 +3131,13 @@ renderer.domElement.addEventListener('pointerup', e=>{
   let  o=hit.object;while(o&&!o.userData.asset)o=o.parent;if(o?.userData.asset){inspect(o.userData.asset);break} /* Local value for o */
  }
 });
-const  views={overview:{pos:[530,440,440],target:[0,0,55]},top:{pos:[0,620,10],target:[0,0,50]},quay:{pos:[-300,200,-260],target:[0,0,-90]},yards:{pos:[330,230,300],target:[0,0,172]}}; /* Configuration or state record for views */
+const yardCenterZ=(sim.L.yards[0].z+sim.L.yards.at(-1).z)/2;
+const views={
+ overview:{pos:[siteEast+95,660,siteSouth+175],target:[siteX,0,siteZ]},
+ top:{pos:[siteX,1050,siteZ-15],target:[siteX,0,siteZ]},
+ quay:{pos:[quayX-310,230,-260],target:[quayX,0,-45]},
+ yards:{pos:[siteEast+40,460,yardCenterZ+155],target:[storageCenter,0,yardCenterZ]}
+};
 /* Handles set view in the terminal simulation */
 /* Evaluates callback for document.querySelectorAll('[data-view]').forEach using b */
  function setView(name){const  v=views[name];camera.position.set(...v.pos);controls.target.set(...v.target);camera.lookAt(controls.target);controls.update();document.querySelectorAll('[data-view]').forEach( b=>b.classList.toggle('active',b.dataset.view===name))} /* Current vehicle or value being processed in setView() */

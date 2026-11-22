@@ -32,8 +32,8 @@ function fixture(){let seed=3;return make({rng:()=>((seed=Math.imul(seed,1664525
 }
 {
  const sim=fixture(),call=sim.vesselCalls[0],entry=call.load[0];
- const slot=sim.yardSlots.find(s=>s.yard===3&&s.x===-42.75&&s.stack.length&&!sim.containers.get(s.stack.at(-1)).loadCall);
- assert.ok(slot,'reproduce the real storage column between -45 and -40 m');
+ const slot=sim.yardSlots.find(s=>s.yard===3&&s.x===sim.L.agvStorageMaxX-2.75&&s.stack.length&&!sim.containers.get(s.stack.at(-1)).loadCall);
+ assert.ok(slot,'reproduce the real storage column at the AGV booking boundary');
  const cargo=sim.containers.get(slot.stack.at(-1)),previous=sim.containers.get(entry.container);
  previous.loadCall=null;cargo.loadCall=call.id;entry.container=cargo.id;
  for(let i=0;i<9000;i++)sim.tick(.1);

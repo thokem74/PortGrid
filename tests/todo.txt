@@ -5,12 +5,9 @@ connections between two intersections must large enough for an AGV,
 so that an AGV can wait here without blocking the two intersections 
 for other AGVs
 
+for the quay grid enlarge the visual grid connections
 for the yard grid enlarge the visual grid connections
 the parking grid is fine and nothing to do here
-
-for the quay grid check what makes more sense,
-to enlarge the visual grid connections
-or to reduce logical grid intersections
 
 rework logical and visual grids accordingly
 logical and visual grids must match
