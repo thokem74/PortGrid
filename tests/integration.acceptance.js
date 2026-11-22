@@ -6,7 +6,10 @@ const PortGridEngine=require('../portgrid-engine.js');
 const scenarios=[
  {name:'complete-small-seed3',seed:3,discharge:3,load:2,seconds:900,departures:3,imports:9,exports:6,waitMax:30},
  {name:'complete-small-seed7',seed:7,discharge:3,load:2,seconds:900,departures:3,imports:9,exports:6,waitMax:30},
- ...[3,7,11].map(seed=>({name:'complete-normal-seed'+seed,seed,discharge:12,load:8,seconds:2400,departures:3,imports:36,exports:24,waitMax:100})),
+ ...[3,7,11].map(seed=>({name:'complete-normal-seed'+seed,seed,discharge:12,load:8,seconds:2400,departures:3,imports:36,exports:24,waitMax:100,kpiTarget:true})),
+ ...[3,7,11].map(seed=>({name:'continuous-normal-seed'+seed,seed,discharge:12,load:8,seconds:10800,departures:9,imports:108,exports:72,waitMax:100,continuous:true,kpiTarget:true})),
+ {name:'loaded-delivery-outage',seed:3,discharge:3,load:2,seconds:1500,departures:3,imports:9,exports:6,waitMax:100,loadedOutage:true},
+ {name:'full-storage-recovery',seed:7,discharge:3,load:2,seconds:3600,departures:3,imports:9,exports:6,waitMax:100,fullStorage:true},
  {name:'temporary-yard-outage',seed:3,discharge:3,load:2,seconds:1200,departures:3,imports:9,exports:6,waitMax:100,craneOutages:{'YC-A01':90,'YC-A02':90,'YC-A03':90}},
  {name:'blocked-parking-release',seed:7,discharge:3,load:2,seconds:1200,departures:3,imports:9,exports:6,waitMax:100,stalledUntil:90},
  {name:'continuous-small-seed7',seed:7,discharge:3,load:2,seconds:3000,departures:9,imports:27,exports:18,waitMax:100,continuous:true},
@@ -26,13 +29,24 @@ const begun=performance.now(),samples=[];let nextSample=0;
 let rngState=cfg.seed;const rng=()=>((rngState=Math.imul(rngState,1664525)+1013904223|0)>>>0)/4294967296;
 const sim=PortGridEngine({rng,dischargePerCall:cfg.discharge,loadPerCall:cfg.load,
  continuousVessels:!!cfg.continuous,preloadFutureCalls:false,craneOutages:cfg.craneOutages,onEvent:recordEvent});
+if(cfg.fullStorage){
+ let serial=0;
+ for(const slot of sim.yardSlots.filter(s=>s.yard<3&&s.x<=-45))while(slot.stack.length<3){
+  const id='FULL-STORAGE-'+(++serial);
+  sim.containers.set(id,{id,site:'yard',yard:slot.yard,slot:slot.yard+'-'+slot.bay+'-'+slot.row,x:slot.x,z:slot.z,y:1.45+slot.stack.length*2.8,direction:'inbound',order:null,history:[]});slot.stack.push(id);
+ }
+}
 assert.equal(sim.control.demandOutstanding>=9,true,'each of nine STS should have initial demand');
-let failure=null,duplicateAssignments=0,prematureLoads=0,lastVesselProgress=0,lastVesselMoves=0;
+let failure=null,duplicateAssignments=0,prematureLoads=0,lastVesselProgress=0,lastVesselMoves=0,loadedOutageAt=null;
 const stalled=cfg.stalledUntil?sim.agvs[0]:null;
 if(stalled)stalled.speed=0;
 for(let i=0;i<cfg.seconds*10;i++){
  if(stalled&&sim.time>=cfg.stalledUntil)stalled.speed=15;
  sim.tick(0.1);
+ if(cfg.loadedOutage&&loadedOutageAt==null){
+  const job=sim.jobs.find(j=>j.type==='IMPORT'&&j.vehicle.load===j.container.id&&j.stage==='TO_DROPOFF');
+  if(job){loadedOutageAt=sim.time;job.rtg.downUntil=sim.time+90;}
+ }
  if(sim.time>=nextSample){
   const k=sim.getKPI(),s=sim.status(),d=sim.reliabilityDiagnostics();
   const live=sim.orders.filter(o=>!['DONE','CANCELLED'].includes(o.status));
@@ -55,10 +69,17 @@ flushTrace();
 const st=sim.status(),kpi=sim.getKPI(),info=sim.control;
 const safety={routeFailures:st.gridRouteFailures,bodyOverlaps:st.unsafeAgvBodyOverlaps,
  manifestViolations:st.manifestViolations,jobErrors:sim.eventCounts.JOB_ERROR||0,
- duplicateAssignments,prematureLoads,railViolations:st.craneRailViolations};
+ duplicateAssignments,prematureLoads,railViolations:st.craneRailViolations,transferOwnershipViolations:st.transferOwnershipViolations};
 const result={scenario:cfg.name,configuration:cfg,sourceHashes,traceSummary,wallSeconds:(performance.now()-begun)/1000,failure,kpi,traceFile,latencySeconds:latencySummary(sim.orders.filter(o=>o.status==='DONE'&&['IMPORT','EXPORT'].includes(o.type)).map(o=>o.completed-o.assigned)),diagnostics:sim.diagnostics(),samples,time:+sim.time.toFixed(1),imports:kpi.importMoves,exports:kpi.exportMoves,
  departures:st.vesselsDeparted,stsGrossWaitingPct:+kpi.avoidableSTSPercent.toFixed(2),
  schedulerDelaySeconds:+kpi.schedulerDelaySeconds.toFixed(1),stsWaitBreakdown:kpi.stsWaitBreakdown,
+ stageLatencySeconds:Object.fromEntries([
+  ['requestToAllocation','requestedAt','assigned'],['allocationToDeparture','assigned','departedAt'],
+  ['departureToPickupArrival','departedAt','pickupArrivedAt'],['requestToSTSArrival','requestedAt','stsArrivedAt'],
+  ['pickupArrivalToPickup','pickupArrivedAt','pickedUpAt'],['pickupToDelivery','pickedUpAt','deliveredAt'],
+  ['deliveryToCompletion','deliveredAt','completed'],['stsArrivalToHandling','stsArrivedAt','stsServiceStartedAt'],
+  ['requestToCompletion','requestedAt','completed']
+ ].map(([name,from,to])=>[name,latencySummary(sim.orders.filter(o=>['IMPORT','EXPORT'].includes(o.type)&&o[from]!=null&&o[to]!=null).map(o=>o[to]-o[from]))])),
  completedByCrane:kpi.sts.map(x=>({id:x.id,completed:x.completed})),
  activeMissions:info.liveMissions,blocking:info.blockingReasons,unsafe:safety};
 console.log(JSON.stringify({...result,kpi:undefined,diagnostics:undefined,samples:undefined},null,2));
@@ -69,6 +90,10 @@ const fleet=kpi.fleet;
 const fleetTotal=['loadedTravelPercent','emptyTravelPercent','craneHandlingPercent','parkedAssignedPercent','queueWaitPercent','trafficWaitPercent','parkedUnassignedPercent'].reduce((sum,key)=>sum+fleet[key],0);
 assert.ok(Math.abs(fleetTotal-100)<1e-6,'fleet states partition the common observation window');
 for(const row of kpi.sts){assert.ok(Math.abs(Object.values(row.waitCauses).reduce((a,b)=>a+b,0)-row.avoidableIdle)<1e-6,'gross waiting cause arithmetic');}
+for(const row of kpi.sts)assert.ok(Math.abs(Object.values(row.stateSeconds).reduce((a,b)=>a+b,0)-row.workingSeconds)<1e-6,'all working STS time is partitioned');
+assert.ok(kpi.unclassifiedSTSSeconds<1e-6,'no unclassified STS time');
+for(const summary of Object.values(result.stageLatencySeconds))if(summary.count)assert.ok(summary.min>=-1e-6,'physical stage durations cannot be negative');
+if(cfg.loadedOutage)assert.notEqual(loadedOutageAt,null,'outage must actually interrupt loaded import transport');
 
 for(const [name,value] of Object.entries(safety))assert.equal(value,0,name);
 assert.ok(kpi.importMoves>=cfg.imports,'discharge throughput acceptance');
@@ -81,6 +106,27 @@ if(cfg.name==='normal-load-first-service'){
  assert.ok(kpi.sts.every(x=>x.completed>0),'all nine STS must receive service');
 }
 if(cfg.departures===3)assert.equal(info.liveMissions,0,'no active missions after final cargo completion');
+if(cfg.kpiTarget){
+ const checkWindow=(label,end,start=null)=>{
+  const exposure=end.sts.reduce((sum,q)=>sum+q.workingSeconds,0)-(start?.sts.reduce((sum,q)=>sum+q.workingSeconds,0)||0);
+  const moves=end.sts.reduce((sum,q)=>sum+q.completed,0)-(start?.sts.reduce((sum,q)=>sum+q.completed,0)||0);
+  const metrics={grossMovesPerCraneHour:moves*3600/exposure,
+   estimatedSchedulerShare:100*(end.schedulerDelaySeconds-(start?.schedulerDelaySeconds||0))/exposure,
+   evidencedSchedulerShare:100*(end.evidencedSchedulerSeconds-(start?.evidencedSchedulerSeconds||0))/exposure};
+  result.kpiQualification??={};result.kpiQualification[label]=metrics;
+  assert.ok(metrics.grossMovesPerCraneHour>=25,label+': at least 25 gross moves/crane-hour');
+  assert.ok(metrics.estimatedSchedulerShare<10,label+': estimated scheduler delay under 10%');
+  assert.ok(metrics.evidencedSchedulerShare<10,label+': evidenced scheduler delay under 10%');
+ };
+ checkWindow('fullHorizon',kpi);
+ if(cfg.continuous){
+  const warm=samples.find(sample=>sample.time>=2400);checkWindow('afterWarmup',kpi,warm.kpi);
+  for(const call of sim.vesselCalls){
+   if(call.workStarted!=null&&call.workStarted<=sim.time-2400)assert.equal(call.state,'DEPARTED','admitted call completes within its window');
+   if(call.departure!=null)assert.ok(call.departure-call.workStarted<=2400,'bounded call completion');
+  }
+ }
+}
 result.outcome='PASS';console.log('ACCEPTANCE PASSED',cfg.name);
 }catch(error){result.outcome=failure?'WATCHDOG_FAILURE':'ASSERTION_FAILURE';result.validationError=String(error);console.error(error);process.exitCode=1;}
 finally{fs.writeFileSync(path.join(reportDir,cfg.name+'.json'),JSON.stringify(result,null,2));}

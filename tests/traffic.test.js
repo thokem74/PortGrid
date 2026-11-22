@@ -57,3 +57,29 @@ assert.ok(empty.x<-320,'empty AGV reverses physically on the long parking connec
 assert.ok(longConnector.eventCounts.AGV_PHYSICAL_YIELD>0);
 assert.equal(longConnector.status().unsafeAgvBodyOverlaps,0);
 console.log('PASS: long parking connector does not suppress safe physical reverse');
+{
+ const sim=createEngine({rng:()=>.5,dischargePerCall:3,loadPerCall:2,continuousVessels:false,preloadFutureCalls:false});
+ const [empty,loaded]=sim.agvs;
+ Object.assign(empty,{x:-244,z:12,heading:0,load:null,route:[{x:-244,z:36},{x:-244,z:12},{x:-242,z:12}],routeIndex:2});
+ Object.assign(loaded,{x:-231,z:8,heading:Math.PI/2,load:'FIXTURE',route:[{x:-231,z:0},{x:-231,z:12}],routeIndex:1});
+ assert.deepEqual(sim.routing.planEscape(empty),{x:-244,z:36},'directed connector can retreat over its actual incoming edge');
+ Object.assign(empty,{x:-121,z:12,heading:Math.PI/2,route:[{x:-121,z:12},{x:-110,z:12}],routeIndex:1});
+ Object.assign(loaded,{x:-121,z:-24,heading:Math.PI/2,load:null,route:[{x:-121,z:-24},{x:-121,z:0}],routeIndex:1});
+ const escape=sim.routing.planEscape(empty);
+ assert.ok(!escape||escape.x!==-121||escape.z!==0,'an escape cannot enter a converging AGV approach');
+ console.log('PASS: connector retreat and predictive escape conflict checks');
+}
+{
+ const sim=createEngine({rng:()=>.5,dischargePerCall:3,loadPerCall:2,continuousVessels:false,preloadFutureCalls:false});
+ const v=sim.agvs[0];Object.assign(v,{x:-221,z:81.5,heading:0,route:[],state:'AVAILABLE'});
+ // Saturate the quay's route costs. Parking must still be excluded as a
+ // shortcut between two terminal destinations.
+ for(let i=1;i<sim.agvs.length;i++)Object.assign(sim.agvs[i],{x:-297+i*11,z:12,route:[{x:-297+i*11,z:12},{x:-308+i*11,z:12}],routeIndex:1});
+ const path=sim.routing.planAGV(v,'sts',sim.sts[8]);
+ assert.ok(path.every(p=>p.x>=-330),'terminal transport cannot bypass traffic through parking');
+ assert.ok(path.every((p,i)=>i<2||i===path.length-1||p.x!==path[i-2].x||p.z!==path[i-2].z),'route contains no intermediate dead-end spur');
+ Object.assign(v,{x:-350,z:-12,state:'RETURNING',route:[]});
+ const home=sim.routing.planAGV(v,'parking');
+ assert.equal(home[1].x,-426,'an AGV already on its return connector continues toward home');
+ console.log('PASS: terminal routes exclude parking bypasses and preserve parking return direction');
+}

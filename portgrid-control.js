@@ -26,6 +26,7 @@ function createController(adapter,policy={}){
   maxImportPerCrane:2,dispatchPeriod:0.2,staleSeconds:30,...policy};
  const requests=new Map(),missions=new Map(),metrics={requestsCreated:0,assigned:0,started:0,
   prepositioned:0,finished:0,blockedReasons:{},lastDispatchAt:-Infinity};
+ const lastAllocation=new Map();
  const keyOf=r=>r.call.id+'|'+r.type+'|'+r.c.id;
  function updateDemand(){
   const now=adapter.now(),seen=new Set();
@@ -47,8 +48,9 @@ function createController(adapter,policy={}){
    }
   }
  }
- function runningCount(stsId){return [...missions.values()].filter(m=>m.sts===stsId&&m.state==='RUNNING').length;}
- function waitingCount(stsId){return [...missions.values()].filter(m=>m.sts===stsId&&!['RUNNING','DONE','CANCELLED'].includes(m.state)).length;}
+ function serviceStatus(m){return adapter.serviceStatus?adapter.serviceStatus(m):m.state==='RUNNING'?'HANDLING':'SUPPLYING';}
+ function runningCount(stsId){return [...missions.values()].filter(m=>m.sts===stsId&&!['DONE','CANCELLED'].includes(m.state)&&serviceStatus(m)==='HANDLING').length;}
+ function waitingCount(stsId){return [...missions.values()].filter(m=>m.sts===stsId&&!['DONE','CANCELLED'].includes(m.state)&&serviceStatus(m)==='SUPPLYING').length;}
  function authorize(r,v){
   if(r.status!=='OPEN')return 'REQUEST_NOT_OPEN';
   if(!adapter.isVehicleFree(v))return 'VEHICLE_BUSY';
@@ -60,6 +62,13 @@ function createController(adapter,policy={}){
  function score(r,v){
   const q=r.request,from=adapter.pickup(q);
   const metres=Math.abs(v.x-from.x)+Math.abs(v.z-from.z);
+  if(adapter.estimateArrival){
+   const arrival=adapter.estimateArrival(q,v),forecast=adapter.serviceForecast(q.qc);
+   // Predict lateness against the next physical service slot. Reuse only
+   // breaks close ties: an opposite-direction mission cannot hide starvation.
+   const paired=v.lastCompletedType&&v.lastCompletedType!==q.type;
+   return Math.max(0,arrival.seconds-forecast.readyIn)*4+arrival.seconds-(paired?1:0);
+  }
   const older=Math.min(240,(adapter.now()-r.created)*0.65);
   const idle=adapter.stsWaiting(q.qc);
   const waits=Math.min(180,idle*.12);
@@ -101,19 +110,22 @@ function createController(adapter,policy={}){
   while(open.length){
    open.sort((a,b)=>{
     const load=r=>runningCount(r.request.qc.id)+waitingCount(r.request.qc.id);
-    return load(a)-load(b)||a.created-b.created||a.key.localeCompare(b.key);
+    const urgency=r=>adapter.serviceForecast?adapter.serviceForecast(r.request.qc).readyIn:0;
+    return load(a)-load(b)||urgency(a)-urgency(b)||
+     (lastAllocation.get(a.request.qc.id)??-Infinity)-(lastAllocation.get(b.request.qc.id)??-Infinity)||a.created-b.created||a.key.localeCompare(b.key);
    });
    const r=open.shift();
    const evaluated=available.filter(v=>!assigned.has(v.id)).map(v=>({v,reason:authorize(r,v),score:score(r,v)}));
    const candidates=evaluated.filter(x=>!x.reason).sort((a,b)=>a.score-b.score||a.v.id.localeCompare(b.v.id));
    if(!candidates.length){r.reason=evaluated.length?(evaluated.find(x=>x.reason)?.reason||'RESOURCE_OR_CAPACITY_LIMIT'):'NO_AVAILABLE_AGV';continue;}
-   const v=candidates[0].v,result=adapter.reserve(r.request,v);
+   const v=candidates[0].v,result=adapter.reserve(r.request,v,{requestedAt:r.created});
    if(!result){r.reason='RESERVATION_FAILED';continue;}
    assigned.add(v.id);r.status='ASSIGNED';r.reason=null;
    const mission={id:result.orderId,requestKey:r.key,sts:r.request.qc.id,
      vehicle:v.id,call:r.request.call.id,type:r.request.type,container:r.request.c.id,
      state:'WAITING',created:now,reason:'AWAITING_PHYSICAL_AUTHORIZATION'};
    missions.set(mission.id,mission);metrics.assigned++;
+   lastAllocation.set(mission.sts,now);
    const started=adapter.start(mission);
    if(started===true){mission.state='RUNNING';mission.started=now;metrics.started++;}
    else {const positioned=adapter.preposition(mission);

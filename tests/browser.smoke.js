@@ -38,6 +38,24 @@ async function main(){
  await until(async()=>await evaluate('PORTGRID.time')>start.time+15,45);
  const moved=await evaluate('PORTGRID.agvs.map(v=>({x:v.x,z:v.z}))');
  assert.ok(moved.some((v,i)=>Math.hypot(v.x-start.positions[i].x,v.z-start.positions[i].z)>1),'AGVs physically move in rendered simulation');
+ const extended=process.argv.includes('--extended'),coverage={parkingExit:false,quayStand:false,yardJunction:false,truckCorridor:false};
+ if(extended){
+  for(const target of [60,180,360,600,900]){
+   while(await evaluate('PORTGRID.time')<target){
+    const sample=await evaluate(`(()=>{for(let i=0;i<100&&PORTGRID.running;i++)PORTGRID.tick(.1);
+     return {running:PORTGRID.running,
+      parkingExit:PORTGRID.agvs.some(v=>v.route.length&&v.x<-308&&v.z<0),
+      quayStand:PORTGRID.agvs.some(v=>v.state==='DOCKED'&&PORTGRID.sts.some(q=>Math.abs(v.x-q.homeX)<.2)&&v.z<0),
+      yardJunction:PORTGRID.agvs.some(v=>v.route.length&&v.x>=-328&&v.x<=-244&&v.z>=36),
+      truckCorridor:PORTGRID.trucks.some(v=>v.route.length&&v.x>=221&&v.x<=317)};})()`);
+    assert.ok(sample.running,'rendered engine must remain running');
+    for(const key of Object.keys(coverage))coverage[key]||=sample[key];
+    await evaluate('new Promise(resolve=>requestAnimationFrame(resolve))');
+   }
+   console.log('Rendered progress',target,JSON.stringify(coverage));
+  }
+  assert.ok(Object.values(coverage).every(Boolean),'observe parking exits, STS stands, yard junctions and truck corridors');
+ }
  for(const view of ['top','quay']){
   await evaluate(`document.querySelector('[data-view="${view}"]').click()`);
   await evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');
@@ -46,7 +64,7 @@ async function main(){
  const status=await evaluate('PORTGRID.diagnostics()');
  assert.equal(status.unsafeAgvBodyOverlaps,0);assert.equal(status.gridRouteFailures,0);assert.equal(status.manifestViolations,0);
  assert.equal(errors.length,0);assert.equal(consoleErrors.length,0);
- fs.writeFileSync(path.join(reports,'browser-smoke.json'),JSON.stringify({passed:true,sourceHashes,time:status.time,errors,consoleErrors,status},null,2));
+ fs.writeFileSync(path.join(reports,'browser-smoke.json'),JSON.stringify({passed:true,sourceHashes,extended,coverage,time:status.time,errors,consoleErrors,status},null,2));
  console.log('PASS: Chromium rendering, top/quay cameras, actual AGV motion, console and safety smoke checks');
 }
 main().catch(error=>{fs.writeFileSync(path.join(reports,'browser-smoke.json'),JSON.stringify({passed:false,sourceHashes,error:String(error),errors,consoleErrors},null,2));console.error(error);process.exitCode=1;}).finally(async()=>{
