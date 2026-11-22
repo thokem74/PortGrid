@@ -7,3 +7,19 @@ https://www.aihero.dev/skills-implement
 https://www.aihero.dev/ai-coding-dictionary
 
 --------------------------------------------------
+
+https://github.com/mattpocock
+
+https://github.com/mattpocock/skills
+
+
+--------------------------------------------------
+book list
+
+a philosophy of software design by john ousterhout
+the pragmatic programmer by andrew hunt and david thomas 
+working effectively with legacy code by michael feathers
+refactoring by martin fowler
+extreme programming explained by kent beck 
+
+--------------------------------------------------
