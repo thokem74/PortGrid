@@ -1,0 +1,10 @@
+--------------------------------------------------
+
+simulation slows down drastically after a certain time
+
+investigate what can slow down the simulation over time
+(logs, databases, history data, ...)
+
+and make suggestions how to fix 
+
+--------------------------------------------------
