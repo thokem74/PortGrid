@@ -42,6 +42,18 @@ const reverse=convoy.routing.reverseTruckRoute({x:297,z:100,routeIndex:2,
 assert.deepEqual(reverse,[{x:297,z:100},{x:297,z:123},{x:348,z:123}],
  'truck recovery reverses the traversed route instead of cutting across occupied gate pockets');
 console.log('PASS: truck recovery retraces the physical approach');
+{
+ const sim=createEngine({rng:()=>.5,dischargePerCall:3,loadPerCall:2,continuousVessels:false,preloadFutureCalls:false});
+ const a=sim.trucks[6],b=sim.trucks[10];
+ Object.assign(a,{x:299.4,z:103,heading:Math.PI,pending:'FIXTURE',job:'FIXTURE',state:'TRAVEL',blockedTime:10,
+  route:[{x:367,z:103},{x:297,z:103},{x:297,z:149.5},{x:221,z:149.5}],routeIndex:1,routeIntent:{type:'truck-yard',crane:{x:221,z:160,dockZ:149.5}}});
+ Object.assign(b,{x:297,z:115.8,heading:-Math.PI/2,pending:'FIXTURE',job:'FIXTURE',state:'TRAVEL',blockedTime:10,
+  route:[{x:367,z:247},{x:297,z:247},{x:297,z:115.5},{x:221,z:115.5}],routeIndex:2,routeIntent:{type:'truck-yard',crane:{x:221,z:126,dockZ:115.5}}});
+ for(let i=0;i<200;i++)sim.tick(.1);
+ assert.ok(sim.eventCounts.TRUCK_GATE_PHYSICAL_YIELD>0,'two inbound trucks in a wait cycle can physically retreat');
+ assert.ok(b.x<290||b.z<110,'the other truck clears its formerly blocked turn');
+ console.log('PASS: inbound/inbound truck wait cycle has bounded physical recovery');
+}
 const longConnector=createEngine({rng:()=>.5,dischargePerCall:3,loadPerCall:2,continuousVessels:false,preloadFutureCalls:false});
 const empty=longConnector.agvs[14],loaded=longConnector.agvs[4];
 // A real unbooked yard container is placed on the stationary blocker as
@@ -77,9 +89,24 @@ console.log('PASS: long parking connector does not suppress safe physical revers
  for(let i=1;i<sim.agvs.length;i++)Object.assign(sim.agvs[i],{x:-297+i*11,z:12,route:[{x:-297+i*11,z:12},{x:-308+i*11,z:12}],routeIndex:1});
  const path=sim.routing.planAGV(v,'sts',sim.sts[8]);
  assert.ok(path.every(p=>p.x>=-330),'terminal transport cannot bypass traffic through parking');
+ assert.ok(path.every(p=>p.z>=0||p.x===sim.sts[8].homeX+11||p.x===sim.sts[8].homeX),
+  'through travel cannot enter another crane handover corridor');
  assert.ok(path.every((p,i)=>i<2||i===path.length-1||p.x!==path[i-2].x||p.z!==path[i-2].z),'route contains no intermediate dead-end spur');
  Object.assign(v,{x:-350,z:-12,state:'RETURNING',route:[]});
  const home=sim.routing.planAGV(v,'parking');
  assert.equal(home[1].x,-426,'an AGV already on its return connector continues toward home');
  console.log('PASS: terminal routes exclude parking bypasses and preserve parking return direction');
+}
+{
+ const sim=createEngine({rng:()=>.5,dischargePerCall:3,loadPerCall:2,continuousVessels:false,preloadFutureCalls:false});
+ const front=sim.agvs[22],rear=sim.agvs[23];
+ Object.assign(front,{x:-308,z:0,heading:Math.PI/2,pending:'FIXTURE',job:null,state:'RETURNING',blockedTime:10,
+  route:[{x:-308,z:12},{x:-308,z:0},{x:-378,z:0}],routeIndex:2,routeIntent:{type:'parking'}});
+ Object.assign(rear,{x:-297.5,z:0,heading:Math.PI,pending:'FIXTURE',job:null,state:'RETURNING',blockedTime:10,
+  route:[{x:-275,z:0},{x:-286,z:0},{x:-297,z:0},{x:-308,z:0},{x:-378,z:0}],routeIndex:3,routeIntent:{type:'parking'}});
+ for(let i=0;i<100;i++)sim.tick(.1);
+ assert.ok(sim.eventCounts.AGV_PHYSICAL_YIELD>0,'empty follower backs away to permit a leading turn');
+ assert.ok(front.x<-310,'the leading AGV clears the parking merge');
+ assert.equal(sim.status().unsafeAgvBodyOverlaps,0);
+ console.log('PASS: follower reverses over sufficient traversed nodes to release a leading turn');
 }

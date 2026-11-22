@@ -38,6 +38,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
  const eventCounts={};
  const arrivalDistances=new Map(),serviceSamples=new Map();
  const cycleMetrics={completed:0,actualEmptyMeters:0,unpairedGraphMeters:0,savedMeters:0};
+ const yardMetrics=new Map();
  let transferOwnershipViolations=0;
  function recordService(q,j){
   const started=q.type==='sts'?j.stsServiceStarted:j.rtgServiceStarted;
@@ -187,6 +188,13 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
      m.readyIdle+=dt;
    }
    kpiFleet.observation+=dt;
+   for(const crane of rtgs){
+    let m=yardMetrics.get(crane.id);
+    if(!m){m={observed:0,busy:0,moving:0,x:crane.hook.x,y:crane.hook.y,z:crane.hook.z};yardMetrics.set(crane.id,m);}
+    m.observed+=dt;if(crane.job&&crane.downUntil<=t)m.busy+=dt;
+    if(Math.hypot(crane.hook.x-m.x,crane.hook.y-m.y,crane.hook.z-m.z)>.01)m.moving+=dt;
+    m.x=crane.hook.x;m.y=crane.hook.y;m.z=crane.hook.z;
+   }
    for(const  v of agvs){ /* Current vehicle or value being processed in sampleKPI() */
      const  assigned=!!(v.job||v.pending||v.pipelineJob); /* Items currently assigned to equipment in sampleKPI() */
      const  moving=v.route.length&&activePermits.has(v.id); /* Local value for moving in sampleKPI() */
@@ -232,6 +240,8 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
       /* Evaluates callback for rtgs.map using q */
       yard:rtgs.map(q=>({id:q.id,yard:q.yard+1,side:q.role,completed:q.completed,throughput:3600*q.completed/Math.max(1,t),currentJob:q.job||'IDLE',
        queueLength:jobs.filter(j=>!j.completed&&j.rtg===q&&j.vehicle?.state==='DOCKED'&&j.id!==q.job).length,
+       busySeconds:yardMetrics.get(q.id)?.busy||0,hookMotionSeconds:yardMetrics.get(q.id)?.moving||0,
+       utilizationPercent:100*(yardMetrics.get(q.id)?.busy||0)/Math.max(1,yardMetrics.get(q.id)?.observed||0),
        serviceCycleSeconds:serviceSamples.get(q.id)??null})),
       /* Evaluates callback for jobs.filter using j */
       /* Evaluates callback for jobs.filter using j */
@@ -828,6 +838,9 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
     // Parking is an ingress/egress resource, never a congestion bypass for
     // a journey whose source and destination are both in the terminal.
     if(from.x>=-330&&to.x>=-330&&e.zone.startsWith('PARKING'))continue;
+    // STS handover rows are local crane approaches, not a bypass between
+    // yard/quay travel points. Opposite loaded flows stay on rows 0 and 12.
+    if(from.z>=0&&to.z>=0&&AGV_GRID.nodes.get(e.to).z<0)continue;
     const  n=AGV_GRID.nodes.get(e.to); /* Current counter, result, or node in this calculation in shortestGrid() */
     /* Evaluates callback for agvs.some using v */
     const  parkingBlock=agvs.some( v=>!v.route.length&&v.x>-312&& /* Local value for parking block in shortestGrid() */
@@ -991,7 +1004,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
     waypoints=[point(gridX,12),point(gridX,lastZ),point(end.x,lastZ)];
    }else if(atYard){
     waypoints=[point(gridX,start.z),point(gridX,12),end];
-   }else waypoints=[end];
+   }else waypoints=inParking||onParkingExit?[point(start.x,12),end]:[end];
   }else waypoints=[end];
   for(const  waypoint of waypoints){ /* Local value for waypoint in routeAGV() */
    const  path=shortestGrid(start,waypoint,v); /* Path returned by the routing algorithm in routeAGV() */
@@ -1970,14 +1983,28 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
     /* Evaluates callback for agvs.some using o */
     const  approaching=agvs.some( o=>o!==v&&o.route.length&&(o.blockedTime||0)>4&& /* Local value for approaching in tick() */
       Math.hypot(o.x-v.x,o.z-v.z)<48&&
-      (o.load||v.id<o.id)&&
+      (o.load||v.id<o.id||(()=>{
+       const target=o.route[o.routeIndex];if(!target)return false;
+       const direction=Math.atan2(target.z-o.z,target.x-o.x);
+       return Math.cos(direction-movementAngle)>.9&&
+        Math.abs((o.x-v.x)*Math.sin(movementAngle)-(o.z-v.z)*Math.cos(movementAngle))<6;
+      })())&&
       ((o.x-v.x)*Math.cos(movementAngle)+(o.z-v.z)*Math.sin(movementAngle)>2));
     if(!approaching)continue;
-    const  backDist=Math.hypot(v.x-prev.x,v.z-prev.z); /* Local value for back dist in tick() */
+    const retreat=[];
+    const reverseAngle=Math.atan2(prev.z-v.z,prev.x-v.x);
+    for(const node of v.route.slice(0,v.routeIndex).reverse()){
+     if(dist(node,v)<.15)continue;
+     if(Math.abs((node.x-v.x)*Math.sin(reverseAngle)-(node.z-v.z)*Math.cos(reverseAngle))>.1)break;
+     retreat.push(node);if(dist(node,v)>=2*BODY_LONG+1)break;
+    }
+    const back=retreat.at(-1)||prev;
+    const backDist=Math.hypot(v.x-back.x,v.z-back.z);
     // Parking connector edges exceed 50 m. Distance alone cannot deny
     // reversal along an already traversed edge; every step remains guarded.
     if(backDist<.15)continue;
-    const  heading=Math.atan2(prev.z-v.z,prev.x-v.x); /* Local value for heading in tick() */
+    const heading=Math.atan2(back.z-v.z,back.x-v.x);
+    if(Math.abs(Math.sin(heading-v.heading))>.035)continue; // Never reverse sideways.
     const  px=v.x+Math.cos(heading)*Math.min(2,backDist), pz=v.z+Math.sin(heading)*Math.min(2,backDist); /* Local value for px in tick() */ /* Local value for pz in tick() */
     /* Evaluates callback for agvs.some using o */
     if(agvs.some( o=>o!==v&&rectangularOverlap({x:px,z:pz,heading:v.heading},o)))continue;
@@ -1985,9 +2012,9 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
     // Keep the chassis heading fixed; the AGV backs to its previous graph node.
     v.recovery={intent:v.routeIntent,reverse:true};v.recoveryToken=t;
     v.avoidNode={key:gKey(next.x,next.z),until:t+120};
-    v.route=[point(v.x,v.z),point(prev.x,prev.z)];
+    v.route=[point(v.x,v.z),...retreat.map(clone)];
     v.routeIndex=1;v.routeVersion=(v.routeVersion||0)+1;v.blockedTime=0;
-    log('AGV_PHYSICAL_YIELD',{agv:v.id,x:prev.x,z:prev.z,contested:v.avoidNode.key,mode:'NORMAL_REVERSE'});
+    log('AGV_PHYSICAL_YIELD',{agv:v.id,x:back.x,z:back.z,contested:v.avoidNode.key,mode:'NORMAL_REVERSE'});
    }
    // Reserve complete swept footprints before authorizing ANY road movement.
    // In a reservation tick, pivots have priority over an approaching vehicle;
@@ -2147,7 +2174,10 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
     }
     if(v.truckYield||!v.job||v.state!=='TRAVEL'||(v.blockedTime||0)<8||v.routeIntent?.type!=='truck-yard')continue;
     /* Evaluates callback for trucks.find using o */
-    const  outbound=trucks.find( o=>o!==v&&(o.state==='RETURNING'||o.truckYield)&&(o.blockedTime||0)>5&&Math.hypot(o.x-v.x,o.z-v.z)<35); /* Local value for outbound in tick() */
+    const cycle=monitor.snapshot().cycles.find(ids=>ids.includes(v.id));
+    const outbound=trucks.find(o=>o!==v&&!o.truckYield&&(o.blockedTime||0)>5&&
+     (o.state==='RETURNING'||o.state==='TRAVEL'&&cycle?.includes(o.id)&&v.id<o.id)&&
+     Math.hypot(o.x-v.x,o.z-v.z)<35);
     if(!outbound)continue;
     const  back=point(v.home.x,v.home.z); /* Local value for back in tick() */
     if(Math.hypot(v.x-back.x,v.z-back.z)<15)continue;
@@ -2194,7 +2224,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
    const order=job?.order||orders.find(o=>o.id===v.pending);
    const mission=order?coordinator.missions.get(order.id):null;
    const next=v.route[v.routeIndex];
-   let blockingReason=v.route.length?v.trafficBlock?.reason||(!activePermits.has(v.id)?'TRAFFIC_AUTHORIZATION':null):mission?.reason||null;
+   let blockingReason=v.pivot?'TRANSFER_ALIGNMENT':v.route.length?v.trafficBlock?.reason||(!activePermits.has(v.id)?'TRAFFIC_AUTHORIZATION':null):mission?.reason||null;
    let blockingResourceId=v.route.length?v.trafficBlock?.resource||null:null;
    if(v.type==='truck'&&v.pending&&order){
     const crane=rtgTruck[order.yard];blockingReason=crane.downUntil>t?'CRANE_OUTAGE':crane.job?'CRANE_BUSY':'WAITING_TRUCK_AUTHORIZATION';blockingResourceId=crane.id;
@@ -2209,7 +2239,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
     if(crane?.downUntil>t){blockingReason='CRANE_OUTAGE';blockingResourceId=crane.id;}
     else if(crane?.job&&crane.job!==job.id){blockingReason='CRANE_BUSY';blockingResourceId=crane.id;}
    }
-   return {vehicleId:v.id,missionId:mission?.id||null,vesselCallId:order?.vesselCall||null,stsId:order?.crane||null,
+   return {vehicleId:v.id,missionId:mission?.id||order?.id||null,vesselCallId:order?.vesselCall||null,stsId:order?.crane||null,
     vehicleType:v.type,containerId:v.load||order?.container||null,toState:job?.stage||mission?.state||v.state,
     active:!!(order||v.route.length),position:{x:v.x,z:v.z},destination:next?{x:next.x,z:next.z}:null,
     blockingReason,blockingResourceId,routeOrReservationId:v.route.length?v.id+':'+v.routeVersion+':'+v.routeIndex:order?.id||null,

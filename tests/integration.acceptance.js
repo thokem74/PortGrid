@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('fs'),path=require('path');
-const {createHash}=require('node:crypto');
+const {createHash,randomUUID}=require('node:crypto');
 const sourceHashes=Object.fromEntries(['portgrid-engine.js','portgrid-control.js','portgrid-monitor.js','PORTGRID_Standalone.html'].map(file=>[file,createHash('sha256').update(fs.readFileSync(path.join(__dirname,'..',file))).digest('hex')]));
 const PortGridEngine=require('../portgrid-engine.js');
 const scenarios=[
@@ -21,10 +21,11 @@ const chosen=process.argv[2]||'complete-small-seed3';
 if(chosen==='list'){console.log(scenarios.map(s=>s.name).join('\n'));process.exit(0);}
 const cfg=scenarios.find(c=>c.name===chosen);assert.ok(cfg, 'unknown scenario '+chosen);
 const reportDir=path.join(__dirname,'..','reports');fs.mkdirSync(reportDir,{recursive:true});
-const traceFile=path.join(reportDir,cfg.name+'.events.ndjson');fs.writeFileSync(traceFile,'');let traceBuffer=[];
+const runId=randomUUID(),traceDir=path.join(reportDir,'runs');fs.mkdirSync(traceDir,{recursive:true});
+const traceFile=path.join(traceDir,cfg.name+'-'+runId+'.events.ndjson');fs.writeFileSync(traceFile,'');let traceBuffer=[];
 const flushTrace=()=>{if(traceBuffer.length){fs.appendFileSync(traceFile,traceBuffer.join('\n')+'\n');traceBuffer=[];}};
 const traceSummary={lastCargoCompletionTime:0,departureTimes:[],doubleCycleAssignments:0,crossVesselDoubleCycles:0};
-const recordEvent=e=>{traceBuffer.push(JSON.stringify(e));if(e.type==='VESSEL_WORK_CONFIRMED')traceSummary.lastCargoCompletionTime=e.simulationTime;if(e.type==='VESSEL_DEPARTED')traceSummary.departureTimes.push({call:e.call,time:e.simulationTime});if(e.type==='AGV_DOUBLE_CYCLE_ASSIGNED'){traceSummary.doubleCycleAssignments++;if(e.crossVessel)traceSummary.crossVesselDoubleCycles++;}};
+const recordEvent=e=>{traceBuffer.push(JSON.stringify({runId,...e}));if(e.type==='VESSEL_WORK_CONFIRMED')traceSummary.lastCargoCompletionTime=e.simulationTime;if(e.type==='VESSEL_DEPARTED')traceSummary.departureTimes.push({call:e.call,time:e.simulationTime});if(e.type==='AGV_DOUBLE_CYCLE_ASSIGNED'){traceSummary.doubleCycleAssignments++;if(e.crossVessel)traceSummary.crossVesselDoubleCycles++;}};
 const begun=performance.now(),samples=[];let nextSample=0;
 let rngState=cfg.seed;const rng=()=>((rngState=Math.imul(rngState,1664525)+1013904223|0)>>>0)/4294967296;
 const sim=PortGridEngine({rng,dischargePerCall:cfg.discharge,loadPerCall:cfg.load,
@@ -70,7 +71,7 @@ const st=sim.status(),kpi=sim.getKPI(),info=sim.control;
 const safety={routeFailures:st.gridRouteFailures,bodyOverlaps:st.unsafeAgvBodyOverlaps,
  manifestViolations:st.manifestViolations,jobErrors:sim.eventCounts.JOB_ERROR||0,
  duplicateAssignments,prematureLoads,railViolations:st.craneRailViolations,transferOwnershipViolations:st.transferOwnershipViolations};
-const result={scenario:cfg.name,configuration:cfg,sourceHashes,traceSummary,wallSeconds:(performance.now()-begun)/1000,failure,kpi,traceFile,latencySeconds:latencySummary(sim.orders.filter(o=>o.status==='DONE'&&['IMPORT','EXPORT'].includes(o.type)).map(o=>o.completed-o.assigned)),diagnostics:sim.diagnostics(),samples,time:+sim.time.toFixed(1),imports:kpi.importMoves,exports:kpi.exportMoves,
+const result={runId,scenario:cfg.name,configuration:cfg,sourceHashes,traceSummary,wallSeconds:(performance.now()-begun)/1000,failure,kpi,traceFile,latencySeconds:latencySummary(sim.orders.filter(o=>o.status==='DONE'&&['IMPORT','EXPORT'].includes(o.type)).map(o=>o.completed-o.assigned)),diagnostics:sim.diagnostics(),samples,time:+sim.time.toFixed(1),imports:kpi.importMoves,exports:kpi.exportMoves,
  departures:st.vesselsDeparted,stsGrossWaitingPct:+kpi.avoidableSTSPercent.toFixed(2),
  schedulerDelaySeconds:+kpi.schedulerDelaySeconds.toFixed(1),stsWaitBreakdown:kpi.stsWaitBreakdown,
  stageLatencySeconds:Object.fromEntries([

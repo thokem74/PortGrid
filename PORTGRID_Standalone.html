@@ -312,6 +312,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
  const eventCounts={};
  const arrivalDistances=new Map(),serviceSamples=new Map();
  const cycleMetrics={completed:0,actualEmptyMeters:0,unpairedGraphMeters:0,savedMeters:0};
+ const yardMetrics=new Map();
  let transferOwnershipViolations=0;
  function recordService(q,j){
   const started=q.type==='sts'?j.stsServiceStarted:j.rtgServiceStarted;
@@ -461,6 +462,13 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
      m.readyIdle+=dt;
    }
    kpiFleet.observation+=dt;
+   for(const crane of rtgs){
+    let m=yardMetrics.get(crane.id);
+    if(!m){m={observed:0,busy:0,moving:0,x:crane.hook.x,y:crane.hook.y,z:crane.hook.z};yardMetrics.set(crane.id,m);}
+    m.observed+=dt;if(crane.job&&crane.downUntil<=t)m.busy+=dt;
+    if(Math.hypot(crane.hook.x-m.x,crane.hook.y-m.y,crane.hook.z-m.z)>.01)m.moving+=dt;
+    m.x=crane.hook.x;m.y=crane.hook.y;m.z=crane.hook.z;
+   }
    for(const  v of agvs){ /* Current vehicle or value being processed in sampleKPI() */
      const  assigned=!!(v.job||v.pending||v.pipelineJob); /* Items currently assigned to equipment in sampleKPI() */
      const  moving=v.route.length&&activePermits.has(v.id); /* Local value for moving in sampleKPI() */
@@ -506,6 +514,8 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
       /* Evaluates callback for rtgs.map using q */
       yard:rtgs.map(q=>({id:q.id,yard:q.yard+1,side:q.role,completed:q.completed,throughput:3600*q.completed/Math.max(1,t),currentJob:q.job||'IDLE',
        queueLength:jobs.filter(j=>!j.completed&&j.rtg===q&&j.vehicle?.state==='DOCKED'&&j.id!==q.job).length,
+       busySeconds:yardMetrics.get(q.id)?.busy||0,hookMotionSeconds:yardMetrics.get(q.id)?.moving||0,
+       utilizationPercent:100*(yardMetrics.get(q.id)?.busy||0)/Math.max(1,yardMetrics.get(q.id)?.observed||0),
        serviceCycleSeconds:serviceSamples.get(q.id)??null})),
       /* Evaluates callback for jobs.filter using j */
       /* Evaluates callback for jobs.filter using j */
@@ -1102,6 +1112,9 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
     // Parking is an ingress/egress resource, never a congestion bypass for
     // a journey whose source and destination are both in the terminal.
     if(from.x>=-330&&to.x>=-330&&e.zone.startsWith('PARKING'))continue;
+    // STS handover rows are local crane approaches, not a bypass between
+    // yard/quay travel points. Opposite loaded flows stay on rows 0 and 12.
+    if(from.z>=0&&to.z>=0&&AGV_GRID.nodes.get(e.to).z<0)continue;
     const  n=AGV_GRID.nodes.get(e.to); /* Current counter, result, or node in this calculation in shortestGrid() */
     /* Evaluates callback for agvs.some using v */
     const  parkingBlock=agvs.some( v=>!v.route.length&&v.x>-312&& /* Local value for parking block in shortestGrid() */
@@ -1265,7 +1278,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
     waypoints=[point(gridX,12),point(gridX,lastZ),point(end.x,lastZ)];
    }else if(atYard){
     waypoints=[point(gridX,start.z),point(gridX,12),end];
-   }else waypoints=[end];
+   }else waypoints=inParking||onParkingExit?[point(start.x,12),end]:[end];
   }else waypoints=[end];
   for(const  waypoint of waypoints){ /* Local value for waypoint in routeAGV() */
    const  path=shortestGrid(start,waypoint,v); /* Path returned by the routing algorithm in routeAGV() */
@@ -1277,8 +1290,10 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   // and immediately return over the same edge. Remove that dead-end spur
   // before execution, rather than stranding an AGV at a one-exit branch.
   const route=[];
-  for(const node of p){
-   if(route.length>1&&dist(route[route.length-2],node)<.01)route.pop();
+  for(let i=0;i<p.length;i++){
+   const node=p[i];
+   // Keep the final approach edge: it establishes physical deck alignment.
+   if(i<p.length-1&&route.length>1&&dist(route[route.length-2],node)<.01)route.pop();
    else if(!route.length||dist(route[route.length-1],node)>.01)route.push(node);
   }
   return route;
@@ -1850,7 +1865,8 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
  function acquireTransferCrane(j,crane){
   const aligned=crane.type==='sts'?alignedAtSTS(j.vehicle,crane,j.stsDockZ):
    alignedAtRTG(j.vehicle,crane,j.vehicle.type==='agv'?j.yardDockZ:j.truckDockZ);
-  if(!aligned||crane.downUntil>t||crane.job&&crane.job!==j.id)return false;
+  if(!aligned){requestTransferAlignment(j,crane);return false;}
+  if(crane.downUntil>t||crane.job&&crane.job!==j.id)return false;
   if(!crane.job){
    crane.job=j.id;
    if(crane.type==='sts'){j.stsServiceStarted=t;j.order.stsServiceStartedAt=t;}
@@ -1859,6 +1875,14 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
     {crane:crane.id,sts:j.sts?.id||null,job:j.id,vehicle:j.vehicle.id});
   }
   return true;
+ }
+ function requestTransferAlignment(j,crane){
+  const v=j.vehicle,dockZ=crane.type==='sts'?j.stsDockZ:v.type==='agv'?j.yardDockZ:j.truckDockZ;
+  const dockX=crane.type==='sts'?crane.homeX:v.type==='agv'?L.agvDockX:L.truckDockX;
+  if(v.type!=='agv'||v.route.length||v.state!=='DOCKED'||v.pivot||Math.abs(v.x-dockX)>=.12||Math.abs(v.z-dockZ)>=.12||Math.abs(Math.sin(v.heading))<.035)return;
+  if(v.load)return;
+  v.pivot={target:Math.cos(v.heading)>=0?0:Math.PI,started:false,alignment:true};
+  log('TRANSFER_ALIGNMENT_REQUESTED',{job:j.id,vehicle:v.id,crane:crane.id});
  }
  function craneOccupancy(){
   return cranes.filter(c=>c.job).map(crane=>{
@@ -1876,7 +1900,6 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   // Vehicle enters its designated crane interchange only after the physical lane route is complete.
   if(j.stage==='TO_PICKUP'&&v.state==='DOCKED'){
    if(j.order.pickupArrivedAt==null){j.order.pickupArrivedAt=t;log('PICKUP_ARRIVED',{job:j.id,vehicle:v.id});}
-   if(j.type==='IMPORT'&&!alignedAtSTS(v,qc,j.stsDockZ))return;
    if(j.type==='IMPORT'){
     if(j.stsArrivedAt==null){j.stsArrivedAt=t;j.order.stsArrivedAt=t;}
     if(!currentTop(c)||!acquireTransferCrane(j,qc))return;
@@ -1940,7 +1963,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
     }
    }
   }else if(j.stage==='TO_DROPOFF'&&v.state==='DOCKED'){
-   if(j.type==='EXPORT'&&!alignedAtSTS(v,qc,j.stsDockZ))return;
+   if(j.type==='EXPORT'&&!alignedAtSTS(v,qc,j.stsDockZ)){requestTransferAlignment(j,qc);return;}
    j.order.deliveredAt=t;
    if(j.type==='EXPORT'){j.stsArrivedAt=t;j.order.stsArrivedAt=t;}
    log('DROPOFF_ARRIVED',{job:j.id,vehicle:v.id});j.stage='PLACE';
@@ -2088,7 +2111,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
  }
  /* Handles pivot envelope clear in the terminal simulation */
   function pivotEnvelopeClear(v){
-   if(v.load||v.state==='DOCKED'||v.state==='CRANE_HANDLING')return false;
+   if(v.load||v.state==='DOCKED'&&!v.pivot?.alignment||v.state==='CRANE_HANDLING')return false;
    /* Evaluates callback for agvs.some using o */
    return !agvs.some( o=>o!==v&&circleIntersectsVehicle(v.x,v.z,PIVOT_SWEEP_RADIUS,o));
  }
@@ -2148,7 +2171,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
    // Independent AGV and truck routes can move concurrently. Conflicting
    // routes receive permits sequentially; crane exits take precedence.
    /* Evaluates callback for agvs.filter using v */
-   const  travelAgvs=agvs.filter( v=>v.route.length); /* Local value for travel agvs in tick() */
+   const travelAgvs=agvs.filter(v=>v.route.length||v.pivot);
    /* Evaluates callback for trucks.filter using v */
    const  travelTrucks=trucks.filter( v=>v.route.length); /* Local value for travel trucks in tick() */
    // Conservatively reserve an entire active journey until its current target.
@@ -2411,7 +2434,10 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
     }
     if(v.truckYield||!v.job||v.state!=='TRAVEL'||(v.blockedTime||0)<8||v.routeIntent?.type!=='truck-yard')continue;
     /* Evaluates callback for trucks.find using o */
-    const  outbound=trucks.find( o=>o!==v&&(o.state==='RETURNING'||o.truckYield)&&(o.blockedTime||0)>5&&Math.hypot(o.x-v.x,o.z-v.z)<35); /* Local value for outbound in tick() */
+    const cycle=monitor.snapshot().cycles.find(ids=>ids.includes(v.id));
+    const outbound=trucks.find(o=>o!==v&&!o.truckYield&&(o.blockedTime||0)>5&&
+     (o.state==='RETURNING'||o.state==='TRAVEL'&&cycle?.includes(o.id)&&v.id<o.id)&&
+     Math.hypot(o.x-v.x,o.z-v.z)<35);
     if(!outbound)continue;
     const  back=point(v.home.x,v.home.z); /* Local value for back in tick() */
     if(Math.hypot(v.x-back.x,v.z-back.z)<15)continue;
@@ -2458,7 +2484,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
    const order=job?.order||orders.find(o=>o.id===v.pending);
    const mission=order?coordinator.missions.get(order.id):null;
    const next=v.route[v.routeIndex];
-   let blockingReason=v.route.length?v.trafficBlock?.reason||(!activePermits.has(v.id)?'TRAFFIC_AUTHORIZATION':null):mission?.reason||null;
+   let blockingReason=v.pivot?'TRANSFER_ALIGNMENT':v.route.length?v.trafficBlock?.reason||(!activePermits.has(v.id)?'TRAFFIC_AUTHORIZATION':null):mission?.reason||null;
    let blockingResourceId=v.route.length?v.trafficBlock?.resource||null:null;
    if(v.type==='truck'&&v.pending&&order){
     const crane=rtgTruck[order.yard];blockingReason=crane.downUntil>t?'CRANE_OUTAGE':crane.job?'CRANE_BUSY':'WAITING_TRUCK_AUTHORIZATION';blockingResourceId=crane.id;
@@ -2473,7 +2499,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
     if(crane?.downUntil>t){blockingReason='CRANE_OUTAGE';blockingResourceId=crane.id;}
     else if(crane?.job&&crane.job!==job.id){blockingReason='CRANE_BUSY';blockingResourceId=crane.id;}
    }
-   return {vehicleId:v.id,missionId:mission?.id||null,vesselCallId:order?.vesselCall||null,stsId:order?.crane||null,
+   return {vehicleId:v.id,missionId:mission?.id||order?.id||null,vesselCallId:order?.vesselCall||null,stsId:order?.crane||null,
     vehicleType:v.type,containerId:v.load||order?.container||null,toState:job?.stage||mission?.state||v.state,
     active:!!(order||v.route.length),position:{x:v.x,z:v.z},destination:next?{x:next.x,z:next.z}:null,
     blockingReason,blockingResourceId,routeOrReservationId:v.route.length?v.id+':'+v.routeVersion+':'+v.routeIndex:order?.id||null,
