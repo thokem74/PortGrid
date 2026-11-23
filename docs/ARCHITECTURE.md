@@ -29,6 +29,10 @@ All pickup cranes release after the physical lift and spreader clearance, includ
 
 Booked exports physically stored on the truck side require a two-RTG relay. When the crane pair is free, an urgent relay gets admission before another truck job. Relay final storage and buffer slots are excluded from other storage admission throughout the relay.
 
+Jobs and transport orders remain available in creation order for audit and reporting. The engine looks them up by ID and iterates live work for scheduling, physics, and KPI sampling. Completed-job totals accumulate at physical completion. The controller uses live requests and missions for dispatch and keeps the complete request history in its default diagnostic snapshot.
+
+Yard slot reservations are indexed by slot and owning job. An import's prepositioning job retains its identity and slot when it activates. A relay shifts its current slot from the handover buffer to the final destination while retaining both placement claims until physical completion. Top-container selection checks each job's current slot. Placement checks current, buffer, and final slots.
+
 ## Traffic and recovery
 
 The quay travel rows are at z = 0, 36, 72 and 108 m. They alternate westbound and eastbound. The 36 m travel columns carry northbound traffic on STS approaches and southbound traffic on the remaining columns. Each STS has a drive-through service area with a dedicated eastern entry and western exit. The four local transfer rows keep their compact spacing under the crane. The two parking rows connect at their original endpoints through a protected terminal-side gateway. Parking stays excluded as a shortcut for terminal routes.

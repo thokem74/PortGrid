@@ -26,6 +26,7 @@ function createController(adapter,policy={}){
   maxImportPerCrane:2,dispatchPeriod:0.2,staleSeconds:30,...policy};
  const requests=new Map(),missions=new Map(),metrics={requestsCreated:0,assigned:0,started:0,
   prepositioned:0,finished:0,blockedReasons:{},lastDispatchAt:-Infinity};
+ const liveRequests=new Set(),liveMissions=new Set();
  const lastAllocation=new Map();
  const keyOf=r=>r.call.id+'|'+r.type+'|'+r.c.id;
  function updateDemand(){
@@ -35,22 +36,24 @@ function createController(adapter,policy={}){
   for(const candidate of adapter.demands()){
    const key=keyOf(candidate);seen.add(key);
    const existing=requests.get(key);
-   if(!existing){requests.set(key,{key,created:now,updated:now,status:'OPEN',
-      reason:'AWAITING_ASSIGNMENT',request:candidate});metrics.requestsCreated++;}
+   if(!existing){
+    const entry={key,created:now,updated:now,status:'OPEN',reason:'AWAITING_ASSIGNMENT',request:candidate};
+    requests.set(key,entry);liveRequests.add(entry);metrics.requestsCreated++;
+   }
    else {existing.request=candidate;existing.updated=now;
     if(existing.status==='UNAVAILABLE')existing.status='OPEN';}
   }
-  for(const [key,r] of requests){
-   if(!seen.has(key)){
-    if(r.request.work.state==='DONE'){r.status='DONE';r.reason=null;}
-    else if(r.request.work.state==='EXCEPTION'){r.status='EXCEPTION';r.reason='MANIFEST_EXCEPTION';}
+  for(const r of liveRequests){
+   if(!seen.has(r.key)){
+    if(r.request.work.state==='DONE'){r.status='DONE';r.reason=null;liveRequests.delete(r);}
+    else if(r.request.work.state==='EXCEPTION'){r.status='EXCEPTION';r.reason='MANIFEST_EXCEPTION';liveRequests.delete(r);}
     else if(r.status==='OPEN') {r.status='UNAVAILABLE';r.reason='CARGO_NOT_ACCESSIBLE';}
    }
   }
  }
  function serviceStatus(m){return adapter.serviceStatus?adapter.serviceStatus(m):m.state==='RUNNING'?'HANDLING':'SUPPLYING';}
- function runningCount(stsId){return [...missions.values()].filter(m=>m.sts===stsId&&!['DONE','CANCELLED'].includes(m.state)&&serviceStatus(m)==='HANDLING').length;}
- function waitingCount(stsId){return [...missions.values()].filter(m=>m.sts===stsId&&!['DONE','CANCELLED'].includes(m.state)&&serviceStatus(m)==='SUPPLYING').length;}
+ function runningCount(stsId){return [...liveMissions].filter(m=>m.sts===stsId&&serviceStatus(m)==='HANDLING').length;}
+ function waitingCount(stsId){return [...liveMissions].filter(m=>m.sts===stsId&&serviceStatus(m)==='SUPPLYING').length;}
  function authorize(r,v){
   if(r.status!=='OPEN')return 'REQUEST_NOT_OPEN';
   if(!adapter.isVehicleFree(v))return 'VEHICLE_BUSY';
@@ -82,15 +85,14 @@ function createController(adapter,policy={}){
   metrics.lastDispatchAt=now;updateDemand();
   // Active reservations are retried before new assignments. A blocked mission
   // retains its container identity and its exact blocking reason.
-  for(const m of missions.values()){
-   if(m.state==='DONE'||m.state==='CANCELLED')continue;
+  for(const m of liveMissions){
    const progress=adapter.progress(m);
-   if(progress==='DONE') {m.state='DONE';m.reason=null;m.finished=now;metrics.finished++;continue;}
+   if(progress==='DONE') {m.state='DONE';m.reason=null;m.finished=now;metrics.finished++;liveMissions.delete(m);continue;}
    if(progress==='RUNNING'){if(m.state!=='RUNNING'&&m.started==null){metrics.started++;m.started=now;}m.state='RUNNING';m.reason=null;continue;}
    if(progress==='BLOCKED'){m.state='BLOCKED';m.reason=adapter.waitReason(m)||'TRANSPORT_BLOCKED';metrics.blockedReasons[m.reason]=(metrics.blockedReasons[m.reason]||0)+1;continue;}
    if(progress==='MOVING'){m.state='PREPOSITIONING';m.reason=null;continue;}
    if(progress==='STAGED'){m.state='READY_FOR_STS';m.reason=adapter.waitReason(m)||'WAITING_CRANE';}
-   if(progress==='CANCELLED'){m.state='CANCELLED';m.reason='CANCELLED';continue;}
+   if(progress==='CANCELLED'){m.state='CANCELLED';m.reason='CANCELLED';liveMissions.delete(m);continue;}
    const result=adapter.start(m);
    if(result===true){m.state='RUNNING';m.reason=null;m.started=now;metrics.started++;continue;}
    const moved=adapter.preposition(m);
@@ -100,7 +102,7 @@ function createController(adapter,policy={}){
   }
   // Persistent demand first: choose a freely available AGV per STS rather
   // than attaching all idle vehicles to speculative work orders.
-  const open=[...requests.values()].filter(r=>r.status==='OPEN'&&r.request.work.state==='PLANNED');
+  const open=[...liveRequests].filter(r=>r.status==='OPEN'&&r.request.work.state==='PLANNED');
   const available=adapter.availableVehicles().filter(adapter.isVehicleFree);
   const assigned=new Set();
   // Fairness is a hard admission rule: give every operational STS its first
@@ -124,7 +126,7 @@ function createController(adapter,policy={}){
    const mission={id:result.orderId,requestKey:r.key,sts:r.request.qc.id,
      vehicle:v.id,call:r.request.call.id,type:r.request.type,container:r.request.c.id,
      state:'WAITING',created:now,reason:'AWAITING_PHYSICAL_AUTHORIZATION'};
-   missions.set(mission.id,mission);metrics.assigned++;
+   missions.set(mission.id,mission);liveMissions.add(mission);metrics.assigned++;
    lastAllocation.set(mission.sts,now);
    const started=adapter.start(mission);
    if(started===true){mission.state='RUNNING';mission.started=now;metrics.started++;}
@@ -133,16 +135,17 @@ function createController(adapter,policy={}){
     else mission.reason=typeof started==='string'?started:typeof positioned==='string'?positioned:'WAITING_FOR_RESOURCES';}
   }
  }
- function snapshot(){
-  const live=[...missions.values()].filter(m=>!['DONE','CANCELLED'].includes(m.state));
+ function snapshot({includeHistory=true}={}){
+  const live=[...liveMissions];
   const byReason={};for(const m of live)if(m.reason)byReason[m.reason]=(byReason[m.reason]||0)+1;
-  return {demandTotal:requests.size,demandOutstanding:[...requests.values()].filter(r=>!['DONE','EXCEPTION'].includes(r.status)).length,
+  return {demandTotal:requests.size,demandOutstanding:liveRequests.size,
    liveMissions:live.length,missionStates:Object.fromEntries([...new Set(live.map(m=>m.state))].map(k=>[k,live.filter(m=>m.state===k).length])),
-   blockingReasons:byReason,requests:[...requests.values()].map(r=>({id:r.key,status:r.status,reason:r.reason,sts:r.request.qc.id,
+   blockingReasons:byReason,requests:[...(includeHistory?requests.values():liveRequests)].map(r=>({id:r.key,status:r.status,reason:r.reason,sts:r.request.qc.id,
     type:r.request.type,container:r.request.c.id,age:+(adapter.now()-r.created).toFixed(1)})),
    missions:live.map(m=>({...m})),metrics:{...metrics,blockedReasons:{...metrics.blockedReasons}}};
  }
- return {step,updateDemand,authorize,score,snapshot,requests,missions,policy:cfg};
+ return {step,updateDemand,authorize,score,snapshot,requests,missions,
+  activeRequests:()=>liveRequests.values(),activeMissions:()=>liveMissions.values(),policy:cfg};
 }
 root.PortGridControl={createController,authorizeParkingDeparture,authorizeImportYard};
 if(typeof module!=='undefined'&&module.exports)module.exports={createController,authorizeParkingDeparture,authorizeImportYard};

@@ -1,5 +1,29 @@
 # Verification status
 
+## Completed job and order history — 2026-11-23
+
+`node tests/archive-performance.js` passed twice on Node.js 26.13.1. The seed 3 probe starts three vessels with 12 discharge and 8 load entries each and no crane outages. It warms up for 90 simulated seconds and times the next 60 seconds over seven paired runs. The confirmation took 16.23 wall seconds. Median tick time was 441.9 ms with ordinary history and 426.3 ms with 1,000 additional completed job/order pairs, a ratio of 0.965 against the 1.25 limit. Each measured window produced 715 identical events, eight new orders, six new jobs, and two imports. New work's audit records, KPIs, and safety counters matched.
+
+`npm test` passed all 14 checks in 54.22 wall seconds. The continuous small, full-storage recovery, and loaded-delivery outage cases passed in independent runs. Use `node tests/integration.acceptance.js SCENARIO` for any row. Each starts with three vessels, nine STSs, twelve RTGs, 24 AGVs and twelve trucks. The loaded-delivery fixture takes one destination RTG out of service for 90 simulated seconds. The full-storage fixture starts with inbound AGV-side storage at capacity. D/L is the manifest per vessel. All rows recorded zero route failures, body overlaps, rail or transfer-ownership violations, manifest violations, premature loads, duplicate orders and job errors.
+
+| Scenario | Seed | D/L | Simulated s | Wall s | Imports / exports / departures | Live missions | AGVs without progress for ≥60 s at end |
+| --- | ---: | ---: | ---: | ---: | --- | ---: | ---: |
+| `complete-small-seed3` | 3 | 3/2 | 900 | 2.68 | 9 / 6 / 3 | 0 | 0 |
+| `complete-small-seed7` | 7 | 3/2 | 900 | 2.66 | 9 / 6 / 3 | 0 | 0 |
+| `normal-load-first-service` | 3 | 12/8 | 300 | 2.90 | 15 / 0 / 0 | 21 | 4 |
+| `complete-normal-seed3` | 3 | 12/8 | 2400 | 10.80 | 36 / 24 / 3 | 0 | 0 |
+| `complete-normal-seed7` | 7 | 12/8 | 2400 | 9.65 | 36 / 24 / 3 | 0 | 0 |
+| `complete-normal-seed11` | 11 | 12/8 | 2400 | 12.66 | 36 / 24 / 3 | 0 | 0 |
+| `continuous-small-seed7` | 7 | 3/2 | 3000 | 11.74 | 49 / 30 / 15 | 7 | 0 |
+| `full-storage-recovery` | 7 | 3/2 | 3600 | 10.63 | 9 / 6 / 3 | 0 | 0 |
+| `loaded-delivery-outage` | 3 | 3/2 | 1500 | 3.74 | 9 / 6 / 3 | 0 | 0 |
+
+The full normal runs achieved 26.88–27.12 gross moves per crane-hour, 31.05–31.71% gross STS waiting and 3.40–3.58% estimated scheduler delay. Evidenced scheduler delay was 0% in those runs. Productive AGV fleet time was 20.84–21.00%, assigned parking 3.33–3.38%, traffic wait 0.87–1.00%, and empty distance 60.61–61.46%. Each recorded 20–22 opposite-direction assignments. The scenario JSON and traces contain per-STS and wait-cause totals, fleet partitions, and latency distributions. This run's reports and event traces are in `/tmp/portgrid-slowdown-evidence/`. Re-run the commands to regenerate them under `reports/`.
+
+The extended Chromium smoke harness observed AGVs at parking exits, quay stands and yard junctions, and trucks in their corridor through 910 simulated seconds at seed 3. It reported zero console errors, JavaScript exceptions and sampled safety failures. A temporary CDP probe of the same scene measured 133–150 ms median frame intervals, 0.61–0.72 ms mean per physics tick and 1.95–2.07 simulated seconds per real second at a 4× setting under SwiftShader. The four six-second windows covered the inventory modal open and closed, with ordinary history and with 1,000 extra orders plus 2,000 departed containers. The frame clamp limited simulation speed under software rendering. Simulation speed was similar across the four windows.
+
+Serializing the existing 2.27 MB, 77-sample progress file took a 6.49 ms median and writing it locally took 0.98 ms over seven repeats. The measured cost per sample supports deferring incremental reporting. Longer browser profiling remains open, including retained container and vessel records. The small continuous pass leaves normal-workload continuous throughput and truck recovery qualification open.
+
 ## Expanded quay and yard grids — 2026-11-22
 
 The focused grid fixture checks section lengths against the inflated AGV body and turn sweep, verifies that terminal crossings are shared graph nodes, and checks all four parking connectors. It stalls a downstream AGV on a real graph section in both zones and observes a loaded follower at the intermediate stop line while two other vehicles turn at its bounding junctions. It also verifies section exclusivity in opposing traffic, aligned loaded reverse from an RTG bay, and release to a second vehicle.

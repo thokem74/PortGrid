@@ -43,7 +43,11 @@ function fixture(){
  const [id,order]=[...f.orders][0];order.status='DONE';order.request.work.state='DONE';
  f.setClock(1);f.scheduler.step();
  assert.equal(f.scheduler.missions.get(id).state,'DONE');
- assert.equal(f.scheduler.requests.get(f.scheduler.missions.get(id).requestKey).status,'DONE');
+ const key=f.scheduler.missions.get(id).requestKey;
+ assert.equal(f.scheduler.requests.get(key).status,'DONE');
+ assert.ok(f.scheduler.snapshot().requests.some(request=>request.id===key));
+ assert.ok(!f.scheduler.snapshot({includeHistory:false}).requests.some(request=>request.id===key));
+ assert.ok(!Array.from(f.scheduler.activeMissions()).some(mission=>mission.id===id));
 }
 {
  const f=fixture();f.scheduler.step();const order=[...f.orders.values()][0];

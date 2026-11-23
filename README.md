@@ -14,6 +14,7 @@ Use Node.js 22+. There are no npm dependencies for headless acceptance:
 ```bash
 npm test
 npm run test:extended
+node tests/archive-performance.js
 node tests/integration.acceptance.js list
 node tests/integration.acceptance.js complete-normal-seed3
 ```
@@ -21,6 +22,8 @@ node tests/integration.acceptance.js complete-normal-seed3
 `npm test` includes source/syntax checks, controller, monitor, traffic, grid clearance, physical fault, supply, and transfer ownership tests, both shipped small scenarios, early normal service and full normal seeds 3, 7 and 11. Full normal acceptance additionally requires at least 25 gross moves per crane-hour and under 10% estimated and evidenced scheduler delay. These are project targets, not guaranteed results. The extended suite also runs temporary yard outage, blocked parking release, loaded-delivery outage, physical full-storage recovery, high load, and small and normal continuous-vessel pipelines. Normal continuous scenarios use seeds 3, 7 and 11 over 10,800 simulated seconds. A failed acceptance returns a nonzero exit code; inspect the actual report rather than assuming every listed scenario is certified.
 
 Reports in `reports/` contain scenario configuration, source hashes, actual simulated/wall time, result, cumulative safety counts, per-STS/yard/fleet KPIs, physical stage latency summaries and progress snapshots. Each run streams a unique `reports/runs/SCENARIO-RUN_ID.events.ndjson` referenced by its report, preventing concurrent runs from mixing event traces. `*.progress.json` remains useful during a long run. Suite reports record each command and exit status. `reproduction-*.json` preserves earlier failing conditions and must not be read as current certification.
+
+Run the archive performance probe on an otherwise idle machine. It checks that 1,000 extra completed job/order pairs add at most 25% to median tick time and leave the measured run's assignments, physical events, audit output, and safety counters identical.
 
 Optional browser smoke testing uses Chromium and Node's built-in WebSocket/CDP support, a loopback-only server and a disposable browser profile:
 
