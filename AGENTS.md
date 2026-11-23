@@ -212,3 +212,17 @@ For every major test or milestone, provide:
 - **Remaining:** open acceptance gates and next root-cause action.
 
 No old-versus-new legacy comparison is required. Never label an untested browser appearance, a timed-out scenario or a small-only success as full production certification.
+
+## Agent skills
+
+### Issue tracker
+
+Track issues and specs in GitHub Issues for `thokem74/PortGrid`. Before working with issues, read `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Use the default triage labels. Before triaging issues, read `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+PortGrid uses a single-context layout. Before exploring domain terminology or design decisions, read `docs/agents/domain.md`.
