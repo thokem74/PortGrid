@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PortGrid scheduler prototype</title>
+<style>
+  :root { color-scheme: dark; font: 16px/1.5 system-ui, sans-serif; background: #131b21; color: #edf2f4; }
+  * { box-sizing: border-box; }
+  body { margin: 0 auto; max-width: 70rem; padding: 2rem clamp(1rem, 4vw, 3rem); }
+  h1 { font-size: clamp(1.8rem, 5vw, 2.8rem); margin: 0; }
+  h2 { font-size: 1.2rem; margin: 0 0 .6rem; }
+  h3 { font-size: 1rem; margin: .8rem 0 .25rem; }
+  p { margin: .4rem 0 1rem; }
+  .intro, .muted { color: #b9c8ce; }
+  section, article { border: 1px solid #394852; background: #1c262e; padding: 1rem; border-radius: .6rem; }
+  section { margin: 1rem 0; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); gap: .8rem; }
+  .buttons { display: flex; flex-wrap: wrap; gap: .4rem; }
+  button { font: inherit; color: inherit; background: #263640; border: 1px solid #647b88; border-radius: .3rem; padding: .35rem .65rem; cursor: pointer; }
+  button[aria-selected="true"], button.primary { background: #99e2da; border-color: #99e2da; color: #132624; }
+  button:focus-visible { outline: 2px solid #99e2da; outline-offset: 3px; }
+  button:disabled { opacity: .6; cursor: default; }
+  dl { display: grid; grid-template-columns: max-content 1fr; gap: .35rem .65rem; margin: 0; }
+  dt { color: #b9c8ce; }
+  dd { margin: 0; }
+  ol, ul { margin: .4rem 0; padding-left: 1.4rem; }
+  li { margin: .35rem 0; }
+  #steps button { text-align: left; }
+  summary { cursor: pointer; }
+  pre { overflow: auto; margin-bottom: 0; max-height: 24rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>PortGrid scheduler prototype</h1>
+  <p class="intro">Can dispatch work from observations and submit assignments while the simulation controls every reservation and handover? This throwaway demo models one vessel, one STS, one AGV, one truck and a pair of yard cranes. Each execution click advances one simplified physical stage.</p>
+</header>
+
+<div class="grid">
+  <article aria-labelledby="scheduler-heading">
+    <h2 id="scheduler-heading">Scheduler</h2>
+    <dl id="scheduler-state"></dl>
+  </article>
+  <article aria-labelledby="interface-heading">
+    <h2 id="interface-heading">Observation → proposal → reply</h2>
+    <dl id="interface-state"></dl>
+  </article>
+  <article aria-labelledby="engine-heading">
+    <h2 id="engine-heading">Simulation</h2>
+    <dl id="engine-state"></dl>
+  </article>
+</div>
+
+<section aria-labelledby="free-heading">
+  <h2 id="free-heading">Free play</h2>
+  <div class="buttons" id="actions"></div>
+  <p id="message" role="status"></p>
+</section>
+
+<section aria-labelledby="walkthrough-heading">
+  <h2 id="walkthrough-heading">Guided walkthroughs</h2>
+  <div class="buttons" id="tabs" role="tablist" aria-label="Walkthroughs"></div>
+  <div id="walkthrough" role="tabpanel" tabindex="0">
+    <p id="description"></p>
+    <ol id="steps"></ol>
+    <button id="restart" type="button">Restart walkthrough</button>
+  </div>
+</section>
+
+<section aria-labelledby="trace-heading">
+  <h2 id="trace-heading">Exchange log</h2>
+  <ol id="log" reversed></ol>
+  <details><summary>Inspect the exchanged data</summary><pre id="data"></pre></details>
+</section>
+
+<script id="prototype-logic">
+'use strict';
+
+const work = {
+  'V1|IMPORT|I1': {kind: 'IMPORT', vehicle: 'AGV-01', container: 'I1', sts: 'STS-01'},
+  'V1|EXPORT|E1': {kind: 'EXPORT', vehicle: 'AGV-01', container: 'E1', sts: 'STS-01'},
+  'RELAY|E1': {kind: 'RELAY', vehicle: null, container: 'E1', sts: null},
+  'TRUCK|T1': {kind: 'TRUCK_PICKUP', vehicle: 'TRK-01', container: 'T1', sts: null}
+};
+const [importId, exportId, relayId, truckId] = Object.keys(work);
+const labels = {
+  IMPORT: 'Vessel discharge', EXPORT: 'Vessel loading',
+  RELAY: 'Booked export relay', TRUCK_PICKUP: 'Truck pickup'
+};
+const active = order => order.stage !== 'DONE';
+const requestLabel = id => work[id] ? labels[work[id].kind] : 'No assignment';
+const display = value => value ?? '—';
+
+function initialEngine(scenario) {
+  const yardScenario = scenario === 'relay';
+  return {
+    cargo: {I1: yardScenario ? 'Yard storage' : 'Vessel', E1: 'Truck-side yard', T1: 'Truck-side yard'},
+    dischargeDone: yardScenario, exportDone: false, truckDone: false,
+    truckQueued: yardScenario, storageOccupied: yardScenario,
+    storageHeldBy: null, orders: [], rtgs: {agv: null, truck: null}, sts: null
+  };
+}
+
+function observe(engine) {
+  const demand = [];
+  if (!engine.dischargeDone) demand.push(importId);
+  if (engine.dischargeDone && !engine.exportDone) demand.push(exportId);
+  if (engine.dischargeDone && engine.cargo.E1 === 'Truck-side yard') demand.push(relayId);
+  if (engine.truckQueued && !engine.truckDone) demand.push(truckId);
+  return {
+    demand: demand.map(id => ({
+      id, ...work[id],
+      ready: id === exportId ? engine.cargo.E1 === 'AGV-side yard' : true
+    })),
+    availableVehicles: ['AGV-01', 'TRK-01'].filter(id =>
+      !engine.orders.some(order => active(order) && order.vehicle === id)),
+    importSlotAvailable: !engine.storageOccupied && !engine.storageHeldBy,
+    relayCranesAvailable: !engine.rtgs.agv && !engine.rtgs.truck,
+    truckCraneAvailable: !engine.rtgs.truck,
+    orders: engine.orders.map(order => ({...order}))
+  };
+}
+
+function readObservation(previous, observation) {
+  const requests = {...previous.requests};
+  for (const demand of observation.demand) {
+    requests[demand.id] ??= {state: 'OPEN', reason: null};
+  }
+  for (const order of observation.orders) {
+    requests[order.requestId] = {
+      state: active(order) ? 'ASSIGNED' : 'DONE', orderId: order.id, reason: null
+    };
+  }
+  return {requests};
+}
+
+function propose(scheduler, observation) {
+  for (const id of [relayId, importId, exportId, truckId]) {
+    const demand = observation.demand.find(entry => entry.id === id);
+    if (!demand?.ready || scheduler.requests[id]?.state !== 'OPEN') continue;
+    if (demand.vehicle && !observation.availableVehicles.includes(demand.vehicle)) continue;
+    if (id === importId && !observation.importSlotAvailable) continue;
+    if (id === relayId && !observation.relayCranesAvailable) continue;
+    if (id === truckId && !observation.truckCraneAvailable) continue;
+    return {requestId: id, vehicleId: demand.vehicle};
+  }
+  return null;
+}
+
+function authorize(engine, proposal) {
+  const {requestId, vehicleId} = proposal;
+  const {kind, container} = work[requestId];
+  const reject = reason => ({engine, reply: {accepted: false, reason}});
+  if (requestId === exportId && !engine.dischargeDone) return reject('Vessel discharge is still in progress');
+  const current = observe(engine);
+  const demand = current.demand.find(entry => entry.id === requestId);
+  if (!demand?.ready || demand.vehicle !== vehicleId) return reject('Cargo is unavailable for this assignment');
+  if (engine.orders.some(order => active(order) && order.container === container)) {
+    return reject('Container already has an active transport order');
+  }
+  if (vehicleId && !current.availableVehicles.includes(vehicleId)) return reject('Vehicle already assigned');
+  if (requestId === importId && !current.importSlotAvailable) return reject('Inbound storage slot unavailable');
+  if (requestId === relayId && !current.relayCranesAvailable) return reject('The RTG pair is unavailable');
+  if (requestId === truckId && !current.truckCraneAvailable) return reject('Truck-side RTG is busy');
+
+  const next = structuredClone(engine);
+  const id = 'ORDER-' + (next.orders.length + 1);
+  const stage = requestId === relayId ? 'RELAYING' : 'TO_PICKUP';
+  next.orders.push({id, requestId, kind, vehicle: vehicleId, container, stage, blocker: null});
+  if (requestId === importId) next.storageHeldBy = id;
+  if (requestId === relayId) next.rtgs = {agv: id, truck: id};
+  return {engine: next, reply: {accepted: true, orderId: id}};
+}
+
+function advance(engine) {
+  const next = structuredClone(engine);
+  const events = [];
+  for (const order of next.orders.filter(active)) {
+    const {id, kind} = order;
+    const move = (stage, text) => {
+      order.stage = stage;
+      order.blocker = null;
+      events.push(id + ' · ' + text);
+    };
+    if (order.stage === 'RELAYING') {
+      next.cargo.E1 = 'AGV-side yard';
+      next.rtgs = {agv: null, truck: null};
+      move('DONE', 'RTG pair placed the booked export on the AGV side and released both cranes.');
+    } else if (order.stage === 'TO_PICKUP') {
+      move('AT_PICKUP', order.vehicle + ' reached its transfer stand and aligned.');
+    } else if (order.stage === 'AT_PICKUP') {
+      const crane = kind === 'IMPORT' ? 'sts' : kind === 'EXPORT' ? 'agv' : 'truck';
+      const owner = crane === 'sts' ? next.sts : next.rtgs[crane];
+      if (owner) {
+        order.blocker = 'Pickup crane held by ' + owner;
+        events.push(id + ' · ' + order.blocker);
+        continue;
+      }
+      if (crane === 'sts') next.sts = id;
+      else next.rtgs[crane] = id;
+      move('PICKUP_LIFT', 'The aligned vehicle acquired its pickup crane.');
+    } else if (order.stage === 'PICKUP_LIFT') {
+      if (kind === 'IMPORT') next.sts = null;
+      else next.rtgs[kind === 'EXPORT' ? 'agv' : 'truck'] = null;
+      next.cargo[order.container] = order.vehicle;
+      move('TO_DELIVERY', 'Pickup confirmed. The crane released before the vehicle left.');
+    } else if (order.stage === 'TO_DELIVERY') {
+      if (kind === 'TRUCK_PICKUP') {
+        next.cargo.T1 = 'Outside terminal';
+        next.truckDone = true;
+        move('DONE', 'Truck exited the gate with the container.');
+      } else {
+        move('AT_DELIVERY', 'AGV reached its destination stand and aligned.');
+      }
+    } else if (order.stage === 'AT_DELIVERY') {
+      const owner = kind === 'IMPORT' ? next.rtgs.agv : next.sts;
+      if (owner) {
+        order.blocker = 'Destination crane held by ' + owner;
+        events.push(id + ' · ' + order.blocker);
+        continue;
+      }
+      if (kind === 'IMPORT') next.rtgs.agv = id;
+      else next.sts = id;
+      move('DELIVERY_LIFT', 'The aligned AGV acquired its destination crane.');
+    } else if (order.stage === 'DELIVERY_LIFT') {
+      if (kind === 'IMPORT') {
+        next.rtgs.agv = null;
+        next.storageHeldBy = null;
+        next.storageOccupied = true;
+        next.cargo.I1 = 'Yard storage';
+        next.dischargeDone = true;
+      } else {
+        next.sts = null;
+        next.cargo.E1 = 'Vessel';
+        next.exportDone = true;
+      }
+      move('DONE', 'Destination lift confirmed. The vessel work list advanced.');
+    }
+  }
+  return {engine: next, events};
+}
+
+function initialState(scenario) {
+  return {
+    engine: initialEngine(scenario), scheduler: {requests: {}},
+    observation: null, proposal: null, reply: null, log: []
+  };
+}
+
+function exchange(state, action) {
+  if (action === 'observe') {
+    const observation = observe(state.engine);
+    const scheduler = readObservation(state.scheduler, observation);
+    return [{...state, observation, scheduler, proposal: null, reply: null}, 'Scheduler received an observation.'];
+  }
+  if (action === 'propose' || action === 'early-export') {
+    if (!state.observation) return [state, 'Read an observation first.'];
+    const proposal = action === 'early-export'
+      ? {requestId: exportId, vehicleId: 'AGV-01'} : propose(state.scheduler, state.observation);
+    return [{...state, proposal, reply: null}, proposal
+      ? requestLabel(proposal.requestId) + ' proposed.'
+      : 'The observation offers no eligible assignment.'];
+  }
+  if (action === 'submit') {
+    if (!state.proposal) return [state, 'Create a proposal first.'];
+    const {engine, reply} = authorize(state.engine, state.proposal);
+    const id = state.proposal.requestId;
+    const requests = {...state.scheduler.requests};
+    if (reply.accepted) requests[id] = {state: 'ASSIGNED', orderId: reply.orderId, reason: null};
+    else if (requests[id]?.state === 'OPEN') requests[id] = {state: 'OPEN', reason: reply.reason};
+    return [{...state, engine, scheduler: {requests}, proposal: null, reply},
+      reply.accepted ? 'Simulation accepted ' + reply.orderId + '.' : 'Simulation rejected the proposal. ' + reply.reason + '.'];
+  }
+  if (action === 'advance') {
+    const {engine, events} = advance(state.engine);
+    return [{...state, engine}, events.join(' ') || 'No physical work to advance.'];
+  }
+  if (action === 'storage') {
+    if (state.engine.storageHeldBy) return [state, 'This slot is reserved by ' + state.engine.storageHeldBy + '.'];
+    if (state.engine.cargo.I1 === 'Yard storage') return [state, 'The delivered import occupies this slot.'];
+    const storageOccupied = !state.engine.storageOccupied;
+    return [{...state, engine: {...state.engine, storageOccupied}}, storageOccupied
+      ? 'Other yard work filled the inbound slot.'
+      : 'Other yard work freed the slot.'];
+  }
+  if (action === 'truck') {
+    return [{...state, engine: {...state.engine, truckQueued: true}}, 'A truck is waiting at the gate.'];
+  }
+  return [state, 'Choose an action.'];
+}
+</script>
+
+<script id="prototype-ui">
+'use strict';
+
+const actions = {
+  observe: 'Read simulation state',
+  propose: 'Choose an assignment',
+  submit: 'Submit assignment',
+  advance: 'Advance physical work',
+  storage: 'Fill or free the inbound slot',
+  truck: 'Queue a truck',
+  'early-export': 'Propose early vessel loading'
+};
+
+const submit = [
+  ['observe', 'Read the simulation state'],
+  ['propose', 'Choose an assignment'],
+  ['submit', 'Submit the assignment']
+];
+
+const walkthroughs = {
+  discharge: {
+    title: 'Discharge handover',
+    description: 'Follow an import from the vessel to the yard. Watch the STS release after pickup, the storage slot remain reserved in transit, and loading become eligible after yard delivery.',
+    steps: [
+      ...submit,
+      ['advance', 'Arrive and align at the STS'],
+      ['advance', 'Acquire the STS for pickup'],
+      ['advance', 'Pick up the container and release the STS'],
+      ['observe', 'Check that the import is still outstanding'],
+      ['advance', 'Arrive and align at the yard stand'],
+      ['advance', 'Acquire the AGV-side RTG'],
+      ['advance', 'Deliver the import into storage'],
+      ['observe', 'Read the confirmed completion and new loading demand']
+    ]
+  },
+  storage: {
+    title: 'Storage changes after a proposal',
+    description: 'Another yard operation takes the last slot. Check that the simulation rejects the stale proposal, then frees the scheduler to retry the same request when storage is available.',
+    steps: [
+      ...submit.slice(0, 2),
+      ['storage', 'Fill the last inbound slot'],
+      ['submit', 'Submit the proposal from the earlier observation'],
+      ['observe', 'Read the request that is still waiting'],
+      ['propose', 'Check what can be assigned while storage is full'],
+      ['storage', 'Free the inbound slot'],
+      ...submit
+    ]
+  },
+  phase: {
+    title: 'Early loading blocked',
+    description: 'Send a loading proposal while discharge is outstanding. The simulation checks the actual vessel phase before it grants any resources.',
+    steps: [
+      ['observe', 'Read the state of the vessel'],
+      ['early-export', 'Propose loading before discharge is complete'],
+      ['submit', 'Submit the invalid proposal'],
+      ...submit
+    ]
+  },
+  relay: {
+    title: 'Export relay and truck',
+    description: 'Start after discharge with a booked export on the truck side and a pickup truck at the gate. The scheduler prioritizes the relay. Both RTGs stay assigned to it until the container is placed. The truck can then approach and acquire its RTG only after aligning at its stand.',
+    steps: [
+      ...submit,
+      ['observe', 'Read the RTG occupancy during the relay'],
+      ['propose', 'Check whether either waiting move can start'],
+      ['advance', 'Place the export on the AGV side and release the RTGs'],
+      ...submit,
+      ...submit,
+      ['advance', 'Bring the AGV and truck to their separate stands'],
+      ['advance', 'Acquire the pickup RTGs'],
+      ['advance', 'Pick up both containers and release the RTGs'],
+      ['advance', 'Move the AGV to the STS and the truck through the gate'],
+      ['advance', 'Acquire the STS'],
+      ['advance', 'Stow the export'],
+      ['observe', 'Read both confirmed completions']
+    ]
+  }
+};
+
+const ui = id => document.getElementById(id);
+const node = (tag, value) => {
+  const element = document.createElement(tag);
+  element.textContent = value;
+  return element;
+};
+
+let selected = 'discharge';
+let step = 0;
+let state = initialState(selected);
+let message = 'Choose an action or start a walkthrough.';
+
+function run(action) {
+  const [next, result] = exchange(state, action);
+  state = {...next, log: [...next.log, result]};
+  message = result;
+  render();
+}
+
+function pairs(id, rows) {
+  ui(id).replaceChildren(...rows.flatMap(([label, value]) =>
+    [node('dt', label), node('dd', value)]));
+}
+
+function render() {
+  const {scheduler, engine, observation, proposal, reply, log} = state;
+  pairs('scheduler-state', Object.entries(scheduler.requests).length
+    ? Object.entries(scheduler.requests).map(([id, request]) => [
+      requestLabel(id), [request.state, request.orderId, request.reason].filter(Boolean).join(' · ')
+    ])
+    : [['Requests', 'Read the simulation state to discover demand.']]);
+
+  const visibleDemand = observation && observation.demand
+    .map(request => requestLabel(request.id) + (request.ready ? '' : ' (cargo unavailable)')).join(', ');
+  pairs('interface-state', [
+    ['Last observation', observation ? visibleDemand || 'No remaining demand' : 'Awaiting first read'],
+    ['Observed storage', observation ? observation.importSlotAvailable ? 'Slot free' : 'Slot unavailable' : '—'],
+    ['Proposal', proposal ? requestLabel(proposal.requestId) + ' · ' + (proposal.vehicleId ?? 'RTG pair') : '—'],
+    ['Reply', reply ? reply.accepted ? 'Accepted · ' + reply.orderId : 'Rejected · ' + reply.reason : '—']
+  ]);
+
+  pairs('engine-state', [
+    ['Vessel phase', engine.exportDone ? 'Cargo complete' : engine.dischargeDone ? 'Loading' : 'Discharging'],
+    ['Cargo', Object.entries(engine.cargo).map(([id, location]) => id + ' · ' + location).join(', ')],
+    ['Gate', engine.truckDone ? 'Truck departed' : engine.truckQueued ? 'Truck work outstanding' : 'No truck waiting'],
+    ['Inbound slot', engine.storageHeldBy ? 'Reserved by ' + engine.storageHeldBy : engine.storageOccupied ? 'Occupied' : 'Free'],
+    ['STS', display(engine.sts)], ['AGV-side RTG', display(engine.rtgs.agv)], ['Truck-side RTG', display(engine.rtgs.truck)],
+    ...engine.orders.map(order => [order.id, [
+      requestLabel(order.requestId), order.vehicle, order.stage.replaceAll('_', ' ').toLowerCase(), order.blocker
+    ].filter(Boolean).join(' · ')])
+  ]);
+
+  ui('message').textContent = message;
+  ui('log').replaceChildren(...log.slice().reverse().map(event => node('li', event)));
+  ui('data').textContent = JSON.stringify({observation, proposal, reply}, null, 2);
+
+  for (const tab of ui('tabs').children) {
+    const current = tab.id === 'tab-' + selected;
+    tab.setAttribute('aria-selected', current);
+    tab.tabIndex = current ? 0 : -1;
+  }
+  ui('walkthrough').setAttribute('aria-labelledby', 'tab-' + selected);
+  const walkthrough = walkthroughs[selected];
+  ui('description').textContent = walkthrough.description;
+  ui('steps').replaceChildren(...walkthrough.steps.map(([action, label], index) => {
+    const item = node('li', '');
+    const button = node('button', label + (index < step ? ' ✓' : ''));
+    button.disabled = step !== index;
+    if (step === index) button.className = 'primary';
+    button.addEventListener('click', () => {
+      step++;
+      run(action);
+      (ui('steps').querySelector('button.primary') ?? ui('restart')).focus();
+    });
+    item.append(button);
+    return item;
+  }));
+}
+
+function select(id) {
+  selected = id;
+  step = 0;
+  state = initialState(id);
+  message = 'Walkthrough ready.';
+  render();
+  ui('tab-' + id).focus();
+}
+
+for (const [action, label] of Object.entries(actions)) {
+  const button = node('button', label);
+  button.addEventListener('click', () => run(action));
+  ui('actions').append(button);
+}
+
+const tabIds = Object.keys(walkthroughs);
+ui('restart').addEventListener('click', () => select(selected));
+for (const [index, id] of tabIds.entries()) {
+  const button = node('button', walkthroughs[id].title);
+  button.id = 'tab-' + id;
+  button.setAttribute('role', 'tab');
+  button.setAttribute('aria-controls', 'walkthrough');
+  button.addEventListener('click', () => select(id));
+  button.addEventListener('keydown', event => {
+    const offset = {ArrowRight: 1, ArrowLeft: -1}[event.key];
+    if (!offset) return;
+    event.preventDefault();
+    select(tabIds[(index + offset + tabIds.length) % tabIds.length]);
+  });
+  ui('tabs').append(button);
+}
+
+render();
+</script>
+</body>
+</html>

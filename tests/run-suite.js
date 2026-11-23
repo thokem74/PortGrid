@@ -1,7 +1,7 @@
 'use strict';
 const {spawnSync}=require('node:child_process'),path=require('node:path');
 const fs=require('node:fs');
-const tests=['source-parity.test.js','control.unit.test.js','reliability.unit.test.js','traffic.test.js','grid-clearance.test.js','physical-faults.test.js','sts-supply.test.js','transfer-ownership.test.js'];
+const tests=['source-parity.test.js','control.unit.test.js','reliability.unit.test.js','traffic.test.js','grid-clearance.test.js','physical-faults.test.js','sts-supply.test.js','transfer-ownership.test.js','quay-sts.test.js'];
 const scenarios=['complete-small-seed3','complete-small-seed7','normal-load-first-service',...[3,7,11].map(seed=>'complete-normal-seed'+seed)];
 if(process.argv.includes('--extended'))scenarios.push('temporary-yard-outage','blocked-parking-release','complete-high-seed3','continuous-small-seed7','loaded-delivery-outage','full-storage-recovery',...[3,7,11].map(seed=>'continuous-normal-seed'+seed));
 let failures=0;

@@ -36,7 +36,7 @@
  <section class="section"><div class="eyebrow">CAMERAS</div><div class="buttons" id="views"><button class="btn active" data-view="overview">◈ Overview</button><button class="btn" data-view="top">⊞ Top-down</button><button class="btn" data-view="quay">⚓ Quayside</button><button class="btn" data-view="yards">▤ Parallel yards</button></div></section>
  <section class="section"><div class="eyebrow">OPERATIONS WINDOWS</div><div class="buttons"><button class="btn primary" id="showJobs">▦ Jobs</button><button class="btn primary" id="showVessels">⚓ Vessels</button><button class="btn primary" id="showContainers">▤ Containers</button><button class="btn primary" id="showKPI">▥ KPI Dashboard</button></div><div class="note" style="margin-top:8px">Live fleet, crane and container tables sourced from the simulation scheduler.</div></section>
  <section class="section"><div class="eyebrow">SIMULATION</div><div class="line"><span>Simulation speed</span><b id="speedText">4×</b></div><input class="field" type="range" id="speed" min="1" max="12" value="4" step="1"><div class="buttons" style="margin-top:12px"><button class="btn primary" id="pause">Ⅱ Pause</button><button class="btn" id="restart">↺ Reset</button></div><div class="line"><span>Show zone labels</span><input type="checkbox" id="labels" checked></div><div class="line"><span>Container highlight</span><input type="checkbox" id="highlight" checked></div></section>
- <section class="section"><div class="eyebrow">TRAFFIC & YARD LEGEND</div><div class="legend"><i class="square" style="background:#187fab"></i>4 quay travel lanes · 36 m junction spacing</div><div class="legend"><i class="square" style="background:#2b7187"></i>4 incoming yard lanes · quay → yard</div><div class="legend"><i class="square" style="background:#278c99"></i>4 outgoing yard lanes · yard → quay</div><div class="legend"><i class="square" style="background:#24a7a1"></i>Yard cross-lanes · 36 m minimum spacing</div><div class="legend"><i class="square" style="background:#b78340"></i>STS transfer uses any reserved quay lane</div><div class="legend"><i class="square" style="background:#8c6baa"></i>AGV-only left-edge transfer corridor</div><div class="legend"><i class="square" style="background:#547d45"></i>External truck right-edge transfer corridor</div><div class="legend"><i class="square" style="background:#d2a34c"></i>Incoming / import yard</div><div class="legend"><i class="square" style="background:#4a93ba"></i>Outgoing / export yard</div></section>
+ <section class="section"><div class="eyebrow">TRAFFIC & YARD LEGEND</div><div class="legend"><i class="square" style="background:#2ba8c8"></i>4 quay travel lanes · 36 m junction spacing</div><div class="legend"><i class="square" style="background:#2b7187"></i>4 incoming yard lanes · quay → yard</div><div class="legend"><i class="square" style="background:#278c99"></i>4 outgoing yard lanes · yard → quay</div><div class="legend"><i class="square" style="background:#24a7a1"></i>Yard cross-lanes · 36 m minimum spacing</div><div class="legend"><i class="square" style="background:#2ba8c8"></i>4 westbound STS transfer rows per berth</div><div class="legend"><i class="square" style="background:#8c6baa"></i>AGV-only left-edge transfer corridor</div><div class="legend"><i class="square" style="background:#547d45"></i>External truck right-edge transfer corridor</div><div class="legend"><i class="square" style="background:#d2a34c"></i>Incoming / import yard</div><div class="legend"><i class="square" style="background:#4a93ba"></i>Outgoing / export yard</div></section>
  <div class="note">Eight 12m-pitch yard guide lanes (4 incoming + 4 outgoing) and eight uniformly spaced (12m) quay lanes, with 11m equal-pitch STS cross-grid cells and separate yard-access connectors, with intersection-level traffic checks and reserved in-place turn maneuvers; no temporary waiting bays. Assigned AGVs can remain parked until a safe crane slot is available. Dispatch favors existing manifest orders, load-balanced import/export cycles and physical crane readiness. AGVs queue only at crane transfer positions; only independently clear road sections run together. Current vehicle motion and crane handling are reported separately. Both gantries maintain rail separation and coordinate physical yard handovers. Click a container, AGV, truck or crane to inspect it. Drag to rotate, scroll to zoom and right-drag to pan. Cargo is transferred only by the assigned equipment.</div>
 </aside>
 <aside id="right">
@@ -288,15 +288,18 @@ const QUAY_COLUMNS=Array.from({length:21},(_,i)=>PARKING_CONNECTOR_X+i*TRAVEL_PI
 const STS_ACCESS=Array.from({length:9},(_,i)=>{
  const west=QUAY_COLUMNS[1+2*i+Math.floor(i/3)];
  const east=west+TRAVEL_PITCH;
- return {west,east,x:(west+east)/2,id:'STS-SERVICE-'+(i+1)};
+ return {west,east,x:(west+east)/2,berth:Math.floor(i/3),id:'STS-SERVICE-'+(i+1)};
 });
+const STS_RAIL_GAP=32, STS_LIFT_CLEARANCE=28;
+const SHIP_BAY_PITCH=10.8, SHIP_BAYS=18;
 const BLOCK_GRID_X=QUAY_COLUMNS.slice(0,8);
 const YARD_INCOMING_X=BLOCK_GRID_X.slice(0,4), YARD_OUTGOING_X=BLOCK_GRID_X.slice(4);
 const YARD_SERVICE_X=BLOCK_GRID_X.at(-1)+TRAVEL_PITCH;
 const YARD_X_SHIFT=237;
 const L={
  shipX:[STS_ACCESS[1].x,STS_ACCESS[4].x,STS_ACCESS[7].x],stsX:STS_ACCESS.map(access=>access.x),
- shipZ:-152,stsZ:-95,stsDockZ:-60,
+ shipZ:-152,stsZ:-95,stsDockZ:-60,stsRailGap:STS_RAIL_GAP,stsWheelOffsetsZ:[-18,11],
+ shipHullLength:232,shipDeckLength:225,shipBridgeOffset:-105,shipBridgeLength:14,
  yards:Array.from({length:6},(_,i)=>{
   const inbound=i<3;
   return {id:(inbound?'IN':'OUT')+'-0'+(i%3+1),type:inbound?'inbound':'outbound',z:180+i*72};
@@ -308,6 +311,9 @@ const L={
  agvStorageMaxX:-40+YARD_X_SHIFT,truckStorageMinX:45+YARD_X_SHIFT
 };
 const STS_DOCK_LANES=[L.agvOuterWestZ,L.agvWestZ,L.agvEastZ,L.agvOuterEastZ];
+const SHIP_STACKS=L.shipX.map(center=>Array.from({length:SHIP_BAYS},(_,bay)=>
+ Array.from({length:5},(_,row)=>({x:center+(bay-(SHIP_BAYS-1)/2)*SHIP_BAY_PITCH,z:L.shipZ+(row-2)*6}))
+).flat());
 const YARD_SLOT_OFFSETS=[-10.5,-3.5,3.5,10.5];
 /* Evaluates callback for YARD_SLOT_OFFSETS.map using dz, lane */
 const  YARD_AGV_BAYS=L.yards.map( y=>YARD_SLOT_OFFSETS.map( (dz,lane)=>({x:L.agvDockX,z:y.z+dz,lane,yard:y.id,side:'agv'}))); /* AGV-accessible crane transfer positions for each yard block */
@@ -386,16 +392,20 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
  function serviceForecast(q){
   const cycle=serviceSamples.get(q.id)??75;
   const j=q.job?jobsById.get(q.job):null;
-  return {readyIn:j?Math.max(0,cycle-(t-(j.stsServiceStarted??t))):0,cycleSeconds:cycle};
+  const returnTime=q.type==='sts'&&!j?Math.abs(q.x-q.homeX)/9:0;
+  return {readyIn:j?Math.max(0,cycle-(t-(j.stsServiceStarted??t))):returnTime,cycleSeconds:cycle};
  }
  // Static directed graph distances are cached by destination. Forecasting
  // never calls the mutating route planner, consumes RNG or grants movement.
  function graphDistance(from,to){
-  const goal=gKey(to.x,to.z),allowParking=from.x<PARKING_CONNECTOR_X||to.x<PARKING_CONNECTOR_X,cacheKey=goal+'|'+allowParking;
+  const goal=gKey(to.x,to.z),allowParking=from.x<PARKING_CONNECTOR_X||to.x<PARKING_CONNECTOR_X;
+  const apronBerth=p=>p.z<0?L.shipX.findIndex(x=>Math.abs(p.x-x)<=90):-1;
+  const origin=apronBerth(from),target=apronBerth(to),cacheKey=goal+'|'+allowParking+'|'+origin;
   if(!arrivalDistances.has(cacheKey)){
    const reverse=new Map();
    for(const [id,edges] of AGV_GRID.edges)for(const edge of edges){
     if(!allowParking&&edge.zone.startsWith('PARKING'))continue;
+    if(edge.section.berth!==null&&edge.section.berth!==origin&&edge.section.berth!==target)continue;
     if(!reverse.has(edge.to))reverse.set(edge.to,[]);
     reverse.get(edge.to).push({to:id,cost:dist(AGV_GRID.nodes.get(id),AGV_GRID.nodes.get(edge.to))});
    }
@@ -413,9 +423,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   return dist(from,nearest)+(nodes.get(gKey(nearest.x,nearest.z))??Infinity);
  }
  function estimateArrival(q,v){
-  const access=STS_ACCESS.find(area=>area.x===q.qc.homeX);
-  const quay={x:access.east,z:QUAY_EASTBOUND_Z};
-  const tail=graphDistance(quay,{x:access.x,z:L.stsDockZ});
+  const stsStand={x:q.qc.homeX,z:L.stsDockZ};
   let distance,handling=0;
   const approach=target=>{
    if(v.x<-360&&v.z>-40&&v.z<170){
@@ -424,10 +432,10 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
    }
    return graphDistance(v,target);
   };
-  if(q.type==='IMPORT')distance=approach(quay)+tail;
+  if(q.type==='IMPORT')distance=approach(stsStand);
   else {
    const bi=q.c.yard,bay=YARD_AGV_BAYS[bi][0];
-   distance=approach(bay)+graphDistance(bay,quay)+tail;
+   distance=approach(bay)+graphDistance(bay,stsStand);
    const crane=rtgAgv[bi],job=jobsById.get(crane.job);
    const cycle=serviceSamples.get(crane.id)??30;
    handling=cycle+(job?Math.max(0,cycle-(t-(job.rtgServiceStarted??t))):0);
@@ -455,6 +463,8 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   const result=(state,resource=null,evidence=null)=>({state,blockingResourceId:resource,job:selected?.id||null,vehicleId:v?.id||null,evidence});
   if(q.downUntil>t)return result('CRANE_OUTAGE',q.id);
   if(owned&&((owned.type==='IMPORT'&&owned.stage==='PICK')||(owned.type==='EXPORT'&&owned.stage==='PLACE')))return result('HANDLING');
+  if(!owned&&stsSweeps.has(q.id))return result('STS_RAIL_RETURN',q.id);
+  if(selected?.stsRailBlocker)return result('STS_RAIL_CLEARANCE',selected.stsRailBlocker);
   if(!pending.length)return result('WORKLIST_EXHAUSTED');
   if(v){
    if(v.route.length)return result(v.blockedTime>4?'TRAFFIC_CONSTRAINT':'AGV_TRANSIT',v.trafficBlock?.resource||v.id);
@@ -503,7 +513,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
      if(!pending){m.waitingWork+=dt;continue;}
      /* Evaluates callback for call.load.some using w */
      const  ready=topShip(q).length>0||(vesselWorkPhase(call)==='LOADING'&&call.load.some( w=>w.crane===q.id&&w.state==='PLANNED')); /* Local value for ready in sampleKPI() */
-     if(job||ready){
+     if(job||ready||observed.state==='STS_RAIL_CLEARANCE'){
        // The legacy aggregate remains available, but every waiting interval is
        // now attributed to a concrete cause for controller optimization.
        m.waitingAGV+=dt;
@@ -516,7 +526,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
        const vehicle=mission?agvs.find(v=>v.id===mission.vehicle):null;
        const yardBlocked=L.yards.filter(y=>y.type==='inbound').every((y,bi)=>
          !freeSlot(bi,'agv',false)||[...liveJobs].filter(j=>!j.preposition&&j.type==='IMPORT'&&j.order.yard===bi).length>=TRANSPORT_POLICY.maxActiveImportsPerYard);
-       const reason=vehicle?.blockedTime>4?'TRAFFIC_OBSTRUCTION':
+       const reason=observed.state==='STS_RAIL_CLEARANCE'?'STS_RAIL_CLEARANCE':vehicle?.blockedTime>4?'TRAFFIC_OBSTRUCTION':
          vehicle?.route.length?'AGV_IN_TRANSIT':
          vehicle?.x<-350?'PARKING_DISPATCH_WAIT':
          mission?.reason||
@@ -635,6 +645,26 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
  let  completedRelays=0; /* Local value for completed relays in makeEngine() */
  const  lastRelayAt=Array(L.yards.length).fill(-400); /* Simulation timestamp for last relay at */
  const  yardCraneIncidents=[]; /* Collection of yard crane incidents */
+ const stsSweeps=new Map();
+ let stsRailViolations=0;
+ const berthCranes=L.shipX.map((_,berth)=>sts.filter(q=>q.ship===berth));
+ const stsNeighbors=new Map(berthCranes.flatMap(group=>group.map((q,i)=>
+  [q,[group[i-1],group[i+1]].filter(Boolean)])));
+ const shipBays=SHIP_STACKS.map((stacks,berth)=>stacks.map(stack=>{
+  const [primary,neighbor]=berthCranes[berth].slice().sort((a,b)=>
+   Math.abs(a.homeX-stack.x)-Math.abs(b.homeX-stack.x));
+  const clearance=q=>stsNeighbors.get(q).every(other=>Math.abs(other.homeX-stack.x)>=STS_RAIL_GAP);
+  if(!clearance(primary))throw Error('Unreachable ship bay '+stack.x);
+  return {...stack,cranes:[primary,...(clearance(neighbor)?[neighbor]:[])]};
+ }));
+ const shipBayByX=shipBays.map(stacks=>new Map(stacks.map(stack=>[stack.x,stack])));
+ function stsSweepBlocker(crane,sweep){
+  return stsNeighbors.get(crane).find(other=>{
+   const adjacent=stsSweeps.get(other.id)||{min:other.x,max:other.x};
+   return other.homeX<crane.homeX?sweep.min-adjacent.max<STS_RAIL_GAP-1e-6:
+    adjacent.min-sweep.max<STS_RAIL_GAP-1e-6;
+  });
+ }
  /* Checks whether an RTG can reach a horizontal position */
   function craneReachable(crane,x){
   if(!crane||crane.type!=='rtg')return true;
@@ -656,14 +686,20 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   return true;
  }
 
- // Ship stacks are constrained to crane bay territories, so three cranes can work the same vessel.
- for(let  s=0;s<3;s++)for(let  c=0;c<3;c++){ /* Current storage slot or vessel index in makeEngine() */ /* Current container or item being processed in makeEngine() */
-  const  crane=sts[s*3+c];for(let  bay=-1;bay<=1;bay++)for(let  row=0;row<5;row++){ /* Crane participating in the current operation in makeEngine() */ /* Local value for bay in makeEngine() */ /* Current grid row or formatted table record in makeEngine() */
-   const  x=crane.x+bay*10.8, z=-164+row*6; /* Horizontal world coordinate in makeEngine() */ /* Longitudinal world coordinate in makeEngine() */
-   const  n=options.dischargePerCall>120?4:2+Math.floor(rng()*2); /* Current counter, result, or node in this calculation in makeEngine() */
-   for(let  lev=0;lev<n;lev++)cont('ship',point(x,z),{y:5.7+lev*2.8,level:lev,ship:s,direction:'inbound'}); /* Local value for lev in makeEngine() */
+ function populateShip(berth,z,initial){
+  const ids=[];
+  for(const stack of shipBays[berth]){
+   const tiers=initial?(options.dischargePerCall>120?4:2+Math.floor(rng()*2)):
+    (vesselConfig.dischargePerCall>90?4:2);
+   for(let tier=0;tier<tiers;tier++){
+    ids.push(cont('ship',point(stack.x,stack.z+z-L.shipZ),{
+     y:5.7+tier*2.8,level:tier,ship:berth,direction:'inbound'
+    }).id);
+   }
   }
+  return ids;
  }
+ const initialShipCargo=L.shipX.map((_,berth)=>populateShip(berth,L.shipZ,true));
  // Each yard has two separate transfer corridors (outside the storage footprint):
  // AGV at x=L.agvDockX, truck at x=L.truckDockX. Everything between the
  // corridors is a real container-storage grid with NO missing middle bays.
@@ -715,13 +751,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
  /* Adds a discharge or load task to a vessel manifest */
   function appendManifest(call,kind,c,stow=null){
   const  rec={container:c.id,action:kind,state:'PLANNED',bay:Math.round(c.x),row:Math.round(c.z),tier:Math.round(c.y),plannedPosition:stow}; /* Configuration or state record for rec */
-   // Every discharge entry belongs to a specific STS operating territory.
-   // Loading entries receive their crane during stowage planning.
-   if(kind==='DISCHARGE'){
-    const  vesselSts=sts.slice(call.berth*3,call.berth*3+3); /* Local value for vessel sts in appendManifest() */
-    /* Evaluates callback for vesselSts.reduce using best, q */
-    rec.crane=vesselSts.reduce( (best,q)=>Math.abs(q.homeX-c.x)<Math.abs(best.homeX-c.x)?q:best).id;
-   }
+  if(kind==='DISCHARGE')rec.crane=shipBayByX[call.berth].get(c.x).cranes[0].id;
   (kind==='DISCHARGE'?call.discharge:call.load).push(rec);
   if(kind==='DISCHARGE')c.dischargeCall=call.id;
   else c.loadCall=call.id;
@@ -751,27 +781,25 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   function planStowage(call){
   /* Evaluates callback for call.discharge.map using w */
   const  discharged=new Set(call.discharge.map( w=>w.container)); /* Unique values for discharged */
-  const  stacks=[]; /* Collection of stacks */
-  for(let  ci=0;ci<3;ci++)for(let  bay of [-1,0,1])for(let  row=0;row<5;row++){ /* Index of the current crane in planStowage() */ /* Local value for bay in planStowage() */ /* Current grid row or formatted table record in planStowage() */
-   const  x=sts[call.berth*3+ci].homeX+bay*10.8, z=-164+row*6+(call.z-L.shipZ); /* Horizontal world coordinate in planStowage() */ /* Longitudinal world coordinate in planStowage() */
-   let  h=5.7; /* Local value for h in planStowage() */
-   for(const  id of call.shipContainers){const  c=containers.get(id); /* Identifier of the selected entity in planStowage() */ /* Current container or item being processed in planStowage() */
-    if(c&&!discharged.has(id)&&Math.abs(c.x-x)<.1&&Math.abs(c.z-z)<.1)h=Math.max(h,c.y+2.8);
-   }
-   stacks.push({x,z,y:h,crane:sts[call.berth*3+ci].id});
+  const remainingTops=new Map();
+  for(const id of call.shipContainers){
+   const c=containers.get(id);
+   if(!c||discharged.has(id))continue;
+   const key=gKey(c.x,c.z);
+   remainingTops.set(key,Math.max(remainingTops.get(key)||5.7,c.y+2.8));
   }
+  const stacks=shipBays[call.berth].map(({x,z,cranes})=>({
+   x,z,y:remainingTops.get(gKey(x,z+call.z-L.shipZ))||5.7,crane:cranes[0]
+  }));
   for(let  i=0;i<call.load.length;i++){ /* Loop index for the current collection in planStowage() */
    const  w=call.load[i]; /* Local value for w in planStowage() */
-   // Spread instructions across all three STS working territories while
-   // favouring compact stowage above the predicted post-discharge stacks.
-   const  crane=sts[call.berth*3+(i%3)].id; /* Crane participating in the current operation in planStowage() */
-   /* Evaluates callback for stacks.filter using p */
-   const  choices=stacks.filter( p=>p.crane===crane&&p.y<21); /* Eligible options available for selection in planStowage() */
+   const crane=berthCranes[call.berth][i%3];
+   const choices=stacks.filter(p=>p.y<21);
    if(!choices.length){w.state='EXCEPTION';w.reason='NO_STOWAGE_CAPACITY';continue}
-   /* Evaluates callback for choices.sort using a, b */
-   choices.sort( (a,b)=>a.y-b.y||Math.abs(a.x-L.shipX[call.berth])-Math.abs(b.x-L.shipX[call.berth]));
-   const  chosen=choices[0];w.crane=crane; /* Local value for chosen in planStowage() */
-   w.plannedPosition={x:chosen.x,z:chosen.z-(call.z-L.shipZ),y:chosen.y};
+   choices.sort((a,b)=>Number(b.crane===crane)-Number(a.crane===crane)||a.y-b.y||
+    Math.abs(a.x-crane.homeX)-Math.abs(b.x-crane.homeX));
+   const chosen=choices[0];w.crane=chosen.crane.id;
+   w.plannedPosition={x:chosen.x,z:chosen.z,y:chosen.y};
    chosen.y+=2.8;
   }
  }
@@ -785,22 +813,14 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   vesselCalls.push(call);
   // Initial vessels use the already populated physical stowage. Replacements
   // carry their own actual shipboard containers while entering the channel.
-  if(!initial){
-   for(let  ci=0;ci<3;ci++)for(let  bay=-1;bay<=1;bay++)for(let  row=0;row<5;row++){ /* Index of the current crane in makeVesselCall() */ /* Local value for bay in makeVesselCall() */ /* Current grid row or formatted table record in makeVesselCall() */
-    const  x=sts[berth*3+ci].homeX+bay*10.8; /* Horizontal world coordinate in makeVesselCall() */
-    const  z=-164+row*6+(call.z-L.shipZ); /* Longitudinal world coordinate in makeVesselCall() */
-    for(let  lev=0;lev<(vesselConfig.dischargePerCall>90?4:2);lev++){ /* Local value for lev in makeVesselCall() */
-     const  c=cont('ship',point(x,z),{y:5.7+lev*2.8,level:lev,ship:berth,direction:'inbound'}); /* Current container or item being processed in makeVesselCall() */
-     c.callId=id;call.shipContainers.push(c.id);
-    }
-   }
-  }else for(const  c of containers.values())if(c.site==='ship'&&c.ship===berth){c.callId=id;call.shipContainers.push(c.id)} /* Current container or item being processed in makeVesselCall() */
+  call.shipContainers=initial?initialShipCargo[berth]:populateShip(berth,call.z,false);
+  for(const id of call.shipContainers)containers.get(id).callId=call.id;
   // Manifest contains physically accessible upper-tier import containers in
   // each crane's bay, leaving through cargo aboard for onward sailing.
   /* Evaluates callback for call.shipContainers.map using k */
   const  available=call.shipContainers.map( k=>containers.get(k)); /* Eligible items after filtering operational constraints in makeVesselCall() */
   const  count=Math.min(vesselConfig.dischargePerCall,available.length); /* Local value for count in makeVesselCall() */
-  if(count<=45){
+  if(count<=SHIP_STACKS[berth].length){
    /* Evaluates callback for available.filter using c */
    /* Evaluates callback for available.some using o */
    const  upper=available.filter( c=>!available.some( o=>o!==c&&Math.abs(o.x-c.x)<.1&&Math.abs(o.z-c.z)<.1&&o.y>c.y+.1)); /* Local value for upper in makeVesselCall() */
@@ -880,7 +900,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
     /* Evaluates callback for [...call.discharge,...call.load].every using w */
     const  done=[...call.discharge,...call.load].every( w=>w.state==='DONE'); /* Local value for done in tickVessels() */
     /* Evaluates callback for sts.slice(call.berth*3,call.berth*3+3).every using q */
-    const  free=sts.slice(call.berth*3,call.berth*3+3).every( q=>!q.job); /* Local value for free in tickVessels() */
+    const free=berthCranes[call.berth].every(q=>!q.job&&!stsSweeps.has(q.id));
     const  noActive=[...liveJobs].every(j=>j.order?.vesselCall!==call.id); /* Local value for no active in tickVessels() */
     if(done&&free&&noActive&&t-call.workStarted>=1){
      call.state='UNBERTHING';call.unmoorAt=t+12;
@@ -933,12 +953,12 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
  }
  /* Finds physically accessible discharge containers assigned to an STS */
   function topShip(crane){
-  const  call=activeCall(crane.ship);if(!call||crane.downUntil>t)return []; /* Vessel call being processed in topShip() */
+  const  call=activeCall(crane.ship);if(!call)return []; /* Vessel call being processed in topShip() */
   const  available=[]; /* Eligible items after filtering operational constraints in topShip() */
   for(const  work of call.discharge){ /* Local value for work in topShip() */
-   if(work.state!=='PLANNED')continue;
+   if(work.state!=='PLANNED'||work.crane!==crane.id)continue;
    const  c=containers.get(work.container); /* Current container or item being processed in topShip() */
-   if(!c||c.site!=='ship'||c.order||Math.abs(c.x-crane.homeX)>14)continue;
+   if(!c||c.site!=='ship'||c.order||!shipBayByX[crane.ship].get(c.x)?.cranes.includes(crane))continue;
    /* Evaluates callback for call.shipContainers.some using id */
    if(call.shipContainers.some( id=>{const  o=containers.get(id);return o&&o!==c&&o.site==='ship'&& /* Local value for o in topShip() */
       Math.abs(o.x-c.x)<.1&&Math.abs(o.z-c.z)<.1&&o.y>c.y+.1}))continue;
@@ -979,7 +999,9 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
      [...liveJobs].some(j=>!j.preposition&&j.sts?.id===qc.id&&j.stsDockZ===lane&&!(j.type==='IMPORT'&&j.pickupCraneReleased));
    /* Evaluates callback for agvs.some using v */
    const  occupied=agvs.some( v=>Math.abs(v.x-qc.homeX)<12&&Math.abs(v.z-lane)<8); /* Currently occupied or reserved positions in freeStsLane() */
-   if(!reserved&&!occupied){qc._laneCycle=(qc._laneCycle+k+1)%STS_DOCK_LANES.length;return lane;}
+   if(!reserved&&!occupied&&!stsStandHasThroughRoute(qc.homeX,lane)){
+    qc._laneCycle=(qc._laneCycle+k+1)%STS_DOCK_LANES.length;return lane;
+   }
   }
   return null;
  }
@@ -1056,11 +1078,11 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   if(!AGV_GRID.nodes.has(id)){AGV_GRID.nodes.set(id,{x,z,zone,id});AGV_GRID.edges.set(id,[]);}
   return AGV_GRID.nodes.get(id);
  }
- function graphLink(x1,z1,x2,z2,oneWay,zone,{area=null,travel=false,reverse=false,multiplier=1}={}){
+ function graphLink(x1,z1,x2,z2,oneWay,zone,{area=null,travel=false,reverse=false,multiplier=1,berth=null}={}){
   const a=graphNode(x1,z1,zone),b=graphNode(x2,z2,zone),length=dist(a,b);
   if(!length||(a.x!==b.x&&a.z!==b.z))throw Error('Invalid AGV connection '+a.id+' to '+b.id);
   if(travel&&length<TRAVEL_PITCH)throw Error('Travel connection cannot hold an AGV '+a.id+' to '+b.id);
-  const section={id:sectionKey(a,b),length,zone,area,travel};
+  const section={id:sectionKey(a,b),length,zone,area,travel,berth};
   if(AGV_GRID.sections.has(section.id))throw Error('Duplicate AGV connection '+section.id);
   AGV_GRID.sections.set(section.id,section);
   AGV_GRID.edges.get(a.id).push({to:b.id,cost:length*multiplier,zone,section});
@@ -1083,8 +1105,8 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
    graphLink(x,northbound?south:north,x,northbound?north:south,true,'QUAY_INTERSECTION',{travel:true});
   }
  }
- for(const {west,east,x,id} of STS_ACCESS){
-  const area={area:id};
+ for(const {west,east,x,id,berth} of STS_ACCESS){
+  const area={area:id,berth};
   const rows=[...STS_DOCK_LANES,QUAY_WESTBOUND_Z];
   for(let i=1;i<rows.length;i++){
    graphLink(east,rows[i],east,rows[i-1],true,'QUAY_SERVICE',area);
@@ -1093,6 +1115,14 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   for(const z of STS_DOCK_LANES){
    graphLink(east,z,x,z,true,'QUAY_SERVICE',area);
    graphLink(x,z,west,z,true,'QUAY_SERVICE',area);
+  }
+ }
+ for(let i=1;i<STS_ACCESS.length;i++){
+  const west=STS_ACCESS[i-1],east=STS_ACCESS[i];
+  if(west.berth!==east.berth)continue;
+  for(const z of STS_DOCK_LANES){
+   graphLink(east.west,z,west.east,z,true,'QUAY_TRANSFER_LINK',
+    {travel:true,berth:east.berth,multiplier:.95});
   }
  }
  const parkingGateway={area:'PARKING-GATEWAY'};
@@ -1157,6 +1187,19 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   for(const bay of bays)graphLink(YARD_SERVICE_X,bay.z,bay.x,bay.z,false,'AGV_TRANSFER',{...area,reverse:true});
  }
  const QUAY_ROW_PITCH=TRAVEL_PITCH;
+ function committedStsStands(vehicle){
+  const claimed=new Set();
+  for(const v of agvs)if(v!==vehicle&&v.stageBay?.side==='sts')claimed.add(gKey(v.stageBay.x,v.stageBay.z));
+  for(const j of liveJobs){
+   if(j.vehicle!==vehicle&&j.sts&&!(j.type==='IMPORT'&&j.pickupCraneReleased))
+    claimed.add(gKey(j.sts.homeX,j.stsDockZ));
+  }
+  return claimed;
+ }
+ function stsStandHasThroughRoute(x,z,vehicle){
+  return agvs.some(v=>v!==vehicle&&v.route.some((p,i)=>
+   i>=v.routeIndex&&i<v.route.length-1&&p.x===x&&p.z===z));
+ }
  /* Plans a shortest feasible AGV route through the logical guide-path graph */
   function shortestGrid(from,to,vehicle=null,edgeAllowed=()=>true){
   const  source=gKey(from.x,from.z), goal=gKey(to.x,to.z); /* Source location or graph node in shortestGrid() */ /* Local value for goal in shortestGrid() */
@@ -1170,9 +1213,6 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
     // a journey whose source and destination are both in the terminal.
     if(from.x>=PARKING_CONNECTOR_X&&to.x>=PARKING_CONNECTOR_X&&e.zone.startsWith('PARKING'))continue;
     if(!edgeAllowed(e))continue;
-    // STS handover rows are local crane approaches, not a bypass between
-    // yard/quay travel points. Opposite loaded flows stay on rows 0 and 12.
-    if(from.z>=0&&to.z>=0&&AGV_GRID.nodes.get(e.to).z<0)continue;
     const  n=AGV_GRID.nodes.get(e.to); /* Current counter, result, or node in this calculation in shortestGrid() */
     /* Evaluates callback for agvs.some using v */
     const  parkingBlock=agvs.some( v=>!v.route.length&&v.x>-312&& /* Local value for parking block in shortestGrid() */
@@ -1251,8 +1291,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
    append(...path);
   };
   const travel=edge=>edge.section.travel;
-  const quay=edge=>travel(edge)&&edge.zone.startsWith('QUAY_');
-  const through=edge=>quay(edge)||edge.section.area===parkingGateway.area;
+  const quay=edge=>travel(edge)&&edge.zone.startsWith('QUAY_')&&edge.section.berth===null;
   const onlyArea=id=>edge=>edge.section.area===id;
   if(type==='parking'&&v.x<PARKING_CONNECTOR_X){
    if(Math.abs(v.z-returnZ)<.1&&v.x>=returnX||Math.abs(v.x-returnX)<.1){
@@ -1271,9 +1310,16 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   const staging=type==='staging'?v.stageBay:null;
   const stsTarget=type==='sts'||staging?.side==='sts';
   const yardTarget=type==='yard'||staging?.side==='agv';
-  const start=p.at(-1), startEdges=AGV_GRID.edges.get(gKey(start.x,start.z));
-  const originSts=STS_ACCESS.find(area=>start.z<0&&startEdges.some(edge=>edge.section.area===area.id));
-  if(originSts)via(point(originSts.west,QUAY_WESTBOUND_Z),onlyArea(originSts.id));
+  const start=p.at(-1),startEdges=AGV_GRID.edges.get(gKey(start.x,start.z));
+  const originBerth=start.z<0?startEdges.find(edge=>edge.section.berth!==null)?.section.berth:null;
+  const targetX=staging?.x??crane?.homeX??crane?.x;
+  const targetZ=stsTarget?(staging?.z??crane.dockZ??L.stsDockZ):null;
+  const targetBerth=stsTarget?STS_ACCESS.find(area=>area.x===targetX).berth:null;
+  const standClaims=originBerth!=null||targetBerth!=null?committedStsStands(v):new Set();
+  if(stsTarget)standClaims.delete(gKey(targetX,targetZ));
+  const through=edge=>quay(edge)||edge.section.area===parkingGateway.area||
+   edge.section.berth!==null&&(edge.section.berth===originBerth||edge.section.berth===targetBerth)&&
+   !standClaims.has(edge.to);
   const originYard=yardAreas.find(area=>startEdges.some(edge=>edge.section.area===area.id)&&start.x>BLOCK_GRID_X.at(-1));
   if(originYard){
    const lane=selectGridTravelLane(v,false);
@@ -1288,12 +1334,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
    }
   }
   if(stsTarget){
-   const x=staging?.x??crane.homeX??crane.x;
-   const z=staging?.z??crane.dockZ??L.stsDockZ;
-   const access=STS_ACCESS.find(area=>area.x===x);
-   via(point(access.east,QUAY_EASTBOUND_Z),through);
-   via(point(access.east,QUAY_WESTBOUND_Z),quay);
-   via(point(x,z),onlyArea(access.id));
+   via(point(targetX,targetZ),through);
   }else if(yardTarget){
    const z=staging?.z??crane.dockZ??crane.homeZ??crane.z;
    const block=YARD_AGV_BAYS.findIndex(bays=>bays.some(bay=>bay.z===z));
@@ -1544,20 +1585,54 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
  const TRANSPORT_POLICY={maxQueuedPerSTS:STS_DOCK_LANES.length-2,maxActiveImportsPerYard:3,maxQueuedImportsPerYard:agvs.length};
  function openStsDemands(){
   const demand=[];
-  for(const qc of sts){
-   const call=activeCall(qc.ship),phase=vesselWorkPhase(call);
-   if(!call||qc.downUntil>t)continue;
+  const supply=new Map();
+  for(const job of liveJobs){
+   if(job.order?.crane&&!job.stsServiceStarted&&!(job.type==='IMPORT'&&job.pickupCraneReleased))
+    supply.set(job.order.crane,(supply.get(job.order.crane)||0)+1);
+  }
+  let free;
+  const publish=(type,call,c,work)=>{
+   const bay=shipBayByX[call.berth].get(type==='IMPORT'?c.x:work.plannedPosition?.x);
+   if(!bay)return;
+   const incumbent=bay.cranes.find(q=>q.id===work.crane)||bay.cranes[0];
+   let qc=incumbent;
+   if(bay.cranes.length>1){
+    free??=agvs.filter(vehicleDispatchable);
+    const score=q=>{
+     if(q.downUntil>t)return Infinity;
+     const forecast=serviceForecast(q);
+     const sweep={min:Math.min(q.homeX,bay.x),max:Math.max(q.homeX,bay.x)};
+     const blocker=stsSweepBlocker(q,sweep);
+     let railReady=0;
+     if(blocker){
+      railReady=Math.max(0,blocker.downUntil-t,serviceForecast(blocker).readyIn);
+      if(!railReady)railReady=forecast.cycleSeconds;
+     }
+     const arrival=free.length?Math.min(...free.map(v=>estimateArrival({type,qc:q,c},v).seconds)):0;
+     return Math.max(arrival,railReady,forecast.readyIn+(supply.get(q.id)||0)*forecast.cycleSeconds);
+    };
+    const alternate=bay.cranes.find(q=>q!==incumbent);
+    if(score(alternate)+1e-6<score(incumbent))qc=alternate;
+   }
+   if(qc!==incumbent)log('STS_DEMAND_REASSIGNED',{sts:qc.id,call:call.id,container:c.id,
+    previousSts:incumbent.id,fromState:'PLANNED',toState:'PLANNED',
+    selectionReason:incumbent.downUntil>t?'CRANE_OUTAGE':'EARLIER_SERVICE'});
+   work.crane=qc.id;
+   demand.push({type,qc,call,c,work});
+  };
+  for(const [berth,cranes] of berthCranes.entries()){
+   const call=activeCall(berth),phase=vesselWorkPhase(call);
    if(phase==='DISCHARGING'){
-    for(const c of topShip(qc)){
-     const work=call.discharge.find(w=>w.container===c.id&&w.crane===qc.id&&w.state==='PLANNED');
-     if(work)demand.push({type:'IMPORT',qc,call,c,work});
-    }
+    // Discover top cargo before selecting a crane so that changing a preference
+    // cannot cause the same container to be published twice in this scan.
+    const tops=cranes.flatMap(q=>topShip(q));
+    const workByContainer=new Map(call.discharge.map(work=>[work.container,work]));
+    for(const c of tops)publish('IMPORT',call,c,workByContainer.get(c.id));
    }else if(phase==='LOADING'){
     for(const work of call.load){
-     if(work.crane!==qc.id||work.state!=='PLANNED')continue;
+     if(work.state!=='PLANNED')continue;
      const c=containers.get(work.container);
-     // Demand remains observable even if the RTG cannot serve it yet.
-     if(c&&c.site==='yard'&&!c.order)demand.push({type:'EXPORT',qc,call,c,work});
+     if(c&&c.site==='yard'&&!c.order)publish('EXPORT',call,c,work);
     }
    }
   }
@@ -1582,7 +1657,8 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   if(pick.type==='IMPORT'){
    const occupied=new Set(agvs.filter(a=>a!==v&&a.stageBay?.side==='sts'&&a.stageBay.crane===pick.qc.id).map(a=>a.stageBay.z));
    for(const j of liveJobs)if(j.sts?.id===pick.qc.id&&j.stsDockZ!=null&&!(j.type==='IMPORT'&&j.pickupCraneReleased))occupied.add(j.stsDockZ);
-   const usable=STS_DOCK_LANES.filter(z=>!occupied.has(z)&&!agvs.some(a=>a!==v&&Math.hypot(a.x-pick.qc.homeX,a.z-z)<8));
+   const usable=STS_DOCK_LANES.filter(z=>!occupied.has(z)&&!stsStandHasThroughRoute(pick.qc.homeX,z,v)&&
+    !agvs.some(a=>a!==v&&Math.hypot(a.x-pick.qc.homeX,a.z-z)<8));
    if(!usable.length)return null;
    return {x:pick.qc.homeX,z:usable[0],crane:pick.qc.id,side:'sts',lane:STS_DOCK_LANES.indexOf(usable[0])};
   }
@@ -1711,7 +1787,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
     candidates.sort((a,b)=>committed(a.i)-committed(b.i)||deliveryCost(a.i)-deliveryCost(b.i)||a.i-b.i);
     bi=candidates[0].i;
    }else bi=q.c.yard;
-   if(q.c.order||q.work.state!=='PLANNED')return null;
+   if(q.c.order||q.work.state!=='PLANNED'||q.work.crane!==q.qc.id)return null;
    const exportStand=q.type==='EXPORT'?availableDockBay('agv',bi,v):null;
    if(q.type==='EXPORT'&&!exportStand)return null;
    if(v.state==='RETURNING'){
@@ -1802,23 +1878,41 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   const  c=j.container; /* Current container or item being processed in performLift() */
   if(!j.phase){j.phase='MOVE_ABOVE';j.phaseTime=0;}
   const  hook=crane.hook; /* Local value for hook in performLift() */
-  const  goal=(phase)=>phase==='MOVE_ABOVE'?{x:from.x,z:from.z,y:24}:phase==='LOWER'?{x:from.x,z:from.z,y:from.y+1.6}: /* Computes goal for the current simulation operation */
-    phase==='RAISE'?{x:from.x,z:from.z,y:24}:phase==='MOVE_TARGET'?{x:target.x,z:target.z,y:24}:
-    phase==='DROP'?{x:target.x,z:target.z,y:target.y+1.6}:{x:target.x,z:target.z,y:24};
-  const  targetHook=goal(j.phase);const  linear=Math.hypot(targetHook.x-hook.x,targetHook.z-hook.z); /* Local value for target hook in performLift() */ /* Local value for linear in performLift() */
+  const clearance=crane.type==='sts'?STS_LIFT_CLEARANCE:24;
+  const goal=(phase)=>phase==='MOVE_ABOVE'?{x:from.x,z:from.z,y:clearance}:phase==='LOWER'?{x:from.x,z:from.z,y:from.y+1.6}: /* Computes goal for the current simulation operation */
+    phase==='RAISE'?{x:from.x,z:from.z,y:clearance}:phase==='MOVE_TARGET'?{x:target.x,z:target.z,y:clearance}:
+    phase==='DROP'?{x:target.x,z:target.z,y:target.y+1.6}:
+    {x:target.x,z:target.z,y:clearance};
+
+  const targetHook=goal(j.phase);
+  const dx=targetHook.x-hook.x,dz=targetHook.z-hook.z;
+  const linear=crane.type==='sts'?Math.max(Math.abs(dx),Math.abs(dz)):Math.hypot(dx,dz);
   const  dh=targetHook.y-hook.y;const  step=9/30; /* Local value for dh in performLift() */ /* Local value for step in performLift() */
   if(crane.type==='rtg'){
    // Reject unreachable tasks (scheduler bug), rather than parking forever at a rail limit.
    if(!craneHookReachable(crane,targetHook.x))throw Error(crane.id+' spreader target out of reach');
   }
+  if(crane.type==='sts'){
+   const sweep=stsSweeps.get(crane.id);
+   if(!sweep||targetHook.x<sweep.min-1e-6||targetHook.x>sweep.max+1e-6)
+    throw Error(crane.id+' lift outside its authorized rail sweep');
+   // Raise the spreader clear of stacked cargo before traversing the deck.
+   if(linear>.1&&hook.y<clearance-.01){
+    hook.y=Math.min(clearance,hook.y+step*1.7);
+    return false;
+   }
+  }
   if(linear>.1){
-   const  d=Math.min(linear,step), nextX=hook.x+(targetHook.x-hook.x)*d/linear; /* Local value for d in performLift() */ /* World-coordinate value for next x */
+   // An STS gantry and its trolley have independent drives. Either axis
+   // can reach its target while the other is still travelling.
+   const travel=Math.min(1,step/linear);
+   const nextX=hook.x+(crane.type==='sts'?Math.sign(dx)*Math.min(Math.abs(dx),step):dx*travel);
    if(crane.type==='rtg'){
     // Gantry rolls directly above the assigned container / vehicle position.
     if(!craneRailSafe(crane,nextX)){craneWaits++;return false;}
    }
    crane.x=nextX;
-   hook.x=nextX;hook.z+=(targetHook.z-hook.z)*d/linear;
+   hook.x=nextX;hook.z+=crane.type==='sts'?Math.sign(dz)*Math.min(Math.abs(dz),step):dz*travel;
   }else{
    if(crane.type==='rtg'&&!craneRailSafe(crane,targetHook.x)){
     craneWaits++;return false;
@@ -1852,6 +1946,11 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
       /* Evaluates callback for vesselCalls.find using k */
       c.site='ship';c.ship=j.sts.ship;c.callId=j.order.vesselCall;const  sailingCall=vesselCalls.find( k=>k.id===c.callId);if(sailingCall&&!sailingCall.shipContainers.includes(c.id))sailingCall.shipContainers.push(c.id);trace(c,'STOWED','VES-'+(c.ship+1)); /* Local value for sailing call in performLift() */
     }else throw Error('Unknown receiving carrier');
+    if(crane.type==='sts'){
+     const bayX=j.type==='IMPORT'?from.x:target.x;
+     if(shipBayByX[crane.ship].get(bayX).cranes.length>1)
+      log('STS_SHARED_BAY_TRANSFER',{job:j.id,sts:crane.id,bayX,action:j.type});
+    }
     j.phase='CLEAR';
   }else if(now==='CLEAR'){j.phase='';return true;}
   return false;
@@ -1879,11 +1978,28 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   if(!aligned){requestTransferAlignment(j,crane);return false;}
   if(crane.downUntil>t||crane.job&&crane.job!==j.id)return false;
   if(!crane.job){
-   crane.job=j.id;
-   if(crane.type==='sts'){j.stsServiceStarted=t;j.order.stsServiceStartedAt=t;}
+   if(crane.type==='sts'){
+    if(stsSweeps.has(crane.id))return false;
+    const bayX=j.type==='IMPORT'?j.container.x:j.destination.x;
+    if(!shipBayByX[crane.ship].get(bayX)?.cranes.includes(crane))
+     throw Error(crane.id+' cannot reach its assigned ship bay');
+    const sweep={min:Math.min(crane.homeX,bayX),max:Math.max(crane.homeX,bayX)};
+    const blocker=stsSweepBlocker(crane,sweep);
+    if(blocker){
+     if(j.stsRailBlocker!==blocker.id)log('STS_RAIL_WAIT',{job:j.id,blockingReason:'STS_RAIL_CLEARANCE',
+      blockingResourceId:blocker.id,routeOrReservationId:blocker.id+':rail'});
+     j.stsRailBlocker=blocker.id;
+     return false;
+    }
+    j.stsRailBlocker=null;
+    stsSweeps.set(crane.id,sweep);
+    j.stsServiceStarted=t;j.order.stsServiceStartedAt=t;
+   }
    else j.rtgServiceStarted=t;
+   crane.job=j.id;
    log(crane.type==='sts'?'STS_CRANE_JIT_RESERVED':'YARD_CRANE_JIT_RESERVED',
-    {crane:crane.id,sts:j.sts?.id||null,job:j.id,vehicle:j.vehicle.id});
+    {crane:crane.id,sts:j.sts?.id||null,job:j.id,vehicle:j.vehicle.id,
+     ...(crane.type==='sts'?{railSweep:stsSweeps.get(crane.id),routeOrReservationId:crane.id+':rail'}:{})});
   }
   return true;
  }
@@ -1959,7 +2075,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
       // This allows STS and yard crane cycles to overlap with the AGV journey.
       if(j.type==='IMPORT' && qc?.job===j.id){
         recordService(qc,j);
-        qc.job=null;qc.completed++;qc.hook.y=24;j.pickupCraneReleased=true;
+        qc.job=null;stsSweeps.delete(qc.id);qc.completed++;j.pickupCraneReleased=true;
         log('CRANE_PICKUP_RELEASED',{crane:qc.id,job:j.id,container:c.id});
       }else if(j.type==='EXPORT' && rtg?.job===j.id){
         recordService(rtg,j);
@@ -2004,7 +2120,11 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
    if(v.type==='agv')log('AGV_NEXT_JOB_READY',{vehicle:v.id,at:{x:v.x,z:v.z},completedType:j.type});
    // Do not clear or count a crane after another job has legitimately
    // taken ownership following early pickup release.
-   if(qc?.job===j.id){recordService(qc,j);qc.job=null;qc.completed++;qc.hook.y=24;}
+   if(qc?.job===j.id){
+    recordService(qc,j);qc.job=null;qc.completed++;
+    // The AGV can leave as soon as the empty spreader has cleared its load.
+    // The gantry's own return keeps the sweep until it reaches home.
+   }
    if(rtg?.job===j.id){recordService(rtg,j);rtg.job=null;rtg.completed++;rtg.hook.y=24;}
    v.job=null;v.task=null;v.queueBay=null;v.stageBay=null;v.state='AVAILABLE';completeJob(j);
    // Real empty-trip minimization: assign the next container from the actual
@@ -2504,6 +2624,8 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
     }
     const oldIndex=v.routeIndex, oldPosition=point(v.x,v.z);
     moveVehicle(v,h,limit);
+    if(v.routeIndex>oldIndex&&edge?.zone==='QUAY_TRANSFER_LINK')
+     log('QUAY_TRANSFER_LINK_TRAVERSED',{vehicle:v.id,berth:edge.section.berth+1,routeOrReservationId:edge.section.id});
     if(dist(v,oldPosition)>.001||v.routeIndex!==oldIndex){
      claim(section,v.id);
      if(checksAhead)claim(getEdge(next,after),v.id);
@@ -2634,6 +2756,21 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
    for(const j of liveJobs)if(!j.preposition)try{tickJob(j)}catch( err){ /* Loop index for the current nested collection in tick() */ /* Local value for err in tick() */
       log('JOB_ERROR',{job:j.id,error:String(err.message)});j.error=String(err.message);started=false;break;
    }
+   for(const group of berthCranes)for(const [i,crane] of group.entries()){
+    if(!crane.job&&stsSweeps.has(crane.id)&&crane.downUntil<=t){
+     const movement=crane.homeX-crane.x;
+     crane.x=Math.abs(movement)<=9*h?crane.homeX:crane.x+Math.sign(movement)*9*h;
+     crane.hook.x=crane.x;
+     if(crane.x===crane.homeX)stsSweeps.delete(crane.id);
+    }
+    const sweep=stsSweeps.get(crane.id)||{min:crane.homeX,max:crane.homeX};
+    const next=group[i+1];
+    if(crane.x<sweep.min-1e-6||crane.x>sweep.max+1e-6||next&&next.x-crane.x<STS_RAIL_GAP-1e-6){
+     stsRailViolations++;
+     log('STS_RAIL_VIOLATION',{sts:crane.id,blockingResourceId:next?.id,position:crane.x});
+     started=false;return;
+    }
+   }
    const invalidOwnership=craneOccupancy().filter(owner=>!owner.valid);
    if(invalidOwnership.length){
     transferOwnershipViolations+=invalidOwnership.length;
@@ -2665,11 +2802,16 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
     const crane=v.type==='truck'?job.rtg:job.stage==='PICK'?(job.type==='IMPORT'?job.sts:job.rtg):(job.type==='IMPORT'?job.rtg:job.sts);
     if(crane?.downUntil>t){blockingReason='CRANE_OUTAGE';blockingResourceId=crane.id;}
     else if(crane?.job&&crane.job!==job.id){blockingReason='CRANE_BUSY';blockingResourceId=crane.id;}
+    else if(job.stsRailBlocker){blockingReason='STS_RAIL_CLEARANCE';blockingResourceId=job.stsRailBlocker;}
+    else if(crane?.type==='sts'&&!crane.job&&stsSweeps.has(crane.id)){
+     blockingReason='STS_RAIL_RETURN';blockingResourceId=crane.id;
+    }
    }
    return {vehicleId:v.id,missionId:mission?.id||order?.id||null,vesselCallId:order?.vesselCall||null,stsId:order?.crane||null,
     vehicleType:v.type,containerId:v.load||order?.container||null,toState:job?.stage||mission?.state||v.state,
     active:!!(order||v.route.length),position:{x:v.x,z:v.z},destination:next?{x:next.x,z:next.z}:null,
-    blockingReason,blockingResourceId,routeOrReservationId:v.route.length?v.trafficBlock?.section||v.id+':'+v.routeVersion+':'+v.routeIndex:order?.id||null,
+    blockingReason,blockingResourceId,routeOrReservationId:v.route.length?v.trafficBlock?.section||v.id+':'+v.routeVersion+':'+v.routeIndex:
+     blockingReason==='STS_RAIL_CLEARANCE'||blockingReason==='STS_RAIL_RETURN'?blockingResourceId+':rail':order?.id||null,
     trafficAuthorized:(v.type==='truck'?activeTruckPermits:activePermits).has(v.id),recoveryToken:v.recoveryToken||null,
     plannedNextAction:v.route.length?'FOLLOW_ROUTE':job?.stage==='PICK'||job?.stage==='PLACE'?'PHYSICAL_HANDOVER':order?'RETRY_AUTHORIZATION':'AWAIT_DEMAND',
     progressSignature:[job?.id,job?.stage,job?.phase,job?.container?.history.length,v.completed].join('|')};
@@ -2757,7 +2899,7 @@ const  point=(x,z)=>({x,z});const  clone=p=>({x:p.x,z:p.z}); /* Builds a two-dim
   agvEmptyShare:( ()=>{const  empty=agvs.reduce( (n,v)=>n+v.emptyMeters,0), loaded=agvs.reduce( (n,v)=>n+v.loadedMeters,0);return loaded+empty?Math.round(1000*empty/(loaded+empty))/10:0;})(), /* Evaluates inline calculation callback */ /* Local value for empty in status() */ /* Local value for loaded in status() */
   /* Evaluates callback for events.filter using e */
   errors:events.filter( e=>e.type==='JOB_ERROR').slice(-5),
-  blocked:roadBlocked,craneWaits,craneRailViolations:yardCraneIncidents.length,relaysCompleted:completedRelays,
+  blocked:roadBlocked,craneWaits,craneRailViolations:yardCraneIncidents.length+stsRailViolations,stsRailViolations,relaysCompleted:completedRelays,
 rollingSectionGrants,rollingSectionReleases,quayLaneCount:8,quayLanePitch:QUAY_ROW_PITCH,yardLaneCount:BLOCK_GRID_X.length,yardInboundLanes:YARD_INCOMING_X.length,yardOutboundLanes:YARD_OUTGOING_X.length,yardLanePitch:TRAVEL_PITCH,
   /* Evaluates callback for events.filter using e */
   /* Evaluates callback for events.filter using e */
@@ -2862,6 +3004,7 @@ const  ROUTE_STYLE={ /* Visual color and lane width assigned to each logical roa
  QUAY_EASTBOUND:{color:0x2ba8c8,width:7},
  QUAY_INTERSECTION:{color:0x2ba8c8,width:7},
  QUAY_ACCESS_CONNECTOR:{color:0x2ba8c8,width:7},
+ QUAY_TRANSFER_LINK:{color:0x2ba8c8,width:7},
  QUAY_SERVICE:{color:0x2ba8c8,width:7},
  YARD_INCOMING:{color:YARD_GRID_COLOR,width:6.2},
  YARD_OUTGOING:{color:YARD_GRID_COLOR,width:6.2},
@@ -3026,9 +3169,12 @@ for(const  v of sim.trucks){ /* Current vehicle or value being processed */
 const  vesselGroups=[]; /* Collection of vessel groups */
 for(let  i=0;i<3;i++){ /* Loop index for the current collection */
  const  vg=new THREE.Group();scene.add(vg);vesselGroups.push(vg); /* Three.js object group for vg */
- const  x=sim.L.shipX[i];box(232,9,29,x,-1.0,sim.L.shipZ,M.ship,vg);box(225,1.2,28,x,3.8,sim.L.shipZ,M.deck,vg); /* Horizontal world coordinate */
- box(17,12,23,x-103,10,sim.L.shipZ,M.white,vg);box(13,4,17,x-103,18,sim.L.shipZ,M.white,vg);box(3,8,3,x-107,22,sim.L.shipZ,M.dark,vg);
+ const  x=sim.L.shipX[i];box(sim.L.shipHullLength,9,29,x,-1.0,sim.L.shipZ,M.ship,vg);box(sim.L.shipDeckLength,1.2,28,x,3.8,sim.L.shipZ,M.deck,vg); /* Horizontal world coordinate */
+ const bridgeX=x+sim.L.shipBridgeOffset;
+ box(sim.L.shipBridgeLength,12,23,bridgeX,10,sim.L.shipZ,M.white,vg);box(13,4,17,bridgeX,18,sim.L.shipZ,M.white,vg);box(3,8,3,bridgeX-4,22,sim.L.shipZ,M.dark,vg);
  box(1,.7,27,x+114,3.6,sim.L.shipZ,0xe08e4e,vg);
+ for(const offset of sim.L.stsWheelOffsetsZ)
+  box(sim.L.shipDeckLength,.08,.23,x,.15,sim.L.stsZ+offset,M.dark);
 }
 // High performance container visual: one instanced draw call with per-instance color.
 const  cargoGeometry=new THREE.BoxGeometry(10,2.7,2.6); /* Local value for cargo geometry */
@@ -3050,7 +3196,7 @@ const  selectables=[], equipmentVisuals=new Map(); /* Collection of selectables 
 for(const  a of sim.agvs)agvVisual(a);for(const  v of sim.trucks)truckVisual(v); /* First item being compared */ /* Current vehicle or value being processed */
 /* Handles add sts in the terminal simulation */
  function addSTS(c){const  grp=new THREE.Group();scene.add(grp);const  color=[M.blue,M.yellow,M.red][c.ship]; /* Three.js object group for grp */ /* Local value for color in addSTS() */
- for(const  xx of [-12.5,12.5])for(const  zz of [-18,18]){strut([xx,1,zz],[xx*.76,58,zz*.62],.5,color,grp);box(4.8,2.4,5.6,xx,1.2,zz,M.dark,grp)} /* Local value for xx in addSTS() */ /* Local value for zz in addSTS() */
+ for(const  xx of [-12.5,12.5])for(const  zz of sim.L.stsWheelOffsetsZ){strut([xx,1,zz],[xx*.76,58,zz*.62],.5,color,grp);box(4.8,2.4,5.6,xx,1.2,zz,M.dark,grp)} /* Local value for xx in addSTS() */ /* Local value for zz in addSTS() */
  for(const  zz of [-13,13])strut([-12,55,zz],[12,55,zz],.58,color,grp); /* Local value for zz in addSTS() */
  for(const  xx of [-10.4,10.4]){ /* Local value for xx in addSTS() */
    strut([xx,60,-92],[xx,60,40],.45,color,grp);

@@ -1,5 +1,52 @@
 # Verification status
 
+## Connected quay transfer rows and shared STS bays — 2026-11-23
+
+`npm test` passed all 15 checks and scenarios in 73.74 wall seconds of cumulative command time on Node.js 26.13.1. The focused `node tests/quay-sts.test.js` fixtures cover the 24 directed berth links, clearance at both ends, initial and replacement deck geometry, physical apron traversal and fallback around committed stands. They also complete imports and exports at the outer deck ends and both shared boundaries, verify that a request retains its identity through reassignment, and confirm that a docked AGV waits until a conflicting gantry sweep clears.
+
+Each acceptance row can be rerun with `node tests/integration.acceptance.js SCENARIO`. The runs start with three vessels, nine STSs, twelve RTGs, 24 AGVs and twelve trucks. D/L is the discharge/load work list per vessel. The temporary yard outage disables three inbound RTGs for 90 simulated seconds. The loaded-delivery outage disables one destination RTG for 90 seconds after pickup. The parking release case stalls one AGV until simulation second 90. The full-storage fixture fills the inbound AGV-side stacks before dispatch.
+
+| Scenario | Seed | D/L | Simulated s | Wall s | Imports / exports / departures | Live missions / AGVs without progress for ≥60 s at end | Outcome |
+| --- | ---: | ---: | ---: | ---: | --- | --- | --- |
+| `complete-small-seed3` | 3 | 3/2 | 900 | 3.39 | 9 / 6 / 3 | 0 / 0 | Pass |
+| `complete-small-seed7` | 7 | 3/2 | 900 | 3.41 | 9 / 6 / 3 | 0 / 0 | Pass |
+| `normal-load-first-service` | 3 | 12/8 | 300 | 3.68 | 16 / 0 / 0 | 19 / 4 | Pass |
+| `complete-normal-seed3` | 3 | 12/8 | 2400 | 11.91 | 36 / 24 / 3 | 0 / 0 | Pass |
+| `complete-normal-seed7` | 7 | 12/8 | 2400 | 12.23 | 36 / 24 / 3 | 0 / 0 | Pass |
+| `complete-normal-seed11` | 11 | 12/8 | 2400 | 12.39 | 36 / 24 / 3 | 0 / 0 | Pass |
+| `temporary-yard-outage` | 3 | 3/2 | 1200 | 6.91 | 9 / 6 / 3 | 0 / 0 | Pass |
+| `blocked-parking-release` | 7 | 3/2 | 1200 | 3.98 | 9 / 6 / 3 | 0 / 0 | Pass |
+| `loaded-delivery-outage` | 3 | 3/2 | 1500 | 4.07 | 9 / 6 / 3 | 0 / 0 | Pass |
+| `full-storage-recovery` | 7 | 3/2 | 3600 | 11.82 | 9 / 6 / 3 | 0 / 0 | Pass |
+| `complete-high-seed3` | 3 | 18/12 | 3600 | 20.82 | 54 / 36 / 3 | 0 / 0 | Pass |
+| `continuous-small-seed7` | 7 | 3/2 | 3000 | 12.34 | 51 / 34 / 17 | 9 / 0 | Pass |
+
+Every passing acceptance report recorded zero route failures, AGV body overlaps, crane-rail violations, transfer-ownership violations, duplicate assignments, premature loads, manifest violations and job errors. Early normal service recorded completed moves at all nine STSs. Full normal runs completed the final cargo move at 983.73–990.73 simulated seconds and the final departure at 1041.67–1046.27 seconds. Each completed 53–57 apron-link traversals and 7–9 physical transfers at shared bays.
+
+| Normal seed | Gross moves / crane-hour | Gross STS waiting (%) | Estimated / evidenced scheduler share (%) | Rail wait (crane-s) | Assignment to completion median / p95 (s) | Opposite-direction assignments |
+| --- | ---: | ---: | ---: | ---: | --- | ---: |
+| 3 | 26.57 | 29.46 | 3.97 / 0.00 | 14.30 | 229.17 / 335.43 | 20 |
+| 7 | 25.10 | 29.41 | 3.33 / 0.00 | 38.13 | 231.30 / 330.73 | 21 |
+| 11 | 25.14 | 28.24 | 3.44 / 0.00 | 19.07 | 228.67 / 344.07 | 21 |
+
+The full normal runs each completed 90 vessel moves per simulated hour over the 2,400-second observation horizon. The nine STSs each completed 5–9 moves per run, with individual gross rates from 18.16 to 35.05 moves per crane-hour. AGV fleet time was 21.01–21.18% productive, 3.50–3.65% assigned parking, 3.19–3.74% queue wait and 0.83–0.99% traffic wait. Empty travel accounted for 60.83–61.22% of AGV distance. The JSON reports contain the per-STS totals, the waiting-cause breakdown, and the latency distributions.
+
+`node tests/browser.smoke.js --extended` passed through 911.37 simulated seconds at seed 3 after an initial page-startup timeout. It recorded 54 actual apron-link traversals and seven shared-bay transfers, along with parking, yard and separate truck-corridor movement. The inspected top-down and quayside captures show all four contiguous transfer rows at each berth and continuous vessel stowage. The final browser run recorded zero JavaScript exceptions, console errors and sampled safety violations.
+
+### Continuous normal workload
+
+All three continuous normal runs stopped at the 300-second vehicle watchdog before the planned 10,800-second horizon. Each used 12 discharge and 8 load entries per vessel and reported zero route, overlap, rail, ownership, manifest or job errors through its last sample.
+
+| Scenario | Seed | Simulated s | Wall s | Imports / exports / departures | Live missions / AGVs without progress for ≥60 s at end | Gross moves / crane-hour |
+| --- | ---: | ---: | ---: | --- | --- | ---: |
+| `continuous-normal-seed3` | 3 | 7560 | 66.42 | 220 / 142 / 16 | 10 / 0 | 21.38 |
+| `continuous-normal-seed7` | 7 | 6900 | 81.84 | 264 / 160 / 20 | 15 / 4 | 28.06 |
+| `continuous-normal-seed11` | 11 | 5760 | 50.52 | 216 / 128 / 16 | 18 / 0 | 27.48 |
+
+In seeds 3 and 11, TRK-08 and TRK-11 spent 305 and 341 seconds waiting on the truck journey permits held by TRK-01 and TRK-09, respectively. In seed 7, staged imports at QC-01 waited 332 and 310 seconds for inbound yard 3. Their trace alternates between transfer-lane and delivery-capacity denials while older imports consume its three active delivery slots. An older staged import, ORD-00901, waited at QC-08 from about 6,542 to 6,793 seconds before activation. Continuous qualification requires resolving these truck permit waits and measuring how long running imports and staged destination commitments hold scarce yard capacity.
+
+Run-specific JSON reports, procedure logs and NDJSON traces are under `/tmp/portgrid-quay-final.VzJCdl/`. Rerun the listed commands to regenerate reports under the repository's `reports/` directory.
+
 ## Completed job and order history — 2026-11-23
 
 `node tests/archive-performance.js` passed twice on Node.js 26.13.1. The seed 3 probe starts three vessels with 12 discharge and 8 load entries each and no crane outages. It warms up for 90 simulated seconds and times the next 60 seconds over seven paired runs. The confirmation took 16.23 wall seconds. Median tick time was 441.9 ms with ordinary history and 426.3 ms with 1,000 additional completed job/order pairs, a ratio of 0.965 against the 1.25 limit. Each measured window produced 715 identical events, eight new orders, six new jobs, and two imports. New work's audit records, KPIs, and safety counters matched.

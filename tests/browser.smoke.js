@@ -43,7 +43,8 @@ async function main(){
  await until(async()=>await evaluate('PORTGRID.time')>start.time+15,45);
  const moved=await evaluate('PORTGRID.agvs.map(v=>({x:v.x,z:v.z}))');
  assert.ok(moved.some((v,i)=>Math.hypot(v.x-start.positions[i].x,v.z-start.positions[i].z)>1),'AGVs physically move in rendered simulation');
- const extended=process.argv.includes('--extended'),coverage={parkingExit:false,quayStand:false,yardJunction:false,truckCorridor:false};
+ const extended=process.argv.includes('--extended'),coverage={parkingExit:false,quayStand:false,
+  quayTransferLink:false,sharedBayLift:false,yardJunction:false,truckCorridor:false};
  if(extended){
   for(const target of [60,180,360,600,900]){
    while(await evaluate('PORTGRID.time')<target){
@@ -53,6 +54,8 @@ async function main(){
      return {running:PORTGRID.running,
       parkingExit:PORTGRID.agvs.some(v=>v.route.length&&v.x<-308&&v.z<0),
       quayStand:PORTGRID.agvs.some(v=>v.state==='DOCKED'&&PORTGRID.sts.some(q=>Math.abs(v.x-q.homeX)<.2)&&v.z<0),
+      quayTransferLink:PORTGRID.eventCounts.QUAY_TRANSFER_LINK_TRAVERSED>0,
+      sharedBayLift:PORTGRID.eventCounts.STS_SHARED_BAY_TRANSFER>0,
       yardJunction:PORTGRID.agvs.some(v=>v.route.length&&v.x>=graph.yardIncomingColumns[0]&&v.x<=agvDockX&&v.z>=graph.yardMouthZ+36),
       truckCorridor:PORTGRID.trucks.some(v=>v.route.length&&v.x>=truckDockX&&v.x<=truckOutX)};})()`);
     assert.ok(sample.running,'rendered engine must remain running');
@@ -61,7 +64,7 @@ async function main(){
    }
    console.log('Rendered progress',target,JSON.stringify(coverage));
   }
-  assert.ok(Object.values(coverage).every(Boolean),'observe parking exits, STS stands, yard junctions and truck corridors');
+  assert.ok(Object.values(coverage).every(Boolean),'observe both transfer links and shared bays as well as existing traffic: '+JSON.stringify(coverage));
  }
  for(const view of ['top','quay']){
   await evaluate(`document.querySelector('[data-view="${view}"]').click()`);

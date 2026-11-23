@@ -24,7 +24,8 @@ function fixture(){let seed=3;return make({rng:()=>((seed=Math.imul(seed,1664525
    assert.ok(j&&['PICK','PLACE'].includes(j.stage),'STS execution belongs only to a physical lift');
    assert.equal(j.vehicle.state,'DOCKED');assert.equal(j.vehicle.route.length,0);
    lifts++;
-   if(sim.jobs.some(other=>!other.completed&&other!==j&&other.sts?.id===q.id&&other.type==='IMPORT'&&!other.pickupCraneReleased))successor=true;
+   if(sim.jobs.some(other=>!other.completed&&other!==j&&other.order?.crane===q.id&&other.type==='IMPORT'&&
+    !other.pickupCraneReleased&&other.vehicle.route.length))successor=true;
   }
   for(const j of sim.jobs)if(!j.completed&&j.type==='EXPORT'&&j.pickupCraneReleased)
    assert.equal(j.vehicle.queueBay,null,'yard pickup bay is released during the outbound journey');
